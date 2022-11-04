@@ -7,28 +7,25 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
-      maxlength: 32,
+      maxlength: 320,
     },
     description: {
       type: String,
-      required: true,
+      // required: true,
       maxlength: 2000,
     },
     price: {
       type: Number,
       trim: true,
-      required: true,
+      // required: true,
       maxlength: 32,
     },
-    category: {
-      type: ObjectId,
-      ref: 'Category',
-      required: true,
-    },
-    quantity: {
-      type: Number,
-    },
-    sold: {
+    // category: {
+    //   type: ObjectId,
+    //   ref: 'Category',
+    //   required: true,
+    // },
+    shared: {
       type: Number,
       default: 0,
     },
@@ -36,10 +33,15 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
-    shipping: {
-      required: false,
-      type: Boolean,
+    url: {
+      type: String,
+      default: ''
     },
+    user: {
+      type: ObjectId,
+      ref: 'User',
+      // required: true
+    }
   },
   { timestamps: true }
 );
