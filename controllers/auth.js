@@ -23,11 +23,12 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
   // find the user based on email
   const { email } = req.body;
-  User.findOne({ email }, (err, user) => {
+  User.findOne({ email }, async (err, user) => {
     if (err || !user) {
-      return res.status(400).json({
-        error: "User with that email doesn't exist. Please signup.",
-      });
+      user = new User(req.body)
+      const r = await user.save();
+      if (!r)
+        return res.status(400).json({ error: "Error occured!" });
     }
     // generate a signed token with user id and secret
     const token = jwt.sign(
@@ -37,6 +38,21 @@ exports.signin = (req, res) => {
     // persist the token as 't' in cookie with expiry date
     res.cookie('t', token, { expire: new Date() + 9999 });
     // return response with user and token to frontend client
+    const { _id, name, email } = user;
+    return res.json({ token, user: { _id, email, name } });
+  });
+};
+
+exports.verifyUser = (req, res) => {
+  // find the user based on email
+  const { token } = req.body;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (!decoded || !decoded._id) return res.status(400).json({ error: "Error occured!" });
+  User.findOne({ _id: decoded._id }, async (err, user) => {
+    if (err || !user) {
+      return res.status(400).json({ error: "Error occured!" });
+    }
+    
     const { _id, name, email } = user;
     return res.json({ token, user: { _id, email, name } });
   });
