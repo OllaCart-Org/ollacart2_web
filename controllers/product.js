@@ -28,7 +28,7 @@ exports.create = (req, res) => {
     });
   }
 
-  let product = new Product({ name, photo, url });
+  let product = new Product({ name, photo, url, user: '63687a98178204052c2b8666' });
 
   product.save((err, result) => {
     if (err) {
@@ -75,11 +75,15 @@ exports.list = (req, res) => {
 
 exports.listBySearch = (req, res) => {
   let order = req.body.order ? req.body.order : 'desc';
-  let sortBy = req.body.sortBy ? req.body.sortBy : '_id';
+  let sortBy = req.body.sortBy ? req.body.sortBy : 'createdAt';
   let limit = req.body.limit ? parseInt(req.body.limit) : 100;
   let skip = parseInt(req.body.skip);
+  const { share, userid } = req.body;
+  const filters = {};
+  if (share) filters.user = userid;
+  else filters.user = req.user && req.user._id;
 
-  Product.find()
+  Product.find(filters)
     .sort([[sortBy, order]])
     .skip(skip)
     .limit(limit)

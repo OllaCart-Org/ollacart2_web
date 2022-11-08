@@ -58,6 +58,16 @@ exports.verifyUser = (req, res) => {
   });
 };
 
+exports.Auth = async (req, res, next) => {
+  const { token } = req.body;
+  if (!token) return next();
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (!decoded || !decoded._id) next();
+  const user = await User.findOne({ _id: decoded._id });
+  req.user = user;
+  next();
+};
+
 exports.signout = (req, res) => {
   res.clearCookie('t');
   res.json({ message: 'Signout success' });
