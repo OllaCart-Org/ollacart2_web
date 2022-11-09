@@ -2,6 +2,7 @@ const formidable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
 const Product = require('../models/product');
+const User = require('../models/user');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
 exports.productById = (req, res, next, id) => {
@@ -73,14 +74,21 @@ exports.list = (req, res) => {
     });
 };
 
-exports.listBySearch = (req, res) => {
+exports.listBySearch = async (req, res) => {
   let order = req.body.order ? req.body.order : 'desc';
   let sortBy = req.body.sortBy ? req.body.sortBy : 'createdAt';
   let limit = req.body.limit ? parseInt(req.body.limit) : 100;
   let skip = parseInt(req.body.skip);
-  const { share, userid } = req.body;
+  const { share, _id } = req.body;
+
   const filters = {};
-  if (share) filters.user = userid;
+  let user = req.user;
+  if (share) {
+    user = await User.findOne({ _id });
+    if (!user) return res.status(400).json({ error: 'Not corret url' });
+    filters.user = _id;
+    filters.shared = 1;
+  }
   else filters.user = req.user && req.user._id;
 
   Product.find(filters)
@@ -96,6 +104,7 @@ exports.listBySearch = (req, res) => {
       res.json({
         size: data.length,
         data,
+        email: user.email
       });
     });
 };
