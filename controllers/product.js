@@ -90,7 +90,7 @@ exports.listBySearch = async (req, res) => {
       res.json({
         size: data.length,
         data,
-        email: user.email
+        email: user?.email
       });
     });
 };
