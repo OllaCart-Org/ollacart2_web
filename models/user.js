@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    ce_id: {
+      type: String,
+      default: ''
+    }
   },
   { timestamps: true }
 );

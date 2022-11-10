@@ -18,18 +18,22 @@ exports.productById = (req, res, next, id) => {
     });
 };
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // check for all fields
-  const { photo, url, name } = req.body;
+  const { photo, url, name, ce_id } = req.body;
+  let user_id = null;
   // const user = req.profile._id;
 
-  if (!name || !photo || !url) {
+  if (!name || !photo || !url || !ce_id) {
     return res.status(400).json({
       error: 'All fields are required',
     });
   }
 
-  let product = new Product({ name, photo, url, user: '63687a98178204052c2b8666' });
+  const user = await User.findOne({ ce_id });
+  if (user) user_id = user.id;
+
+  let product = new Product({ name, photo, url, ce_id, user: user_id });
 
   product.save((err, result) => {
     if (err) {
@@ -54,24 +58,6 @@ exports.remove = (req, res) => {
       message: 'Product deleted successfully',
     });
   });
-};
-
-exports.list = (req, res) => {
-  let order = req.query.order ? req.query.order : 'asc';
-  let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
-  let limit = req.query.limit ? parseInt(req.query.limit) : 6;
-
-  Product.find()
-    .sort([[sortBy, order]])
-    .limit(limit)
-    .exec((err, products) => {
-      if (err) {
-        return res.status(400).json({
-          error: 'Products not found',
-        });
-      }
-      res.json(products);
-    });
 };
 
 exports.listBySearch = async (req, res) => {

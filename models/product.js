@@ -37,6 +37,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    ce_id: {
+      type: String,
+      default: ''
+    },
     user: {
       type: ObjectId,
       ref: 'User',

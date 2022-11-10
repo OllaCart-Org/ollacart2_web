@@ -4,8 +4,6 @@ const router = express.Router();
 const {
   create,
   productById,
-  remove,
-  list,
   listBySearch,
   share
 } = require('../controllers/product');
@@ -14,7 +12,6 @@ const { userById } = require('../controllers/user');
 
 router.post('/product/create', create);
 
-router.get('/products', list);
 router.post('/products/by/search', Auth, listBySearch);
 router.post('/share/:productId', share);
 
