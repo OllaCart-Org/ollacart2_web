@@ -27,7 +27,7 @@ exports.sendMail = async (mailTo) => {
       subject: 'Welcome to Ollacart',
       html: `<h3>Welcome to Ollacart.</h3>
         <p>You can use ollacart chrome extension to add your own shopping items.</p>
-        <p>Download chrome extension here.</p>`
+        <p>Download chrome extension from&nbsp;<a href="http://www.ollacart.com">chrome web store</p>.</a>`
     };
     
     transporter.sendMail(mailOptions, function(error, info){
