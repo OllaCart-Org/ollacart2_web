@@ -23,11 +23,11 @@ exports.sendMail = async (mailTo) => {
   return new Promise(resolve => {
     var mailOptions = {
       from: 'support@ollacart.com',
-      to: 'romanvaraksin763@gmail.com',
+      to: mailTo,
       subject: 'Welcome to Ollacart',
       html: `<h3>Welcome to Ollacart.</h3>
         <p>You can use ollacart chrome extension to add your own shopping items.</p>
-        <p>Download chrome extension here.</p>`
+        <p>Download chrome extension from&nbsp;<a href="http://www.ollacart.com">chrome web store</p>.</a>`
     };
     
     transporter.sendMail(mailOptions, function(error, info){
