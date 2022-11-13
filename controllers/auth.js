@@ -24,11 +24,12 @@ exports.signup = (req, res) => {
 
 exports.signin = async (req, res) => {
   // find the user based on email
-  const { email, ce_id } = req.body;
+  const email = req.body.email,
+    ce_id = req.body.ce_id;
   
   User.findOne({ email }, async (err, user) => {
     if (err || !user) {
-      const response = await utils.sendMail(email);
+      const response = await utils.sendMail(req.body.email);
       if (response.error) res.status(400).json({ error: "Wrong email!" });
 
       user = new User(req.body)
