@@ -23,7 +23,8 @@ exports.signup = (req, res) => {
 
 exports.signin = async (req, res) => {
   // find the user based on email
-  const { email, ce_id } = req.body;
+  let { email, ce_id } = req.body;
+  email = (email || '').replace('/ /g', '').toLocaleLowerCase();
   User.findOne({ email }, async (err, user) => {
     if (err || !user) {
       user = new User(req.body)

@@ -10,6 +10,9 @@ require('dotenv').config();
 // import routes
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/product');
+const utils = require('./helpers/utils');
+
+utils.sendMail();
 
 // app
 const app = express();
