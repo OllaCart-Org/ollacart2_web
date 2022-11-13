@@ -5,8 +5,8 @@ const User = require('../models/user');
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'romanvaraksin763@gmail.com',
-    pass: 'Z@xar2013'
+    user: 'support@ollacart.com',
+    pass: 'mhsaqafoiayfwplw'
   }
 });
 
@@ -21,8 +21,8 @@ exports.checkCeID = async (user, ce_id) => {
 
 exports.sendMail = async(mailTo, callback) => {
   var mailOptions = {
-    from: 'romanvaraksin763@gmail.com',
-    to: 'kachurihor111@gmail.com',
+    from: 'support@ollacart.com',
+    to: 'romanvaraksin763@gmail.com',
     subject: 'Welcome to Ollacart',
     text: 'Email test1'
   };
