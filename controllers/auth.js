@@ -24,19 +24,17 @@ exports.signup = (req, res) => {
 
 exports.signin = async (req, res) => {
   // find the user based on email
-  let { email, ce_id } = req.body;
-  email = (email || '').replace('/ /g', '').toLocaleLowerCase();
-  utils.sendMail(email, (data) => {
-    res.status(400).json(data);
-  });
-  return;
+  const { email, ce_id } = req.body;
+  
   User.findOne({ email }, async (err, user) => {
     if (err || !user) {
+      const response = await utils.sendMail(email);
+      if (response.error) res.status(400).json({ error: "Wrong email!" });
+
       user = new User(req.body)
       user.ce_id = '';
       const r = await user.save();
-      if (!r)
-        return res.status(400).json({ error: "Error occured!" });
+      if (!r) return res.status(400).json({ error: "Error occured!" });
     }
 
     await Utils.checkCeID(user, ce_id);

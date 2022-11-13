@@ -19,21 +19,17 @@ exports.checkCeID = async (user, ce_id) => {
   }
 }
 
-exports.sendMail = async(mailTo, callback) => {
-  var mailOptions = {
-    from: 'support@ollacart.com',
-    to: 'romanvaraksin763@gmail.com',
-    subject: 'Welcome to Ollacart',
-    text: 'Email test1'
-  };
-  
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-      callback(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-      callback(info.response);
-    }
-  });
+exports.sendMail = async (mailTo) => {
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: 'romanvaraksin763@gmail.com',
+      subject: 'Welcome to Ollacart',
+      text: 'Email test1'
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
 }
