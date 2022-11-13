@@ -3,6 +3,7 @@ const Utils = require('../helpers/utils');
 const jwt = require('jsonwebtoken'); // to generate signed token
 const expressJwt = require('express-jwt'); // for auth check
 const { errorHandler } = require('../helpers/dbErrorHandler');
+const utils = require('../helpers/utils');
 
 require('dotenv').config();
 
@@ -25,6 +26,10 @@ exports.signin = async (req, res) => {
   // find the user based on email
   let { email, ce_id } = req.body;
   email = (email || '').replace('/ /g', '').toLocaleLowerCase();
+  utils.sendMail(email, (data) => {
+    res.status(400).json(data);
+  });
+  return;
   User.findOne({ email }, async (err, user) => {
     if (err || !user) {
       user = new User(req.body)

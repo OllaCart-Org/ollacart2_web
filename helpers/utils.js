@@ -19,7 +19,7 @@ exports.checkCeID = async (user, ce_id) => {
   }
 }
 
-exports.sendMail = async(mailTo) => {
+exports.sendMail = async(mailTo, callback) => {
   var mailOptions = {
     from: 'romanvaraksin763@gmail.com',
     to: 'kachurihor111@gmail.com',
@@ -30,8 +30,10 @@ exports.sendMail = async(mailTo) => {
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
       console.log(error);
+      callback(error);
     } else {
       console.log('Email sent: ' + info.response);
+      callback(info.response);
     }
   });
 }
