@@ -23,7 +23,7 @@ exports.sendMail = async (mailTo) => {
   return new Promise(resolve => {
     var mailOptions = {
       from: 'support@ollacart.com',
-      to: 'romanvaraksin763@gmail.com',
+      to: mailTo,
       subject: 'Welcome to Ollacart',
       html: `<h3>Welcome to Ollacart.</h3>
         <p>You can use ollacart chrome extension to add your own shopping items.</p>
