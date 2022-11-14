@@ -27,7 +27,7 @@ exports.sendMail = async (mailTo) => {
       subject: 'Welcome to Ollacart',
       html: `<h3>Welcome to Ollacart.</h3>
         <p>Congrats on the first step towards your new online shopping experience. As we continue to develop the capabilities of OllaCart, download and use our <a href="https://chrome.google.com/webstore">Chrome Extension</a> to select items from any online shopping website and add them to your OllaCart. It is as easy as selecting the extension logo, selecting the item, and selecting the extension logo again.<br>
-        When on <a href="http://www.ollacart.com">OllaCart.com</a>, select the items that you want to publish to your public online shopping cart. In order to share this list, select the share logo, and just copy and paste the website link at the top of your shared list, wherever you want.<br><br>
+        When on <a href="https://www.ollacart.com">OllaCart.com</a>, select the items that you want to publish to your public online shopping cart. In order to share this list, select the share logo, and just copy and paste the website link at the top of your shared list, wherever you want.<br><br>
         In the future, you will be able to:<br>
         Purchase any item, from any website.<br>
         Browse suggested items.<br>
