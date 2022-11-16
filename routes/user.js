@@ -7,7 +7,6 @@ const {
   userById,
   read,
   update,
-  purchaseHistory,
 } = require('../controllers/user');
 
 router.get('/secret/:userId', requireSignin, isAuth, isAdmin, (req, res) => {
