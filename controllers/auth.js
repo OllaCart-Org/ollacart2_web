@@ -52,7 +52,7 @@ exports.signin = async (req, res) => {
 exports.request = async (req, res) => {
   const email = req.body.email;
   const response = await utils.sendRequestMail(email);
-  if (response.error) res.status(400).json({ error: "Wrong email!" });
+  if (response.error) return res.status(400).json({ error: "Wrong email!" });
   let request = new Request(req.body);
   await request.save();
   res.json({ email })
