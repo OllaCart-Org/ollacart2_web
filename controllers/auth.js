@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Request = require('../models/request');
 const Utils = require('../helpers/utils');
 const jwt = require('jsonwebtoken'); // to generate signed token
 const expressJwt = require('express-jwt'); // for auth check
@@ -47,6 +48,15 @@ exports.signin = async (req, res) => {
     return res.json({ token, user: { _id, email, name } });
   });
 };
+
+exports.request = async (req, res) => {
+  const email = req.body.email;
+  const response = await utils.sendRequestMail(email);
+  if (response.error) res.status(400).json({ error: "Wrong email!" });
+  let request = new Request(req.body);
+  await request.save();
+  res.json({ email })
+}
 
 exports.verifyUser = (req, res) => {
   // find the user based on email

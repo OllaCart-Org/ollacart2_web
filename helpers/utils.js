@@ -42,3 +42,18 @@ exports.sendMail = async (mailTo) => {
     });
   })
 }
+
+exports.sendRequestMail = async (mailTo) => {
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: mailTo,
+      subject: 'Persional Data',
+      html: `<p>We are processing your request for your user information collected by OllaCart. Please respond to support@ollacart.com with any questions.</p>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
