@@ -48,7 +48,7 @@ exports.sendRequestMail = async (mailTo) => {
     var mailOptions = {
       from: 'support@ollacart.com',
       to: mailTo,
-      subject: 'Persional Data',
+      subject: 'Persional Data request - Pending',
       html: `<p>We are processing your request for your user information collected by OllaCart. Please respond to support@ollacart.com with any questions.</p>`
     };
     
