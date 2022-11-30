@@ -10,6 +10,7 @@ require('dotenv').config();
 // import routes
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/product');
+const messageRoutes = require('./routes/message');
 
 // app
 const app = express();
@@ -46,6 +47,7 @@ app.use(cors());
 // routes middleware
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
+app.use('/api', messageRoutes);
 
 
 // Server static assets if in production
