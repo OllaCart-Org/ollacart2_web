@@ -21,6 +21,9 @@ exports.productById = (req, res, next, id) => {
 exports.create = async (req, res) => {
   // check for all fields
   const { photo, url, name, ce_id } = req.body;
+  let description = req.body.description || '',
+    price = req.body.price || '',
+    photos = req.body.photos || [];
   let user_id = null;
   // const user = req.profile._id;
 
@@ -33,7 +36,7 @@ exports.create = async (req, res) => {
   const user = await User.findOne({ ce_id });
   if (user) user_id = user.id;
 
-  let product = new Product({ name, photo, url, ce_id, user: user_id });
+  let product = new Product({ name, photo, url, ce_id, description, price, photos, user: user_id });
 
   product.save((err, result) => {
     if (err) {

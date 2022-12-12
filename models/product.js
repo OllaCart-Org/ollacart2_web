@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    photos: [{
+      type: String,
+      default: ''
+    }],
     url: {
       type: String,
       default: ''
