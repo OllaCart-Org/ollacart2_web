@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
   // check for all fields
   const { photo, url, name, ce_id } = req.body;
   let description = req.body.description || '',
-    price = req.body.price || '',
+    price = parseInt(req.body.price || ''),
     photos = req.body.photos || [];
   let user_id = null;
   // const user = req.profile._id;
