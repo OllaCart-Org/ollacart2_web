@@ -44,8 +44,8 @@ exports.signin = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
     res.cookie('t', token, { expire: new Date() + 9999 });
     
-    const { _id, name, email } = user;
-    return res.json({ token, user: { _id, email, name } });
+    const { _id, name, role, email } = user;
+    return res.json({ token, user: { _id, email, role, name } });
   });
 };
 
@@ -68,20 +68,24 @@ exports.verifyUser = (req, res) => {
       return res.status(400).json({ error: "Error occured!" });
     }
     
-    const { _id, name, email } = user;
-    return res.json({ token, user: { _id, email, name } });
+    const { _id, name, email, role } = user;
+    return res.json({ token, user: { _id, email, name, role } });
   });
 };
 
 exports.Auth = async (req, res, next) => {
   const { token, ce_id } = req.body;
   if (!token) return next();
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  if (!decoded || !decoded._id) next();
-  
-  const user = await User.findOne({ _id: decoded._id });
-  await Utils.checkCeID(user, ce_id);
-  req.user = user;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded || !decoded._id) next();
+    
+    const user = await User.findOne({ _id: decoded._id });
+    await Utils.checkCeID(user, ce_id);
+    req.user = user;
+  } catch {
+    req.user = null;
+  }
   next();
 };
 
@@ -97,7 +101,7 @@ exports.requireSignin = expressJwt({
 });
 
 exports.isAuth = (req, res, next) => {
-  let user = req.profile && req.auth && req.profile._id == req.auth._id;
+  let user = req.user;
   if (!user) {
     return res.status(403).json({
       error: 'Access denied',
@@ -107,7 +111,7 @@ exports.isAuth = (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
-  if (req.profile.role === 0) {
+  if (req.user.role !== 'admin') {
     return res.status(403).json({
       error: 'Admin Access denied',
     });

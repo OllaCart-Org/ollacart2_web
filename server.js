@@ -9,6 +9,7 @@ const expressValidator = require('express-validator');
 require('dotenv').config();
 // import routes
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 const productRoutes = require('./routes/product');
 const messageRoutes = require('./routes/message');
 
@@ -46,6 +47,7 @@ app.use(cors());
 
 // routes middleware
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', messageRoutes);
 

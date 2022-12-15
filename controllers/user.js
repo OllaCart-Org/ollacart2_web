@@ -38,3 +38,8 @@ exports.update = (req, res) => {
     }
   );
 };
+
+exports.getUsers = async (req, res) => {
+  const users = await User.find();
+  res.send({ success: true, users });
+}
