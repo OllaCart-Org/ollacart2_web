@@ -10,6 +10,14 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+exports.takeFirstDecimal = (str) => {
+  try {
+    return parseFloat(str.match(/[\d\.]+/)) || 0;
+  } catch (ex) {
+    return 0;
+  }
+}
+
 exports.checkCeID = async (user, ce_id) => {
   if (user && ce_id && user.ce_id !== ce_id) {
     user.ce_id = ce_id;

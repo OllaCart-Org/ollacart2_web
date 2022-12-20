@@ -4,6 +4,7 @@ const fs = require('fs');
 const Product = require('../models/product');
 const User = require('../models/user');
 const { errorHandler } = require('../helpers/dbErrorHandler');
+const { takeFirstDecimal } = require('../helpers/utils');
 
 exports.productById = (req, res, next, id) => {
   Product.findById(id)
@@ -22,7 +23,7 @@ exports.create = async (req, res) => {
   // check for all fields
   const { photo, url, name, ce_id } = req.body;
   let description = req.body.description || '',
-    price = parseFloat(req.body.price || '') || 0,
+    price = takeFirstDecimal(req.body.price || ''),
     photos = req.body.photos || [];
   let user_id = null;
   // const user = req.profile._id;
