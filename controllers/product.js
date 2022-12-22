@@ -73,12 +73,9 @@ exports.listBySearch = async (req, res) => {
 
   const filters = {};
   let user = req.user;
-  if (purchased) {
-    user = await User.findOne({ _id });
-    if (!user) return res.status(400).json({ error: 'Not corret url' });
-    filters.user = _id;
-    filters.purchased = 1;
-  } else if (shared) {
+  if (purchased) filters.purchased = 1;
+  
+  if (shared) {
     user = await User.findOne({ _id });
     if (!user) return res.status(400).json({ error: 'Not corret url' });
     filters.user = _id;
