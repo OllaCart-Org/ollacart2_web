@@ -69,11 +69,16 @@ exports.listBySearch = async (req, res) => {
   let sortBy = req.body.sortBy ? req.body.sortBy : 'createdAt';
   let limit = req.body.limit ? parseInt(req.body.limit) : 100;
   let skip = parseInt(req.body.skip);
-  const { share, _id } = req.body;
+  const { purchased, shared, _id } = req.body;
 
   const filters = {};
   let user = req.user;
-  if (share) {
+  if (purchased) {
+    user = await User.findOne({ _id });
+    if (!user) return res.status(400).json({ error: 'Not corret url' });
+    filters.user = _id;
+    filters.purchased = 1;
+  } else if (shared) {
     user = await User.findOne({ _id });
     if (!user) return res.status(400).json({ error: 'Not corret url' });
     filters.user = _id;
@@ -100,11 +105,23 @@ exports.listBySearch = async (req, res) => {
 };
 
 exports.share = (req, res, next) => {
-  let share = req.body.share;
-  req.product.shared = share;
+  req.product.shared = req.body.shared;
   req.product.save((err, result) => {
     if (err) {
       console.log('PRODUCT SHARE ERROR ', err);
+      return res.status(400).json({
+        error: errorHandler(err),
+      });
+    }
+    res.json(result);
+  });
+};
+
+exports.putPurchaseCart = (req, res, next) => {
+  req.product.purchased = req.body.purchased;
+  req.product.save((err, result) => {
+    if (err) {
+      console.log('PRODUCT PURCHASE ERROR ', err);
       return res.status(400).json({
         error: errorHandler(err),
       });

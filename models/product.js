@@ -17,7 +17,6 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
       trim: true,
-      // required: true,
       maxlength: 32,
     },
     // category: {
@@ -28,6 +27,10 @@ const productSchema = new mongoose.Schema(
     shared: {
       type: Number,
       default: 0,
+    },
+    purchased: {
+      type: Number,
+      default: 0
     },
     photo: {
       type: String,
