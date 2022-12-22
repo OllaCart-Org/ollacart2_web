@@ -114,8 +114,9 @@ exports.share = (req, res, next) => {
   });
 };
 
-exports.putPurchaseCart = (req, res, next) => {
-  req.product.purchased = req.body.purchased;
+exports.putCart = (req, res, next) => {
+  req.product.purchased = req.body.purchased || req.product.purchased;
+  req.product.shared = req.body.shared || req.product.shared;
   req.product.save((err, result) => {
     if (err) {
       console.log('PRODUCT PURCHASE ERROR ', err);
