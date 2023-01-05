@@ -1,16 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const { create, remove, productById, listBySearch, share, getCarts, putCart } = require('../controllers/product');
+const { create, update, updateSequence, remove, productById, listBySearch, share, getCarts, putCart } = require('../controllers/product');
 const { Auth, isAdmin } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
 
 router.post('/product/create', create);
+router.post('/product/update/:productId', update);
+router.post('/product/update_sequence', updateSequence);
 router.post('/product/remove/:productId', remove);
 
 router.post('/products/by/search', Auth, listBySearch);
-router.post('/share/:productId', share);
-router.post('/putcart/:productId', putCart);
+// router.post('/share/:productId', share);
+// router.post('/putcart/:productId', putCart);
 
 router.param('userId', userById);
 router.param('productId', productById);

@@ -48,6 +48,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    sequence: {
+      type: Number,
+      default: 0
+    },
     user: {
       type: ObjectId,
       ref: 'User',
