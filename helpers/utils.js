@@ -13,7 +13,7 @@ var transporter = nodemailer.createTransport({
 exports.takeFirstDecimal = (str) => {
   try {
     // return parseFloat(str.match(/[\d\.]+/)) || 0;
-    return parseFloat(str.replace(/[^0-9.]+/g,"")) || 0;
+    return parseFloat((str + '').replace(/[^0-9.]+/g,"")) || 0;
   } catch (ex) {
     return 0;
   }
