@@ -13,6 +13,8 @@ const userRoutes = require('./routes/user');
 const productRoutes = require('./routes/product');
 const messageRoutes = require('./routes/message');
 
+// const adminController = require('./controllers/admin');
+
 // app
 const app = express();
 
@@ -29,6 +31,8 @@ const connectDB = async () => {
       }
     );
     console.log('MongoDB Connected');
+
+    // await adminController.getAnalyticData();
   } catch (err) {
     console.error(err.message);
     // exit process with failure

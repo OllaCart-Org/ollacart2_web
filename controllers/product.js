@@ -5,6 +5,7 @@ const Product = require('../models/product');
 const User = require('../models/user');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const { takeFirstDecimal } = require('../helpers/utils');
+const { URL } = require('url'); 
 
 exports.productById = (req, res, next, id) => {
   Product.findById(id)
@@ -25,6 +26,7 @@ exports.create = async (req, res) => {
   let description = req.body.description || '',
     price = takeFirstDecimal(req.body.price || ''),
     photos = req.body.photos || [];
+  let domain = new URL(url).origin || '';
   let user_id = null;
   // const user = req.profile._id;
 
@@ -37,7 +39,7 @@ exports.create = async (req, res) => {
   const user = await User.findOne({ ce_id });
   if (user) user_id = user.id;
 
-  let product = new Product({ name, photo, url, ce_id, description, price, photos, user: user_id, sequence: Date.now() });
+  let product = new Product({ name, photo, url, ce_id, description, price, photos, user: user_id, sequence: Date.now(), domain });
 
   product.save((err, result) => {
     if (err) {
@@ -131,34 +133,46 @@ exports.listBySearch = async (req, res) => {
     });
 };
 
-// exports.share = (req, res, next) => {
-//   req.product.shared = req.body.shared;
-//   req.product.save((err, result) => {
-//     if (err) {
-//       console.log('PRODUCT SHARE ERROR ', err);
-//       return res.status(400).json({
-//         error: errorHandler(err),
-//       });
-//     }
-//     res.json(result);
-//   });
-// };
 
-// exports.putCart = (req, res, next) => {
-//   req.product.purchased = req.body.purchased || 0;
-//   req.product.shared = req.body.shared || 0;
-//   req.product.save((err, result) => {
-//     if (err) {
-//       console.log('PRODUCT PURCHASE ERROR ', err);
-//       return res.status(400).json({
-//         error: errorHandler(err),
-//       });
-//     }
-//     res.json(result);
-//   });
-// };
+
+
 
 exports.getCarts = async (req, res) => {
-  const carts = await Product.find().populate('user').exec();
-  res.send({ success: true, carts });
+  const { filter } = req.body;
+
+  const carts = await Product.find()
+    .sort([['sequence', 'desc'], ['createdAt', 'desc']])
+    .skip((filter.page - 1) * filter.countPerPage)
+    .limit(filter.countPerPage).populate('user').exec();
+  res.send({ success: true, carts, total: await this.getProductCount() });
+}
+
+
+
+
+
+
+exports.updateDomain = async () => {
+  const products = await Product.find();
+  for (let i = 0; i < products.length; i ++) {
+    const product = products[i];
+    product.domain = new URL(product.url).origin || '';
+    await product.save()
+  }
+}
+
+
+exports.getProductCount = async (filter = {}) => {
+  const count = await Product.countDocuments(filter) || 0;
+  return count;
+}
+
+exports.getDomains = async () => {
+  const products = await Product.aggregate([{ $group: { _id: '$domain', count: {$sum: 1} } }]);
+  return products;
+}
+
+exports.getProductNames = async () => {
+  const products = await Product.aggregate([{ $group: { _id: '$name', count: {$sum: 1} } }]);
+  return products;
 }

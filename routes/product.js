@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const { create, update, updateSequence, remove, productById, listBySearch, share, getCarts, putCart } = require('../controllers/product');
+const { create, update, updateSequence, remove, productById, listBySearch, getCarts } = require('../controllers/product');
+const { getAnalytics } = require('../controllers/admin');
 const { Auth, isAdmin } = require('../controllers/auth');
 const { userById } = require('../controllers/user');
 
@@ -19,5 +20,6 @@ router.param('productId', productById);
 
 
 router.post('/admin/getcarts', Auth, isAdmin, getCarts );
+router.post('/admin/getanalytics', Auth, isAdmin, getAnalytics );
 
 module.exports = router;

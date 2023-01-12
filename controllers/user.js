@@ -43,3 +43,8 @@ exports.getUsers = async (req, res) => {
   const users = await User.find();
   res.send({ success: true, users });
 }
+
+exports.getUserCount = async (filter = {}) => {
+  const count = await User.countDocuments(filter) || 0;
+  return count;
+}

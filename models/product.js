@@ -44,6 +44,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    domain: {
+      type: String,
+      default: ''
+    },
     ce_id: {
       type: String,
       default: ''
