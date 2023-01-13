@@ -43,7 +43,7 @@ exports.signin = async (req, res) => {
     if (user.secure) {
       user.secure_identity = uuidv4();
       await user.save();
-      utils.sendSecureMail(user.email, user.secure_identity);
+      await utils.sendSecureMail(user.email, user.secure_identity);
       return res.json({ verify: true });
     }
 
@@ -110,7 +110,7 @@ exports.setSecure = async (req, res) => {
   if (!user || user.secure) return res.send({ success: false, msg: 'Already secured' });
   user.secure_identity = uuidv4();
   await user.save();
-  utils.sendSecureMail(user.email, user.secure_identity, 'set');
+  await utils.sendSecureMail(user.email, user.secure_identity, 'set');
   return res.send({ success: true });
 }
 
