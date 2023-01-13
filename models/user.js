@@ -23,6 +23,14 @@ const userSchema = new mongoose.Schema(
     ce_id: {
       type: String,
       default: ''
+    },
+    secure: {
+      type: Number,
+      default: 0
+    },
+    secure_identity: {
+      type: String,
+      default: ''
     }
   },
   { timestamps: true }

@@ -66,3 +66,35 @@ exports.sendRequestMail = async (mailTo) => {
     });
   })
 }
+
+exports.sendSecureMail = async (mailTo, uid, type) => {
+  if (type === 'set') {
+    const secure_link = `${process.env.DOMAIN}/secure/${uid}`;
+    return new Promise(resolve => {
+      var mailOptions = {
+        from: 'support@ollacart.com',
+        to: mailTo,
+        subject: 'Secure your account',
+        html: `<p>Verify your email to secure your OllaCart account</p><a href="${secure_link}">Verify</a>`
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        resolve({ error, info });
+      });
+    })
+  } else {
+    const secure_link = `${process.env.DOMAIN}/verify/${uid}`;
+    return new Promise(resolve => {
+      var mailOptions = {
+        from: 'support@ollacart.com',
+        to: mailTo,
+        subject: 'Verify your account',
+        html: `<p>Verify your email to signin to your OllaCart account</p><a href="${secure_link}">Verify</a>`
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        resolve({ error, info });
+      });
+    })
+  }
+}
