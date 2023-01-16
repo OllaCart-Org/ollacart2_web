@@ -75,7 +75,7 @@ exports.sendSecureMail = async (mailTo, uid, type) => {
         from: 'support@ollacart.com',
         to: mailTo,
         subject: 'Secure your account',
-        html: `<p>Verify your email to secure your OllaCart account</p><a href="${secure_link}">Verify</a>`
+        html: `<p>You can secure your account with email verification by clicking the button below to link your extension, email and OllaCart account.</p><a href="${secure_link}">Secure your account</a>`
       };
       
       transporter.sendMail(mailOptions, function(error, info){
@@ -88,8 +88,8 @@ exports.sendSecureMail = async (mailTo, uid, type) => {
       var mailOptions = {
         from: 'support@ollacart.com',
         to: mailTo,
-        subject: 'Verify your account',
-        html: `<p>Verify your email to signin to your OllaCart account</p><a href="${secure_link}">Verify</a>`
+        subject: 'Signin to your Account',
+        html: `<p>Your account is secured with email verification. Click the button below to signin to your OllaCart account.</p><a href="${secure_link}">Signin to your Account</a>`
       };
       
       transporter.sendMail(mailOptions, function(error, info){
