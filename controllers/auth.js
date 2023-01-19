@@ -32,7 +32,7 @@ exports.signin = async (req, res) => {
   User.findOne({ email }, async (err, user) => {
     if (err || !user) {
       const response = await utils.sendMail(req.body.email);
-      if (response.error) res.status(400).json({ error: "Wrong email!" });
+      if (response.error) return res.status(400).json({ error: "Wrong email!" });
 
       user = new User(req.body)
       user.ce_id = '';
@@ -44,7 +44,7 @@ exports.signin = async (req, res) => {
       user.secure_identity = uuidv4();
       await user.save();
       await utils.sendSecureMail(user.email, user.secure_identity);
-      return res.json({ verify: true });
+      return res.json({ verify: true, uid: user.secure_identity });
     }
 
     await Utils.checkCeID(user, ce_id);
@@ -115,32 +115,46 @@ exports.setSecure = async (req, res) => {
 }
 
 exports.verifySecure = async (req, res) => {
-  const {uid} = req.body;
-  user = await User.findOne({ secure_identity: uid });
-  if (!user) return res.status(400).json({ error: 'Invalid verification code' });
-  user.secure = 1;
-  user.last_verified = uid;
-  await user.save();
-  res.json({ success: true });
+  try {
+    const {uid} = req.body;
+    user = await User.findOne({ secure_identity: uid });
+    if (!user) return res.status(400).json({ error: 'Invalid verification code' });
+    user.secure = 1;
+    user.last_verified = uid;
+    await user.save();
+    res.json({ success: true });
+  } catch(ex) {
+    console.log(ex);
+    res.status(400).json({ error: 'Error!' });
+  }
 }
 
 exports.verifySignin = async (req, res) => {
-  const {uid} = req.body;
-  user = await User.findOne({ secure_identity: uid });
-  if (!user) return res.status(400).json({ error: 'Invalid verification code' });
-  
-  user.last_verified = uid;
-  await user.save();
+  try {
+    const {uid} = req.body;
+    user = await User.findOne({ secure_identity: uid });
+    if (!user) return res.status(400).json({ error: 'Invalid verification code' });
+    
+    user.last_verified = uid;
+    await user.save();
 
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-  res.cookie('t', token, { expire: new Date() + 9999 });
-  res.json({ token });
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    res.cookie('t', token, { expire: new Date() + 9999 });
+    res.json({ token });
+  } catch(ex) {
+    console.log(ex);
+    return res.status(400).json({ error: 'Error!' });
+  }
 }
 
 exports.checkSecureVerified = async (req, res) => {
   const {uid} = req.body;
-  user = await User.findOne({ last_verified: uid });
-  if(user) return res.send({ success: true });
+  try {
+    const user = await User.findOne({ last_verified: uid });
+    if(user) return res.send({ success: true });
+  } catch(ex) {
+    console.log(ex);
+  }
   res.send({success: false});
 }
 
