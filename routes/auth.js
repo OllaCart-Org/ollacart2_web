@@ -10,7 +10,8 @@ const {
   verifyUser,
   setSecure,
   verifySecure,
-  verifySignin
+  verifySignin,
+  checkSecureVerified
 } = require('../controllers/auth');
 const { userSignupValidator } = require('../validator');
 
@@ -23,5 +24,7 @@ router.get('/signout', signout);
 router.post('/auth/setsecure', Auth, setSecure);
 router.post('/auth/verifysecure', Auth, verifySecure);
 router.post('/auth/verifysignin', Auth, verifySignin);
+
+router.post('/auth/checkSecureVerified', Auth, checkSecureVerified);
 
 module.exports = router;

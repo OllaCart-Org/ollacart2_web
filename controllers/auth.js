@@ -111,7 +111,7 @@ exports.setSecure = async (req, res) => {
   user.secure_identity = uuidv4();
   await user.save();
   await utils.sendSecureMail(user.email, user.secure_identity, 'set');
-  return res.send({ success: true });
+  return res.send({ success: true, uid: user.secure_identity });
 }
 
 exports.verifySecure = async (req, res) => {
@@ -119,20 +119,30 @@ exports.verifySecure = async (req, res) => {
   user = await User.findOne({ secure_identity: uid });
   if (!user) return res.status(400).json({ error: 'Invalid verification code' });
   user.secure = 1;
+  user.last_verified = uid;
   await user.save();
   res.json({ success: true });
 }
-
 
 exports.verifySignin = async (req, res) => {
   const {uid} = req.body;
   user = await User.findOne({ secure_identity: uid });
   if (!user) return res.status(400).json({ error: 'Invalid verification code' });
+  
+  user.last_verified = uid;
+  await user.save();
+
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
   res.cookie('t', token, { expire: new Date() + 9999 });
   res.json({ token });
 }
 
+exports.checkSecureVerified = async (req, res) => {
+  const {uid} = req.body;
+  user = await User.findOne({ last_verified: uid });
+  if(user) return res.send({ success: true });
+  res.send({success: false});
+}
 
 
 

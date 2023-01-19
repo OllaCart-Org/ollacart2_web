@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema(
     secure_identity: {
       type: String,
       default: ''
+    },
+    last_verified: {
+      type:String,
+      default: ''
     }
   },
   { timestamps: true }
