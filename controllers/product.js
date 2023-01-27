@@ -137,6 +137,7 @@ exports.listBySearch = async (req, res) => {
 
 
 
+
 exports.getCarts = async (req, res) => {
   const { filter } = req.body;
 
@@ -176,3 +177,5 @@ exports.getProductNames = async () => {
   const products = await Product.aggregate([{ $group: { _id: '$name', count: {$sum: 1} } }]);
   return products;
 }
+
+

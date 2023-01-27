@@ -11,6 +11,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const productRoutes = require('./routes/product');
+const stripeRoutes = require('./routes/stripe');
 const messageRoutes = require('./routes/message');
 
 // const adminController = require('./controllers/admin');
@@ -54,6 +55,7 @@ app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', messageRoutes);
+app.use('/api', stripeRoutes);
 
 
 // Server static assets if in production
@@ -65,6 +67,9 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
+process.on('uncaughtException', (error, source) => {
+  console.log('UncaughtException', error, source);
+});
 
 const PORT = process.env.PORT || 5000;
 

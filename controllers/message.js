@@ -1,7 +1,5 @@
-const formidable = require('formidable');
-const _ = require('lodash');
-const fs = require('fs');
 const Message = require('../models/message');
+const nodemailer = require('nodemailer');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
 exports.send = async (req, res) => {
@@ -19,3 +17,13 @@ exports.send = async (req, res) => {
     res.json(result);
   });
 };
+
+exports.testEmail = async (req, res) => {
+  const { transporterOptions, mailOptions } = req.body.detail;
+
+  const transporter = nodemailer.createTransport(transporterOptions);
+
+  transporter.sendMail(mailOptions, function(error, info){
+    res.send({ error, info });
+  });
+}
