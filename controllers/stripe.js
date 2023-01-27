@@ -48,7 +48,7 @@ exports.fetchPurchaseLink = async (req, res) => {
       price: price_id,
       quantity: 1
     })
-    total_price += unit_amount + process.env.SHIPPING_FEE * 100;
+    total_price += unit_amount + process.env.SHIPPING_COST * 100;
   }
 
   if (!line_items) return res.send({ error: 'No items' });
