@@ -63,7 +63,7 @@ exports.fetchPurchaseLink = async (req, res) => {
   const total_fee = (total_price + 30) / (1 - 0.029) - total_price;
   try {
     const price_id = await createProductPrice({
-        name: 'Stripe Fee',
+        name: 'Processing Fee',
         description: 'Stripe Fee (2.9% + 30¢)'
       }, {
         unit_amount: Math.ceil(total_fee),
