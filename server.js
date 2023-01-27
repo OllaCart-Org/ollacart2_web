@@ -68,7 +68,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 process.on('uncaughtException', (error, source) => {
-  console.log('UncaughtException', error, source);
+  console.log('[UncaughtException]', error, source);
 });
 
 const PORT = process.env.PORT || 5000;
