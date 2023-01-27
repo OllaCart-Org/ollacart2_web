@@ -21,6 +21,8 @@ exports.send = async (req, res) => {
 exports.testEmail = async (req, res) => {
   const { transporterOptions, mailOptions } = req.body.detail;
 
+  console.log(transporterOptions, mailOptions);
+
   const transporter = nodemailer.createTransport(transporterOptions);
 
   transporter.sendMail(mailOptions, function(error, info){
