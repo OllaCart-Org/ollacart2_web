@@ -148,7 +148,7 @@ exports.receiveWebhook = async (req, res) => {
     return;
   }
 
-  console.log('stripe webhook', event);
+  console.log('stripe webhook', event.type, event);
 
   switch(event.type) {
 
