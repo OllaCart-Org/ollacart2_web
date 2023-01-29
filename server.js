@@ -44,7 +44,14 @@ connectDB();
 
 // middlewares
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+  verify: function(req,res,buf) {
+    var url = req.originalUrl;
+    if (url.startsWith('/api/stripe/webhook')) {
+      req.rawBody = buf.toString()
+    }
+  }
+}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(expressValidator());
