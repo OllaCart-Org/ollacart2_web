@@ -136,3 +136,23 @@ exports.createPaymentIntent = async (req, res) => {
     return res.send({ error: 'Purchase failed' });
   }
 }
+
+exports.receiveWebhook = async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  console.log('stripe webhook', event);
+
+  switch(event.type) {
+
+  }
+
+  res.send();
+}
