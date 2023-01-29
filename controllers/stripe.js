@@ -98,3 +98,41 @@ exports.fetchPurchaseLink = async (req, res) => {
     return res.send({ error: 'Purchase failed' });
   }
 }
+
+exports.createPaymentIntent = async (req, res) => {
+  const user = req.user;
+  if (!user) return res.status(400).send({ error: 'not signin' });
+
+  try {
+    let products = await Product.find({ user: user._id, purchased: 1 });
+    products = products.filter(item => item.name && item.url && item.price && item.price >= 0.5);
+
+    let total_price = 0;
+    for (let i = 0; i < products.length; i ++) {
+      total_price += products[i].price;
+    }
+    total_price += process.env.SHIPPING_COST * products.length;
+    total_price = Math.ceil(total_price * 100);
+
+    const total_fee = Math.ceil((total_price + 30) / (1 - 0.029) - total_price);
+    total_price += total_fee;
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: total_price,
+      currency: "usd",
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+      products,
+      total_price,
+      total_fee
+    });
+  } catch (ex) {
+    console.log('create payment link failed', ex);
+    return res.send({ error: 'Purchase failed' });
+  }
+}
