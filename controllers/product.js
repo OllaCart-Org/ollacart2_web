@@ -1,6 +1,3 @@
-const formidable = require('formidable');
-const _ = require('lodash');
-const fs = require('fs');
 const Product = require('../models/product');
 const User = require('../models/user');
 const { errorHandler } = require('../helpers/dbErrorHandler');

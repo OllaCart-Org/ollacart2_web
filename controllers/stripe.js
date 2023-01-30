@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const Order = require('../models/order');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -125,6 +126,26 @@ exports.createPaymentIntent = async (req, res) => {
       },
     });
 
+    const order = new Order({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      totalPrice: total_price / 100,
+      totalFee: total_fee / 100,
+      products: products.map(itm => ({
+        _id: itm._id,
+        photo: itm.photo,
+        name: itm.name,
+        price: itm.price
+      })),
+      status: paymentIntent.status
+    });
+
+    const order_res = await order.save();
+    if (!order_res) {
+      console.log('create order failed');
+      return res.send({ error: 'Create Order failed' });
+    }
+
     res.send({
       clientSecret: paymentIntent.client_secret,
       products,
@@ -141,8 +162,6 @@ exports.receiveWebhook = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event;
 
-  console.log('webhook', sig, req.body);
-
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
@@ -154,7 +173,11 @@ exports.receiveWebhook = async (req, res) => {
   console.log('stripe webhook', event.type, event);
 
   switch(event.type) {
-
+    case 'charge.succeeded':
+      break;
+    default:
+      console.log('Unknown Event', event.type);
+      break;
   }
 
   res.send();

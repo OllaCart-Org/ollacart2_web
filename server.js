@@ -11,6 +11,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const productRoutes = require('./routes/product');
+const orderRoutes = require('./routes/order');
 const stripeRoutes = require('./routes/stripe');
 const messageRoutes = require('./routes/message');
 
@@ -57,6 +58,7 @@ app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', messageRoutes);
+app.use('/api', orderRoutes);
 app.use('/api', stripeRoutes);
 
 
