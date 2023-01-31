@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
+const orderController = require('../controllers/order');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -127,17 +128,18 @@ exports.createPaymentIntent = async (req, res) => {
     });
 
     const order = new Order({
+      user: user._id,
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
       totalPrice: total_price / 100,
       totalFee: total_fee / 100,
       products: products.map(itm => ({
-        _id: itm._id,
+        product: itm._id,
         photo: itm.photo,
         name: itm.name,
         price: itm.price
       })),
-      status: paymentIntent.status
+      status: 'created'
     });
 
     const order_res = await order.save();
@@ -160,25 +162,33 @@ exports.createPaymentIntent = async (req, res) => {
 
 exports.receiveWebhook = async (req, res) => {
   const sig = req.headers['stripe-signature'];
-  let event;
+  let event, data;
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    console.log('stripe webhook', event.type, event);
+    data = event.data.object;
+    
+    switch(event.type) {
+      case 'payment_intent.succeeded':
+        console.log('payment successed');
+        orderController.updateOrder('succeeded', data);
+        break;
+      case 'payment_intent.canceled':
+      case 'payment_intent.payment_failed':
+        console.log('payment failed');
+        orderController.updateOrder('failed', data);
+        break;
+      default:
+        console.log('Unknown Event', event.type);
+        break;
+    }
+  
+    res.send();
+
   } catch (err) {
     console.log('Webhook Error', err);
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
-
-  console.log('stripe webhook', event.type, event);
-
-  switch(event.type) {
-    case 'charge.succeeded':
-      break;
-    default:
-      console.log('Unknown Event', event.type);
-      break;
-  }
-
-  res.send();
 }

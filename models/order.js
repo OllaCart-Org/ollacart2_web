@@ -3,6 +3,10 @@ const { ObjectId } = mongoose.Schema;
 
 const categorySchema = new mongoose.Schema(
   {
+    user: {
+      type: ObjectId,
+      ref: 'User',
+    },
     clientSecret: {
       type: String,
       required: true
@@ -19,8 +23,15 @@ const categorySchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    totalReceived: {
+      type: Number,
+      default: 0
+    },
     products: [{
-      _id: ObjectId,
+      product: {
+        type: ObjectId,
+        ref: 'Product'
+      },
       photo: String,
       name: String,
       price: Number
@@ -28,6 +39,16 @@ const categorySchema = new mongoose.Schema(
     status: {
       type: String,
       default: 'created'
+    },
+    shipping: {
+      city: String,
+      country: String,
+      line1: String,
+      line2: String,
+      postalCode: String,
+      state: String,
+      name: String,
+      phone: String
     }
   },
   { timestamps: true }
