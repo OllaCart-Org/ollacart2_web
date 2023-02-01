@@ -47,7 +47,7 @@ exports.updateOrder = async (type, data) => {
     order.totalReceived = data.amount_received / 100;
     order.name = data.shipping.name;
     order.phone = data.shipping.phone;
-    order.shipping = JSON.stringify(data.shipping.address);
+    order.address = JSON.stringify(data.shipping.address);
   }
 
   await order.save();  

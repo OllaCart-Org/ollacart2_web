@@ -56,7 +56,7 @@ const categorySchema = new mongoose.Schema(
       type: String,
       default: 'created'
     },
-    shipping_detail: {
+    address: {
       type: String,
       default: '""'
     },
