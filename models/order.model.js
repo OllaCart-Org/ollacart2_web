@@ -27,10 +27,26 @@ const categorySchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    shipping_status: {
+      type: String,
+      default: 'initial'
+    },
+    refund_status: {
+      type: String,
+      default: 'initial'
+    },
     products: [{
       product: {
         type: ObjectId,
         ref: 'Product'
+      },
+      shipping_status: {
+        type: String,
+        default: 'initial'
+      },
+      refund_status: {
+        type: String,
+        default: 'initial'
       },
       photo: String,
       name: String,
@@ -40,16 +56,12 @@ const categorySchema = new mongoose.Schema(
       type: String,
       default: 'created'
     },
-    shipping: {
-      city: String,
-      country: String,
-      line1: String,
-      line2: String,
-      postalCode: String,
-      state: String,
-      name: String,
-      phone: String
-    }
+    shipping_detail: {
+      type: String,
+      default: '""'
+    },
+    name: String,
+    phone: String
   },
   { timestamps: true }
 );

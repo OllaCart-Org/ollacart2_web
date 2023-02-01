@@ -1,5 +1,5 @@
-const Product = require('../models/product');
-const User = require('../models/user');
+const Product = require('../models/product.model');
+const User = require('../models/user.model');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const { takeFirstDecimal } = require('../helpers/utils');
 const { URL } = require('url'); 

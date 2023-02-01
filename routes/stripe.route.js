@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const { fetchPurchaseLink, createPaymentIntent, receiveWebhook } = require('../controllers/stripe');
-const { Auth } = require('../controllers/auth');
+const { fetchPurchaseLink, createPaymentIntent, receiveWebhook } = require('../controllers/stripe.controller');
+const { Auth } = require('../controllers/auth.controller');
 
 router.post('/stripe/fetchpurchaselink', Auth, fetchPurchaseLink);
 router.post('/stripe/createpaymentintent', Auth, createPaymentIntent);

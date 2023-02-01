@@ -8,12 +8,12 @@ const path = require('path');
 const expressValidator = require('express-validator');
 require('dotenv').config();
 // import routes
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
-const productRoutes = require('./routes/product');
-const orderRoutes = require('./routes/order');
-const stripeRoutes = require('./routes/stripe');
-const messageRoutes = require('./routes/message');
+const authRoutes = require('./routes/auth.route');
+const userRoutes = require('./routes/user.route');
+const productRoutes = require('./routes/product.route');
+const orderRoutes = require('./routes/order.route');
+const stripeRoutes = require('./routes/stripe.route');
+const messageRoutes = require('./routes/message.route');
 
 // const adminController = require('./controllers/admin');
 

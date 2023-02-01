@@ -1,6 +1,6 @@
-const Product = require('../models/product');
-const Order = require('../models/order');
-const orderController = require('../controllers/order');
+const Product = require('../models/product.model');
+const Order = require('../models/order.model');
+const orderController = require('./order.controller');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 

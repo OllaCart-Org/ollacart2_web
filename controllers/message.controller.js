@@ -1,4 +1,4 @@
-const Message = require('../models/message');
+const Message = require('../models/message.model');
 const nodemailer = require('nodemailer');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 

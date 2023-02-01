@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const { create, update, updateSequence, remove, productById, listBySearch, getCarts } = require('../controllers/product');
-const { getAnalytics } = require('../controllers/admin');
-const { Auth, isAdmin } = require('../controllers/auth');
-const { userById } = require('../controllers/user');
+const { create, update, updateSequence, remove, productById, listBySearch, getCarts } = require('../controllers/product.controller');
+const { getAnalytics } = require('../controllers/admin.controller');
+const { Auth, isAdmin } = require('../controllers/auth.controller');
+const { userById } = require('../controllers/user.controller');
 
 router.post('/product/create', create);
 router.post('/product/update/:productId', update);

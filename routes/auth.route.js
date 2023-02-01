@@ -12,7 +12,7 @@ const {
   verifySecure,
   verifySignin,
   checkSecureVerified
-} = require('../controllers/auth');
+} = require('../controllers/auth.controller');
 const { userSignupValidator } = require('../validator');
 
 router.post('/signup', userSignupValidator, signup);

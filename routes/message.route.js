@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   send,
   testEmail
-} = require('../controllers/message');
+} = require('../controllers/message.controller');
 
 router.post('/message/send', send);
 

@@ -1,14 +1,17 @@
 const nodemailer = require('nodemailer');
-const Product = require('../models/product');
-const User = require('../models/user');
+const Product = require('../models/product.model');
+const User = require('../models/user.model');
+const Twilio = require('twilio');
 
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'support@ollacart.com',
     pass: 'mhsaqafoiayfwplw'
   }
 });
+
+const twilioClient = Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 exports.takeFirstDecimal = (str) => {
   try {
@@ -28,7 +31,7 @@ exports.checkCeID = async (user, ce_id) => {
   }
 }
 
-exports.sendMail = async (mailTo) => {
+exports.sendWelcomeMail = async (mailTo) => {
   return new Promise(resolve => {
     var mailOptions = {
       from: 'support@ollacart.com',
@@ -97,4 +100,13 @@ exports.sendSecureMail = async (mailTo, uid, type) => {
       });
     })
   }
+}
+
+exports.sendPurchaseSMS = async (phoneTo, url) => {
+  const res = await twilioClient.messages.create({
+    body: 'Test SMS ' + url,
+    from: process.env.TWILIO_PHONE_NUMBER,
+    to: phoneTo
+  });
+  console.log('sendSMS', res);
 }

@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
-const User = require('../models/user');
-const Request = require('../models/request');
+const User = require('../models/user.model');
+const Request = require('../models/request.model');
 const Utils = require('../helpers/utils');
 const jwt = require('jsonwebtoken'); // to generate signed token
 const expressJwt = require('express-jwt'); // for auth check
@@ -31,7 +31,7 @@ exports.signin = async (req, res) => {
   
   User.findOne({ email }, async (err, user) => {
     if (err || !user) {
-      const response = await utils.sendMail(req.body.email);
+      const response = await utils.sendWelcomeMail(req.body.email);
       if (response.error) return res.status(400).json({ error: "Wrong email!" });
 
       user = new User(req.body)

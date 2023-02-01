@@ -1,5 +1,5 @@
-const User = require('./user');
-const Product = require('./product');
+const User = require('./user.controller');
+const Product = require('./product.controller');
 
 exports.getAnalytics = async (req, res) => {
   const userCount = await User.getUserCount();
