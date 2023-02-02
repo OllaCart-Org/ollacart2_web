@@ -1,5 +1,6 @@
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
+const Extension = require('../models/extension.model');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const { takeFirstDecimal } = require('../helpers/utils');
 const { URL } = require('url'); 
@@ -33,8 +34,8 @@ exports.create = async (req, res) => {
     });
   }
 
-  const user = await User.findOne({ ce_id });
-  if (user) user_id = user.id;
+  const extension = await Extension.findOne({ ce_id });
+  if (extension) user_id = extension.user;
 
   let product = new Product({ name, photo, url, ce_id, description, price, photos, user: user_id, sequence: Date.now(), domain });
 
