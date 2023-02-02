@@ -50,7 +50,9 @@ const categorySchema = new mongoose.Schema(
       },
       photo: String,
       name: String,
-      price: Number
+      price: Number,
+      url: String,
+      domain: String
     }],
     status: {
       type: String,

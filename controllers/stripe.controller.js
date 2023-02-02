@@ -137,7 +137,9 @@ exports.createPaymentIntent = async (req, res) => {
         product: itm._id,
         photo: itm.photo,
         name: itm.name,
-        price: itm.price
+        price: itm.price,
+        url: itm.url,
+        domain: itm.domain
       })),
       status: 'created'
     });

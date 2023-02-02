@@ -19,7 +19,7 @@ exports.getProductsByClientSecret = async (req, res) => {
 exports.getOrders = async (req, res) => {
   const { filter } = req.body;
 
-  const orders = await Order.find()
+  const orders = await Order.find({ status: 'succeeded' })
     .sort([['createdAt', 'desc']])
     .skip((filter.page - 1) * filter.countPerPage)
     .limit(filter.countPerPage)
