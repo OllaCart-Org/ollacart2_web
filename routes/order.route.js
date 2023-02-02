@@ -8,6 +8,6 @@ router.post('/order/productsbyclientsecret', Auth, getProductsByClientSecret);
 
 
 
-// router.post('/admin/getorders', Auth, isAdmin, getOrders );
+router.post('/admin/getorders', Auth, isAdmin, getOrders );
 
 module.exports = router;

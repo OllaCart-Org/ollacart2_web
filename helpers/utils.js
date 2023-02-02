@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
+const Extension = require('../models/extension.model');
 const Twilio = require('twilio');
 
 const transporter = nodemailer.createTransport({
@@ -28,6 +29,7 @@ exports.checkCeID = async (user, ce_id) => {
     await User.updateMany({ ce_id }, { $set: { ce_id: '' } });
     await user.save();
     await Product.updateMany({ ce_id, user: null }, { $set: { user: user._id } });
+    await Extension.updateOne({ ce_id }, { ce_id, user: user._id }, { upsert: true });
   }
 }
 
