@@ -71,6 +71,21 @@ exports.update = (req, res) => {
   });
 };
 
+exports.updateLogo = async (req, res) => {
+  let product = req.product;
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+
+  const { logo } = req.body;
+  const idx = product.photos.indexOf(logo);
+  if (idx === -1) return res.status(400).json({ error: 'Photo not found' });
+
+  product.photos[idx] = product.photo;
+  product.photo = logo;
+
+  const result = await product.save();
+  res.json(result);
+}
+
 exports.updateSequence = async (req, res) => {
   const data = req.body.data;
   for (let i = 0; i < data.length; i ++) {
