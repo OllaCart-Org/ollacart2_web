@@ -27,22 +27,26 @@ const categorySchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    shipping_status: {
-      type: String,
-      default: 'initial'
+    orderStatus: {
+      type: Number,
+      default: 0
     },
     refund_status: {
       type: String,
       default: 'initial'
+    },
+    receiptUrl: {
+      type: String,
+      default: ''
     },
     products: [{
       product: {
         type: ObjectId,
         ref: 'Product'
       },
-      shipping_status: {
-        type: String,
-        default: 'initial'
+      orderStatus: { // 0: initial,  1: Order Placed, 2: Shipped, 3: Order Closed
+        type: Number,
+        default: 0
       },
       refund_status: {
         type: String,
