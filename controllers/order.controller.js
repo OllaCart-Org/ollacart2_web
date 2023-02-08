@@ -1,4 +1,3 @@
-const { default: Stripe } = require('stripe');
 const Order = require('../models/order.model');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
