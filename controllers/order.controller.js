@@ -15,6 +15,18 @@ exports.getProductsByClientSecret = async (req, res) => {
   })
 };
 
+exports.getOrderedProducts = async (req, res) => {
+  const user = req.user;
+
+  const orders = await Order.find({ user: user._id, status: 'succeeded' }).populate('products.product').exec();
+  if(!orders) return res.status(400).send({ error: 'fetch failed' });
+
+  const products = [];
+  for (let i = 0; i < orders.length; i ++) products.push(...orders[i].products);
+
+  res.send({ products });
+}
+
 
 
 
@@ -30,11 +42,6 @@ exports.getOrders = async (req, res) => {
     .populate('products.product')
     .exec();
   res.send({ success: true, orders, total: await this.getOrderCount({ status: 'succeeded' }) });
-}
-
-exports.getOrderCount = async (filter = {}) => {
-  const count = await Order.countDocuments(filter) || 0;
-  return count;
 }
 
 exports.updateOrderStatusByProduct = async (req, res) => {
@@ -59,6 +66,11 @@ exports.updateOrderStatusByProduct = async (req, res) => {
   utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, false);
   utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, true);
   res.json({ order });
+}
+
+exports.getOrderCount = async (filter = {}) => {
+  const count = await Order.countDocuments(filter) || 0;
+  return count;
 }
 
 exports.getOrdersSummary = async (filter = {}) => {
