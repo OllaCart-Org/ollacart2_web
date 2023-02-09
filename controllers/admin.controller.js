@@ -1,5 +1,6 @@
 const User = require('./user.controller');
 const Product = require('./product.controller');
+const Order = require('./order.controller');
 
 exports.getAnalytics = async (req, res) => {
   const userCount = await User.getUserCount();
@@ -8,6 +9,8 @@ exports.getAnalytics = async (req, res) => {
   const purchasedProductCount = await Product.getProductCount({ purchased: 1 });
   const domains = await Product.getDomains();
   const productNames = await Product.getProductNames();
+  const ordersNotPlacedSummary = await Order.getOrdersSummary({ orderStatus: 0 });
+  const productsNotPlacedSummary = await Order.getOrderProductsSummaryByOrderStatus(0);
 
   res.send({
     success: true,
@@ -15,7 +18,9 @@ exports.getAnalytics = async (req, res) => {
       userCount,
       productCount,
       sharedProductCount,
-      purchasedProductCount
+      purchasedProductCount,
+      ordersNotPlacedSummary,
+      productsNotPlacedSummary,
     },
     domains,
     productNames

@@ -104,6 +104,39 @@ exports.sendSecureMail = async (mailTo, uid, type) => {
   }
 }
 
+exports.sendOrderStatusMail = async (_mailTo, productName, productPrice, status, isAdmin) => {
+  const message = ['The product order status changed to UnOrdered', 'The product order is placed.', 'The product is in shipping.', 'The product order is closed.'];
+  const mailTo = isAdmin ? 'support@ollacart.com' : _mailTo;
+  const subject = 'OllaCart Order' + (isAdmin ? ' for ' + _mailTo : '');
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: mailTo,
+      subject,
+      html: `<h4>"${productName + ' $' + productPrice}"</h4><p>${message[status]}</p>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
+exports.sendNewOrderMail = async (order) => {
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: 'support@ollacart.com',
+      subject: 'New order arrived',
+      html: `<p>New order($${order.totalReceived}) arrived from ${order.user.email}</p>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
 exports.sendPurchaseSMS = async (phoneTo, url) => {
   const res = await twilioClient.messages.create({
     body: 'Test SMS ' + url,

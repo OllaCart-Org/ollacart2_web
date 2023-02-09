@@ -111,10 +111,10 @@ exports.createPaymentIntent = async (req, res) => {
 
     let total_price = 0;
     for (let i = 0; i < products.length; i ++) {
-      total_price += products[i].price;
+      total_price += Math.ceil(products[i].price * 100);
     }
-    total_price += process.env.SHIPPING_COST * products.length;
-    total_price = Math.ceil(total_price * 100);
+    total_price += process.env.SHIPPING_COST * 100 * products.length;
+    // total_price = Math.ceil(total_price * 100);
 
     const total_fee = Math.ceil((total_price + 30) / (1 - 0.029) - total_price);
     total_price += total_fee;
@@ -137,7 +137,7 @@ exports.createPaymentIntent = async (req, res) => {
         product: itm._id,
         photo: itm.photo,
         name: itm.name,
-        price: itm.price,
+        price: Math.ceil(itm.price * 100) / 100,
         url: itm.url,
         domain: itm.domain
       })),

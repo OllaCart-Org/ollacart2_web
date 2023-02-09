@@ -1,4 +1,5 @@
 const Order = require('../models/order.model');
+const utils = require('../helpers/utils');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.getProductsByClientSecret = async (req, res) => {
@@ -47,20 +48,46 @@ exports.updateOrderStatusByProduct = async (req, res) => {
   if (productIdx < 0 || productIdx >= order.products.length) return res.status(400).json({error: 'Not found Product'});
 
   // [TO DO] Secure this section.
-  order.products[productIdx].orderStatus = status;
+  const product = order.products[productIdx];
+  product.orderStatus = status;
   const minStatus = Math.min(...order.products.map(p => p.orderStatus));
-
+  
   order.orderStatus = minStatus;
-
+  
   await order.save();
+
+  utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, false);
+  utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, true);
   res.json({ order });
+}
+
+exports.getOrdersSummary = async (filter = {}) => {
+  const summary = await Order.aggregate([{
+    $match: { ...filter, status: 'succeeded' }
+  }, {
+    $group: { _id: '', count: {$sum: 1}, price: {$sum: '$totalPrice'}} 
+  }]);
+  return summary[0];
+}
+
+exports.getOrderProductsSummaryByOrderStatus = async (orderStatus) => {
+  const summary = await Order.aggregate([{
+    $match: { status: 'succeeded' }
+  }, {
+    $unwind: '$products'
+  }, {
+    $match: { 'products.orderStatus': orderStatus }
+  }, {
+    $group: { _id: '', count: {$sum: 1}, price: {$sum: '$products.price'}} 
+  }]);
+  return summary[0];
 }
 
 
 
 
 exports.updateOrder = async (type, data) => {
-  const order = await Order.findOne({ clientSecret: data.client_secret });
+  const order = await Order.findOne({ clientSecret: data.client_secret }).populate('user').exec();
   if (!order) return;
 
   order.status = type;
@@ -73,6 +100,8 @@ exports.updateOrder = async (type, data) => {
 
     const charge = await stripe.charges.retrieve(data.latest_charge);
     order.receiptUrl = charge.receipt_url;
+
+    utils.sendNewOrderMail(order);
   }
 
   await order.save();  
