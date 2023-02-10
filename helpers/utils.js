@@ -1,8 +1,10 @@
 const nodemailer = require('nodemailer');
-const Product = require('../models/product');
-const User = require('../models/user');
+const Product = require('../models/product.model');
+const User = require('../models/user.model');
+const Extension = require('../models/extension.model');
+const Twilio = require('twilio');
 
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'support@ollacart.com',
@@ -10,16 +12,28 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+const twilioClient = Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+exports.takeFirstDecimal = (str) => {
+  try {
+    // return parseFloat(str.match(/[\d\.]+/)) || 0;
+    return parseFloat((str + '').replace(/[^0-9.]+/g,"")) || 0;
+  } catch (ex) {
+    return 0;
+  }
+}
+
 exports.checkCeID = async (user, ce_id) => {
   if (user && ce_id && user.ce_id !== ce_id) {
     user.ce_id = ce_id;
     await User.updateMany({ ce_id }, { $set: { ce_id: '' } });
     await user.save();
     await Product.updateMany({ ce_id, user: null }, { $set: { user: user._id } });
+    await Extension.updateOne({ ce_id }, { ce_id, user: user._id }, { upsert: true });
   }
 }
 
-exports.sendMail = async (mailTo) => {
+exports.sendWelcomeMail = async (mailTo) => {
   return new Promise(resolve => {
     var mailOptions = {
       from: 'support@ollacart.com',
@@ -56,4 +70,78 @@ exports.sendRequestMail = async (mailTo) => {
       resolve({ error, info });
     });
   })
+}
+
+exports.sendSecureMail = async (mailTo, uid, type) => {
+  if (type === 'set') {
+    const secure_link = `${process.env.DOMAIN}/secure/${uid}`;
+    return new Promise(resolve => {
+      var mailOptions = {
+        from: 'support@ollacart.com',
+        to: mailTo,
+        subject: 'Secure your account',
+        html: `<p>You can secure your account with email verification by clicking the button below to link your extension, email and OllaCart account.</p><a href="${secure_link}">Secure your account</a>`
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        resolve({ error, info });
+      });
+    })
+  } else {
+    const secure_link = `${process.env.DOMAIN}/verify/${uid}`;
+    return new Promise(resolve => {
+      var mailOptions = {
+        from: 'support@ollacart.com',
+        to: mailTo,
+        subject: 'Signin to your Account',
+        html: `<p>Your account is secured with email verification. Click the button below to signin to your OllaCart account.</p><a href="${secure_link}">Signin to your Account</a>`
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        resolve({ error, info });
+      });
+    })
+  }
+}
+
+exports.sendOrderStatusMail = async (_mailTo, productName, productPrice, status, isAdmin) => {
+  const message = ['The product order status changed to UnOrdered', 'The product order is placed.', 'The product is in shipping.', 'The product order is closed.'];
+  const mailTo = isAdmin ? 'support@ollacart.com' : _mailTo;
+  const subject = 'OllaCart Order' + (isAdmin ? ' for ' + _mailTo : '');
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: mailTo,
+      subject,
+      html: `<h4>"${productName + ' $' + productPrice}"</h4><p>${message[status]}</p>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
+exports.sendNewOrderMail = async (order) => {
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: 'support@ollacart.com',
+      subject: 'New order arrived',
+      html: `<p>New order($${order.totalReceived}) arrived from ${order.user.email}</p>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
+exports.sendPurchaseSMS = async (phoneTo, url) => {
+  const res = await twilioClient.messages.create({
+    body: 'Test SMS ' + url,
+    from: process.env.TWILIO_PHONE_NUMBER,
+    to: phoneTo
+  });
+  console.log('sendSMS', res);
 }

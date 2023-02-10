@@ -16,7 +16,23 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    role: {
+      type: String,
+      default: 'user'
+    },
     ce_id: {
+      type: String,
+      default: ''
+    },
+    secure: {
+      type: Number,
+      default: 0
+    },
+    secure_identity: {
+      type: String,
+      default: ''
+    },
+    last_verified: {
       type: String,
       default: ''
     }

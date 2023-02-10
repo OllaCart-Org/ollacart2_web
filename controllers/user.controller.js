@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/user.model');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
 exports.userById = (req, res, next, id) => {
@@ -38,3 +38,18 @@ exports.update = (req, res) => {
     }
   );
 };
+
+exports.getUsers = async (req, res) => {
+  const { filter } = req.body;
+
+  const users = await User.find()
+    .sort([['createdAt', 'desc']])
+    .skip((filter.page - 1) * filter.countPerPage)
+    .limit(filter.countPerPage).populate('user').exec();
+  res.send({ success: true, users, total: await this.getUserCount() });
+}
+
+exports.getUserCount = async (filter = {}) => {
+  const count = await User.countDocuments(filter) || 0;
+  return count;
+}

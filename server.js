@@ -8,9 +8,14 @@ const path = require('path');
 const expressValidator = require('express-validator');
 require('dotenv').config();
 // import routes
-const authRoutes = require('./routes/auth');
-const productRoutes = require('./routes/product');
-const messageRoutes = require('./routes/message');
+const authRoutes = require('./routes/auth.route');
+const userRoutes = require('./routes/user.route');
+const productRoutes = require('./routes/product.route');
+const orderRoutes = require('./routes/order.route');
+const stripeRoutes = require('./routes/stripe.route');
+const messageRoutes = require('./routes/message.route');
+
+// const adminController = require('./controllers/admin');
 
 // app
 const app = express();
@@ -28,6 +33,8 @@ const connectDB = async () => {
       }
     );
     console.log('MongoDB Connected');
+
+    // await adminController.getAnalyticData();
   } catch (err) {
     console.error(err.message);
     // exit process with failure
@@ -38,6 +45,8 @@ connectDB();
 
 // middlewares
 app.use(morgan('dev'));
+app.use('/api/stripe/webhook', express.raw({type: 'application/json'}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -46,8 +55,11 @@ app.use(cors());
 
 // routes middleware
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', messageRoutes);
+app.use('/api', orderRoutes);
+app.use('/api', stripeRoutes);
 
 
 // Server static assets if in production
@@ -59,6 +71,9 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
+process.on('uncaughtException', (error, source) => {
+  console.log('[UncaughtException]', error, source);
+});
 
 const PORT = process.env.PORT || 5000;
 
