@@ -39,15 +39,19 @@ exports.sendWelcomeMail = async (mailTo) => {
       from: 'support@ollacart.com',
       to: mailTo,
       subject: 'Welcome to OllaCart',
-      html: `<p>Congrats on the first step towards your new online shopping experience. As we continue to develop the capabilities of OllaCart, download and use our <a href="https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm">Chrome Extension</a> to select items from any online shopping website and add them to your OllaCart. It is as easy as selecting the extension logo, selecting the item, and selecting the extension logo again.<br>
-        When on <a href="https://www.ollacart.com">OllaCart.com</a>, select the items that you want to publish to your public online shopping cart. In order to share this list, select the share logo, and just copy and paste the website link at the top of your shared list, wherever you want.<br><br>
+      html: `<p>Congrats on the first step towards your new online shopping experience.
+        As we continue to develop the capabilities of OllaCart, download and use our <a href="${process.env.EXTENSION_URL}">Chrome Extension</a> to select items from any online shopping website and add them to your OllaCart.<br>
+        It is as easy as selecting the extension logo, hovering over the item to confirm details, and selecting either the text or image. From there you have the option to confirm additional information or images by manually selecting information.<br>
+        When on <a href="${process.env.DOMAIN}">OllaCart.com</a>, select the items that you want to publish to your public online shopping cart by turning their outline blue. You may copy and paste the website link at the top of your shared list wherever you want. Add an item to your cart by clicking again to change the outline green.<br>
+        You may now purchase items via OllaCart from any website. We are currently fine-tuning our Purchase-as-a-Service system, and appreciate all feedback.<br><br>
+        Now you can:<br>
+        Purchase and share any item from any website through OllaCart.<br><br>
         In the future, you will be able to:<br>
-        Purchase any item, from any website.<br>
-        Browse suggested items.<br>
-        Comment on and add from your friends’ items.<br>
-        Browse, shop, and compare on OllaCart.<br><br>
-        Security: Logging in to your account now only requires your email address in order to keep logging in hassle free. Our extension knows which cart to add your items to once you log in on the website. In case you would like to password protect your account, please let us know.<br><br>
-        We appreciate you using OllaCart while we continue to build out the functionality and cannot wait to revolutionize online shopping; making it easier, more fun, and more convenient.<br><br>
+        Browse suggested items, shop, and compare.<br>
+        Comment on, like, dislike, and add to your friend's items.<br>
+        Recieve personalized recommendations that aren't ads.<br>
+        Security: Logging in to your account now only requires your email address in order to keep logging in hassle free. Our extension knows which cart to add your items to once you log in on the website. To secure your account we use email verification for login, just confirm your email through the profile page.<br>
+        We appreciate you using OllaCart while we continue to build out the functionality and cannot wait to revolutionize online shopping; making it easier, more fun, and more convenient.<br>
         Have any suggestions? Let us know by responding to this email.</p>`
     };
     
