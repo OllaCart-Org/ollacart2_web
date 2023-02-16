@@ -23,7 +23,7 @@ exports.create = async (req, res) => {
   const { photo, url, name, ce_id } = req.body;
   let description = req.body.description || '',
     price = takeFirstDecimal(req.body.price || ''),
-    photos = (req.body.photos || []).map(photo => !!photo);
+    photos = (req.body.photos || []).filter(photo => !!photo);
   let domain = new URL(url).origin || '';
   let user_id = null;
   // const user = req.profile._id;
