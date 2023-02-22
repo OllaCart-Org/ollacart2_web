@@ -19,6 +19,14 @@ const productSchema = new mongoose.Schema(
       trim: true,
       maxlength: 32,
     },
+    color: {
+      type: String,
+      default: ''
+    },
+    size: {
+      type: String,
+      default: ''
+    },
     // category: {
     //   type: ObjectId,
     //   ref: 'Category',
@@ -41,6 +49,10 @@ const productSchema = new mongoose.Schema(
       default: ''
     }],
     url: {
+      type: String,
+      default: ''
+    },
+    original_url: {
       type: String,
       default: ''
     },

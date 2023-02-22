@@ -56,7 +56,10 @@ const categorySchema = new mongoose.Schema(
       name: String,
       price: Number,
       url: String,
-      domain: String
+      domain: String,
+      original_url: String,
+      color: String,
+      size: String
     }],
     status: {
       type: String,

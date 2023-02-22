@@ -20,11 +20,11 @@ exports.productById = (req, res, next, id) => {
 
 exports.create = async (req, res) => {
   // check for all fields
-  const { photo, url, name, ce_id } = req.body;
+  const { photo, url, original_url, color, size, name, ce_id } = req.body;
   let description = req.body.description || '',
     price = takeFirstDecimal(req.body.price || ''),
     photos = (req.body.photos || []).filter(photo => !!photo);
-  let domain = new URL(url).origin || '';
+  let domain = new URL(original_url || url).origin || '';
   let user_id = null;
   // const user = req.profile._id;
 
@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
   const extension = await Extension.findOne({ ce_id });
   if (extension) user_id = extension.user;
 
-  let product = new Product({ name, photo, url, ce_id, description, price, photos, user: user_id, sequence: Date.now(), domain });
+  let product = new Product({ name, photo, url, ce_id, description, price, color, size, photos, user: user_id, sequence: Date.now(), domain });
 
   product.save((err, result) => {
     if (err) {
@@ -170,7 +170,7 @@ exports.updateDomain = async () => {
   const products = await Product.find();
   for (let i = 0; i < products.length; i ++) {
     const product = products[i];
-    product.domain = new URL(product.url).origin || '';
+    product.domain = new URL(product.original_url || product.url).origin || '';
     await product.save()
   }
 }

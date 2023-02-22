@@ -139,6 +139,9 @@ exports.createPaymentIntent = async (req, res) => {
         name: itm.name,
         price: Math.ceil(itm.price * 100) / 100,
         url: itm.url,
+        original_url: itm.original_url,
+        color: itm.color,
+        size: itm.size,
         domain: itm.domain
       })),
       status: 'created'
