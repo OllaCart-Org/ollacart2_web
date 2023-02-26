@@ -114,7 +114,7 @@ exports.remove = (req, res) => {
 exports.listBySearch = async (req, res) => {
   let limit = req.body.limit ? parseInt(req.body.limit) : 100;
   let skip = parseInt(req.body.skip);
-  const { purchased, shared, _id } = req.body;
+  const { purchased, shared, followed, _id } = req.body;
 
   const filters = {};
   let user = req.user;
@@ -124,6 +124,10 @@ exports.listBySearch = async (req, res) => {
     user = await User.findOne({ _id });
     if (!user) return res.status(400).json({ error: 'Not corret url' });
     filters.user = _id;
+    filters.shared = 1;
+  }
+  else if (followed) {
+    filters.user = { $in: req.user && req.user.following };
     filters.shared = 1;
   }
   else filters.user = req.user && req.user._id;

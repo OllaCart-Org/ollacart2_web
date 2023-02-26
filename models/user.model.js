@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
-const { v1: uuidv1 } = require('uuid');
+const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
   {
@@ -35,7 +34,11 @@ const userSchema = new mongoose.Schema(
     last_verified: {
       type: String,
       default: ''
-    }
+    },
+    following: [{
+      type: ObjectId,
+      ref: 'User',
+    }]
   },
   { timestamps: true }
 );

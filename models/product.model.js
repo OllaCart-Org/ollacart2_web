@@ -27,11 +27,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
-    // category: {
-    //   type: ObjectId,
-    //   ref: 'Category',
-    //   required: true,
-    // },
     shared: {
       type: Number,
       default: 0,

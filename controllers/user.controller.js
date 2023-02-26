@@ -39,6 +39,61 @@ exports.update = (req, res) => {
   );
 };
 
+
+exports.getFollowingStatus = async (req, res) => {
+  const { followId } = req.body;
+  const followUser = await User.findOne({ _id: followId });
+  if (!followUser) return res.status(400).json({ error: 'User not found' });
+
+  const followedCount = await User.countDocuments({ following: { $in: [ followId ] } });
+
+  const user = req.user;
+  if (!user) return res.send({ status: false, count: followedCount });
+  const idx = user.following.indexOf(followId);
+  res.send({ status: idx > -1, count: followedCount })
+}
+
+exports.followUser = async (req, res) => {
+  const { followId, email } = req.body;
+  const followUser = await User.findOne({ _id: followId });
+  if (!followUser) return res.status(400).json({ error: 'User not found' });
+
+  const user = req.user;
+  if (user) {
+    const following = user.following;
+    const idx = following.indexOf(followId);
+    if (idx > -1) return res.status(400).json({ error: 'Already followed' });
+    following.push(followId);
+    await user.save();
+    return res.send({ })
+  }
+  res.status(400).json({ error: 'Not success' });
+}
+
+exports.unFollowUser = async (req, res) => {
+  const { followId } = req.body;
+  const followUser = await User.findOne({ _id: followId });
+  if (!followUser) return res.status(400).json({ error: 'User not found' });
+
+  const user = req.user;
+  if (user) {
+    const following = user.following;
+    const idx = following.indexOf(followId);
+    if (idx === -1) return res.status(400).json({ error: 'Not followed user' });
+    following.splice(idx, 1);
+    await user.save();
+    return res.send({ });
+  }
+  res.status(400).json({ error: 'Not success' });
+}
+
+
+
+
+
+
+
+
 exports.getUsers = async (req, res) => {
   const { filter } = req.body;
 
