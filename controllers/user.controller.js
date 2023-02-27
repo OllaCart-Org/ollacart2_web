@@ -58,16 +58,25 @@ exports.followUser = async (req, res) => {
   const followUser = await User.findOne({ _id: followId });
   if (!followUser) return res.status(400).json({ error: 'User not found' });
 
-  const user = req.user;
-  if (user) {
-    const following = user.following;
-    const idx = following.indexOf(followId);
-    if (idx > -1) return res.status(400).json({ error: 'Already followed' });
-    following.push(followId);
-    await user.save();
-    return res.send({ })
+  let user = req.user;  
+  if (!user) {
+    if (!email) return res.status(400).json({ error: 'Email validation failed' });
+    user = await User.findOne({ email });
+    if (!user) {
+      user = new User(req.body)
+      user.ce_id = '';
+      const r = await user.save();
+      if (!r) return res.status(400).json({ error: "Failed" });
+    }
   }
-  res.status(400).json({ error: 'Not success' });
+  if (user._id.toString() === followUser._id.toString()) return res.status(400).json({ error: 'You can not follow your cart' });
+  
+  const following = user.following;
+  const idx = following.indexOf(followId);
+  if (idx > -1) return res.status(400).json({ error: 'Already followed' });
+  following.push(followId);
+  await user.save();
+  res.send({ });
 }
 
 exports.unFollowUser = async (req, res) => {
