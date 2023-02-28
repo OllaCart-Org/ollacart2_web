@@ -18,7 +18,7 @@ exports.getProductsByClientSecret = async (req, res) => {
 exports.getOrderedProducts = async (req, res) => {
   const user = req.user;
 
-  const orders = await Order.find({ user: user._id, status: 'succeeded' }).populate('products.product').exec();
+  const orders = await Order.find({ user: user._id, status: 'succeeded' }).sort([['createdAt', 'desc']]).populate('products.product').exec();
   if(!orders) return res.status(400).send({ error: 'fetch failed' });
 
   const products = [];

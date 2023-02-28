@@ -50,26 +50,32 @@ exports.create = async (req, res) => {
   });
 };
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   let product = req.product;
   if (!product) return res.status(400).json({ error: 'Product not found' });
 
   const detail = req.body;
-  const keys = Object.keys(detail);
+  
+  const keys = ['name', 'size', 'description', 'url', 'price', 'keywords', 'purchased', 'shared']
   for (let i = 0; i < keys.length; i ++) {
     const key = keys[i];
-    product[key] = detail[key];
+    if (!Object.hasOwn(detail, key)) continue;
+
+    if (key === 'price') {
+      product[key] = parseFloat(detail[key]);
+    } else if (key === 'purchased' || key === 'shared') {
+      product[key] = parseInt(detail[key]);
+    } else if (key === 'keywords') {
+      if (!detail[key].length) continue;
+      product[key] = detail[key];
+    } else {
+      product[key] = detail[key];
+    }
   }
 
-  product.save((err, result) => {
-    if (err) {
-      console.log('PRODUCT UPDATE ERROR ', err);
-      return res.status(400).json({
-        error: errorHandler(err),
-      });
-    }
-    res.json(result);
-  });
+  const response = await product.save();
+  if (!response) return res.status(400).json({ error: 'Update failed' });
+  res.json(response);
 };
 
 exports.updateLogo = async (req, res) => {
