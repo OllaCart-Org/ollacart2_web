@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
   const extension = await Extension.findOne({ ce_id });
   if (extension) user_id = extension.user;
 
-  let product = new Product({ name, photo, url, ce_id, description, price, color, size, photos, user: user_id, sequence: Date.now(), domain });
+  let product = new Product({ name, photo, url, ce_id, description, price, color, size, original_url, photos, user: user_id, sequence: Date.now(), domain });
 
   product.save((err, result) => {
     if (err) {
