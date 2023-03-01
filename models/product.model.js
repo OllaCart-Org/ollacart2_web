@@ -3,6 +3,9 @@ const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema(
   {
+    forkId: {
+      type: ObjectId
+    },
     name: {
       type: String,
       trim: true,
@@ -62,7 +65,7 @@ const productSchema = new mongoose.Schema(
     },
     sequence: {
       type: Number,
-      default: 0
+      default: Date.now()
     },
     user: {
       type: ObjectId,

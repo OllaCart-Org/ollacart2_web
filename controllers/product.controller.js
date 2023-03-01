@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const Extension = require('../models/extension.model');
@@ -37,7 +38,7 @@ exports.create = async (req, res) => {
   const extension = await Extension.findOne({ ce_id });
   if (extension) user_id = extension.user;
 
-  let product = new Product({ name, photo, url, ce_id, description, price, color, size, original_url, photos, user: user_id, sequence: Date.now(), domain });
+  let product = new Product({ name, photo, url, ce_id, description, price, color, size, original_url, photos, user: user_id, domain });
 
   product.save((err, result) => {
     if (err) {
@@ -100,6 +101,27 @@ exports.updateSequence = async (req, res) => {
     await Product.updateOne({ _id: d._id }, { sequence: d.sequence });
   }
   res.json({ success: true });
+}
+
+exports.forkProduct = async (req, res) => {
+  let product = req.product;
+  let user = req.user;
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+  if (!user) return res.status(400).json({ error: 'Not signed in' });
+
+  const p = await Product.findOne({ user: user._id, $or: [{ _id: product.forkId }, { forkId: product._id }] });
+  if (p) return res.status(400).json({ error: 'Already in your Cart' });
+
+  const newProduct = new Product({
+    ..._.omit(product, ['_id', 'createdAt', 'updatedAt', 'sequence', 'user']),
+    user: user._id,
+    forkId: product._id,
+    shared: 0,
+    purchased: 0
+  })
+  const response = await newProduct.save();
+  if (!response) return res.status(400).json({ error: 'Fork failed' });
+  res.json(response);
 }
 
 exports.remove = (req, res) => {
