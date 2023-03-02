@@ -70,8 +70,15 @@ const productSchema = new mongoose.Schema(
     user: {
       type: ObjectId,
       ref: 'User',
-      // required: true
-    }
+    },
+    likes: [{
+      type: ObjectId,
+      ref: 'User',
+    }],
+    dislikes: [{
+      type: ObjectId,
+      ref: 'User',
+    }]
   },
   { timestamps: true }
 );

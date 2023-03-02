@@ -113,6 +113,7 @@ exports.createPaymentIntent = async (req, res) => {
     for (let i = 0; i < products.length; i ++) {
       total_price += Math.ceil(products[i].price * 100);
     }
+    if (!products.length) return res.status(400).json({ error: 'No items in purchase cart' });
     total_price += process.env.SHIPPING_COST * 100 * products.length;
     // total_price = Math.ceil(total_price * 100);
 

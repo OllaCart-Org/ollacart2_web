@@ -124,6 +124,44 @@ exports.forkProduct = async (req, res) => {
   res.json(response);
 }
 
+exports.thumbup = async (req, res) => {
+  let product = req.product;
+  let user = req.user;
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+  if (!user) return res.status(400).json({ error: 'Not signed in' });
+
+  const { likes, dislikes } = product;
+  if (likes.includes(user._id)) {
+    likes.splice(likes.indexOf(user), 1);
+  } else {
+    likes.push(user._id);
+    const idx = dislikes.indexOf(user._id);
+    if (idx > -1) dislikes.splice(idx, 1);
+  }  
+
+  await product.save();
+  res.send({ product });
+}
+
+exports.thumbdown = async (req, res) => {
+  let product = req.product;
+  let user = req.user;
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+  if (!user) return res.status(400).json({ error: 'Not signed in' });
+
+  const { likes, dislikes } = product;
+  if (dislikes.includes(user._id)) {
+    dislikes.splice(dislikes.indexOf(user), 1);
+  } else {
+    dislikes.push(user._id);  
+    const idx = likes.indexOf(user._id);
+    if (idx > -1) likes.splice(idx, 1);
+  }
+  
+  await product.save();
+  res.send({ product });
+}
+
 exports.remove = (req, res) => {
   let product = req.product;
   if (!product) return res.status(400).json({ error: 'Product not found' });
@@ -147,7 +185,7 @@ exports.listBySearch = async (req, res) => {
   const filters = {};
   let user = req.user;
   if (purchased) filters.purchased = 1;
-  
+
   if (shared) {
     user = await User.findOne({ _id });
     if (!user) return res.status(400).json({ error: 'Not corret url' });
