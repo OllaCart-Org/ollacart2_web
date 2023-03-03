@@ -3,9 +3,6 @@ const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema(
   {
-    forkId: {
-      type: ObjectId
-    },
     name: {
       type: String,
       trim: true,
@@ -71,6 +68,14 @@ const productSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'User',
     },
+    forkId: {
+      type: ObjectId,
+      ref: 'Product'
+    },
+    forkedIds: [{
+      type: ObjectId,
+      ref: 'Product'
+    }],
     likes: [{
       type: ObjectId,
       ref: 'User',

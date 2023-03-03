@@ -109,15 +109,17 @@ exports.forkProduct = async (req, res) => {
   if (!product) return res.status(400).json({ error: 'Product not found' });
   if (!user) return res.status(400).json({ error: 'Not signed in' });
 
-  const p = await Product.findOne({ user: user._id, $or: [{ _id: product.forkId }, { forkId: product._id }] });
-  if (p) return res.status(400).json({ error: 'Already in your Cart' });
+  const p_from = await Product.findOne({ user: user._id, _id: {$in: product.forkedIds} });
+  if (p_from) return res.status(400).json({ error: 'This is forked from your Cart' });
+  const p_already = await Product.findOne({ user: user._id, forkedIds: product._id });
+  if (p_already) return res.status(400).json({ error: 'Already forked' });
 
+  const forkedIds = [ ...product.forkedIds, product._id ];
   const newProduct = new Product({
-    ..._.omit(product, ['_id', 'createdAt', 'updatedAt', 'sequence', 'user']),
+    ..._.pick(product, ['name', 'description', 'keywords', 'price', 'color', 'size', 'photo', 'photos', 'url', 'original_url', 'domain']),
     user: user._id,
     forkId: product._id,
-    shared: 0,
-    purchased: 0
+    forkedIds
   })
   const response = await newProduct.save();
   if (!response) return res.status(400).json({ error: 'Fork failed' });
