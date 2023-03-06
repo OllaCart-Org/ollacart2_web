@@ -116,7 +116,7 @@ exports.forkProduct = async (req, res) => {
 
   const forkedIds = [ ...product.forkedIds, product._id ];
   const newProduct = new Product({
-    ..._.pick(product, ['name', 'description', 'keywords', 'price', 'color', 'size', 'photo', 'photos', 'url', 'original_url', 'domain']),
+    ..._.pick(product, ['name', 'description', 'keywords', 'price', 'photo', 'photos', 'url', 'original_url', 'domain']),
     user: user._id,
     forkId: product._id,
     forkedIds
@@ -254,12 +254,12 @@ exports.getProductCount = async (filter = {}) => {
 }
 
 exports.getDomains = async () => {
-  const products = await Product.aggregate([{ $group: { _id: '$domain', count: {$sum: 1} } }]);
+  const products = await Product.aggregate([{ $group: { _id: '$domain', count: {$sum: 1}, createdAt: {$max: "$createdAt"}}}]);
   return products;
 }
 
 exports.getProductNames = async () => {
-  const products = await Product.aggregate([{ $group: { _id: '$name', count: {$sum: 1} } }]);
+  const products = await Product.aggregate([{ $group: { _id: '$name', count: {$sum: 1}, createdAt: {$max: "$createdAt"}}}]);
   return products;
 }
 
