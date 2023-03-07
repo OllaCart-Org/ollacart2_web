@@ -63,7 +63,7 @@ exports.followUser = async (req, res) => {
     if (!email) return res.status(400).json({ error: 'Email validation failed' });
     user = await User.findOne({ email });
     if (!user) {
-      user = new User(req.body)
+      user = new User({ email })
       user.ce_id = '';
       const r = await user.save();
       if (!r) return res.status(400).json({ error: "Failed" });

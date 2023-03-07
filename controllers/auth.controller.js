@@ -34,7 +34,7 @@ exports.signin = async (req, res) => {
       const response = await utils.sendWelcomeMail(req.body.email);
       if (response.error) return res.status(400).json({ error: "Wrong email!" });
 
-      user = new User(req.body)
+      user = new User({ email })
       user.ce_id = '';
       const r = await user.save();
       if (!r) return res.status(400).json({ error: "Error occured!" });

@@ -14,6 +14,7 @@ const productRoutes = require('./routes/product.route');
 const orderRoutes = require('./routes/order.route');
 const stripeRoutes = require('./routes/stripe.route');
 const messageRoutes = require('./routes/message.route');
+const contactRoutes = require('./routes/contact.route');
 
 // const adminController = require('./controllers/admin');
 
@@ -59,8 +60,8 @@ app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', messageRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', contactRoutes);
 app.use('/api', stripeRoutes);
-
 
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production') {
