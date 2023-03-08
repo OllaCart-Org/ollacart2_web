@@ -35,14 +35,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
-    feedback: {
-      type: String,
-      default: ''
-    },
-    feedbackName: {
-      type: String,
-      default: ''
-    },
     following: [{
       type: ObjectId,
       ref: 'User',

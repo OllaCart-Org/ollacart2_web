@@ -1,6 +1,6 @@
-const User = require('../models/user.model');
 const Invest = require('../models/invest.model');
 const Partner = require('../models/partner.model');
+const Feedback = require('../models/feedback.model');
 
 exports.sendInvestContact = async (req, res) => {
   const { name, email, company, comment } = req.body;
@@ -24,19 +24,10 @@ exports.sendPartnerContact = async (req, res) => {
 
 exports.sendFeedbackContact = async (req, res) => {
   const { name, email, comment } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email validation failed' });
 
-  let user = await User.findOne({ email });
-  if (!user) {
-    user = new User({ email })
-    const r = await user.save();
-    if (!r) return res.status(400).json({ error: "Failed" });
-  }
+  let feedback = new Feedback({ name, email, comment });
 
-  user.feedbackName = name;
-  user.feedback = comment;
-
-  const result = await user.save();
+  const result = await feedback.save();
   if (!result) return res.status(400).json({ error: 'Failed sending request' });
   return res.send({});
 };
