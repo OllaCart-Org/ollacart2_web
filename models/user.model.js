@@ -35,6 +35,25 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
+    shipping: {
+      address1: String,
+      address2: String,
+      country: String,
+      city: String,
+      zip_code: String
+    },
+    enable_shopping_recommendation: {
+      type: Boolean,
+      default: false
+    },
+    enable_tax: {
+      type: Boolean,
+      default: false
+    },
+    enable_promo_code: {
+      type: Boolean,
+      default: false
+    },
     following: [{
       type: ObjectId,
       ref: 'User',
