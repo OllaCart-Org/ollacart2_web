@@ -224,12 +224,12 @@ exports.listBySearch = async (req, res) => {
 
 
 exports.getCarts = async (req, res) => {
-  const { filter } = req.body;
+  const { pagination } = req.body;
 
   const carts = await Product.find()
     .sort([['sequence', 'desc'], ['createdAt', 'desc']])
-    .skip((filter.page - 1) * filter.countPerPage)
-    .limit(filter.countPerPage).populate('user').exec();
+    .skip((pagination.page - 1) * pagination.countPerPage)
+    .limit(pagination.countPerPage).populate('user').exec();
   res.send({ success: true, carts, total: await this.getProductCount() });
 }
 

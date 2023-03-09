@@ -32,12 +32,12 @@ exports.getOrderedProducts = async (req, res) => {
 
 
 exports.getOrders = async (req, res) => {
-  const { filter } = req.body;
+  const { pagination } = req.body;
 
   const orders = await Order.find({ status: 'succeeded' })
     .sort([['createdAt', 'desc']])
-    .skip((filter.page - 1) * filter.countPerPage)
-    .limit(filter.countPerPage)
+    .skip((pagination.page - 1) * pagination.countPerPage)
+    .limit(pagination.countPerPage)
     .populate('user')
     .populate('products.product')
     .exec();

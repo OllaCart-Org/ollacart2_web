@@ -104,12 +104,12 @@ exports.unFollowUser = async (req, res) => {
 
 
 exports.getUsers = async (req, res) => {
-  const { filter } = req.body;
+  const { pagination } = req.body;
 
   const users = await User.find()
     .sort([['createdAt', 'desc']])
-    .skip((filter.page - 1) * filter.countPerPage)
-    .limit(filter.countPerPage).populate('user').exec();
+    .skip((pagination.page - 1) * pagination.countPerPage)
+    .limit(pagination.countPerPage).populate('user').exec();
   res.send({ success: true, users, total: await this.getUserCount() });
 }
 

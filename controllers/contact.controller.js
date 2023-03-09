@@ -31,3 +31,43 @@ exports.sendFeedbackContact = async (req, res) => {
   if (!result) return res.status(400).json({ error: 'Failed sending request' });
   return res.send({});
 };
+
+
+
+
+
+exports.getFeedbacks = async (req, res) => {
+  const { pagination } = req.body;
+
+  const feedbacks = await Feedback.find()
+    .sort([['createdAt', 'desc']])
+    .skip((pagination.page - 1) * pagination.countPerPage)
+    .limit(pagination.countPerPage).exec();
+  
+    const count = await Feedback.countDocuments({}) || 0;
+  res.send({ success: true, feedbacks, total: count });
+}
+
+exports.getInvestorRequests = async (req, res) => {
+  const { pagination } = req.body;
+
+  const investors = await Invest.find()
+    .sort([['createdAt', 'desc']])
+    .skip((pagination.page - 1) * pagination.countPerPage)
+    .limit(pagination.countPerPage).exec();
+  
+    const count = await Invest.countDocuments({}) || 0;
+  res.send({ success: true, investors, total: count });
+}
+
+exports.getPartnerRequests = async (req, res) => {
+  const { pagination } = req.body;
+
+  const partners = await Partner.find()
+    .sort([['createdAt', 'desc']])
+    .skip((pagination.page - 1) * pagination.countPerPage)
+    .limit(pagination.countPerPage).exec();
+  
+    const count = await Partner.countDocuments({}) || 0;
+  res.send({ success: true, partners, total: count });
+}
