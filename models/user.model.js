@@ -40,19 +40,29 @@ const userSchema = new mongoose.Schema(
       address2: String,
       country: String,
       city: String,
-      zip_code: String
+      zipcode: String
     },
-    enable_shopping_recommendation: {
-      type: Boolean,
-      default: false
-    },
-    enable_tax: {
-      type: Boolean,
-      default: false
-    },
-    enable_promo_code: {
-      type: Boolean,
-      default: false
+    status: {
+      secure: {
+        type: Boolean,
+        default: false
+      },
+      shopping_recommendation: {
+        type: Boolean,
+        default: false
+      },
+      tax: {
+        type: Boolean,
+        default: false
+      },
+      promo_code: {
+        type: Boolean,
+        default: false
+      },
+      anonymous_shopping: {
+        type: Boolean,
+        default: false
+      },
     },
     following: [{
       type: ObjectId,

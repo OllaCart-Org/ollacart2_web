@@ -40,7 +40,7 @@ exports.signin = async (req, res) => {
       if (!r) return res.status(400).json({ error: "Error occured!" });
     }
 
-    if (user.secure) {
+    if (user.status.secure) {
       user.secure_identity = uuidv4();
       await user.save();
       await utils.sendSecureMail(user.email, user.secure_identity);
@@ -52,8 +52,8 @@ exports.signin = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
     res.cookie('t', token, { expire: new Date() + 9999 });
     
-    const { _id, name, role, email, secure } = user;
-    return res.json({ token, user: { _id, email, role, name, secure } });
+    const { _id, name, role, email } = user;
+    return res.json({ token, user: { _id, email, role, name } });
   });
 };
 
@@ -76,8 +76,8 @@ exports.verifyUser = (req, res) => {
       return res.status(400).json({ error: "Error occured!" });
     }
     
-    const { _id, name, email, role, secure } = user;
-    return res.json({ token, user: { _id, email, name, role, secure } });
+    const { _id, name, email, role } = user;
+    return res.json({ token, user: { _id, email, name, role } });
   });
 };
 
@@ -105,21 +105,12 @@ exports.signout = (req, res) => {
 
 
 
-exports.setSecure = async (req, res) => {
-  let user = req.user;
-  if (!user || user.secure) return res.send({ success: false, msg: 'Already secured' });
-  user.secure_identity = uuidv4();
-  await user.save();
-  await utils.sendSecureMail(user.email, user.secure_identity, 'set');
-  return res.send({ success: true, uid: user.secure_identity });
-}
-
 exports.verifySecure = async (req, res) => {
   try {
     const {uid} = req.body;
     user = await User.findOne({ secure_identity: uid });
     if (!user) return res.status(400).json({ error: 'Invalid verification code' });
-    user.secure = 1;
+    user.status.secure = true;
     user.last_verified = uid;
     await user.save();
     res.json({ success: true });

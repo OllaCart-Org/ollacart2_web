@@ -1,5 +1,6 @@
+const { v4: uuidv4 } = require('uuid');
 const User = require('../models/user.model');
-const { errorHandler } = require('../helpers/dbErrorHandler');
+const utils = require('../helpers/utils');
 
 exports.userById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
@@ -94,6 +95,55 @@ exports.unFollowUser = async (req, res) => {
     return res.send({ });
   }
   res.status(400).json({ error: 'Not success' });
+}
+
+exports.getAccountSettings = async (req, res) => {
+  if (!req.user) return res.status(400).json({ error: 'Not signed in' });
+  res.json({ user: req.user });
+}
+
+exports.updateAccountSettings = async (req, res) => {
+  const user = req.user;
+  if (!user) return res.status(400).json({ error: 'Not signed in' });
+
+  if (req.body.shipping) {
+    const { address1, address2, zipcode, country, city } = req.body.shipping;
+  
+    user.shipping.address1 = address1 || '';
+    user.shipping.address2 = address2 || '';
+    user.shipping.zipcode = zipcode || '';
+    user.shipping.country = country || '';
+    user.shipping.city = city || '';
+  }
+  if (req.body.status) {
+    const { secure, shopping_recommendation, tax, promo_code, anonymous_shopping } = req.body.status;
+    if (typeof secure === 'boolean') {
+      if (secure) {
+        if (user.secure) return res.status(400).json({ error: 'Already secured' });
+        user.secure_identity = uuidv4();
+        await utils.sendSecureMail(user.email, user.secure_identity);
+      } else {
+        user.secure_identity = false;
+        user.status.secure = false;
+      }
+    }
+    if (typeof shopping_recommendation === 'boolean') {
+      user.status.shopping_recommendation = shopping_recommendation;
+    }
+    if (typeof tax === 'boolean') {
+      user.status.tax = tax;
+    }
+    if (typeof promo_code === 'boolean') {
+      user.status.promo_code = promo_code;
+    }
+    if (typeof anonymous_shopping === 'boolean') {
+      user.status.anonymous_shopping = anonymous_shopping;
+    }
+  }
+
+  const response = await user.save();
+  if (!response) return res.status(400).json({ error: 'Saving failed!' });
+  res.json({ });
 }
 
 

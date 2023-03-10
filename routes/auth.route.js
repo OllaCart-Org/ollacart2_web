@@ -8,7 +8,6 @@ const {
   signout,
   request,
   verifyUser,
-  setSecure,
   verifySecure,
   verifySignin,
   checkSecureVerified
@@ -21,7 +20,6 @@ router.post('/request', userSignupValidator, request);
 router.post('/Verify', verifyUser);
 router.get('/signout', signout);
 
-router.post('/auth/setsecure', Auth, setSecure);
 router.post('/auth/verifysecure', Auth, verifySecure);
 router.post('/auth/verifysignin', Auth, verifySignin);
 
