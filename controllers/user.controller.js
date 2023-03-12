@@ -119,9 +119,9 @@ exports.updateAccountSettings = async (req, res) => {
     const { secure, shopping_recommendation, tax, promo_code, anonymous_shopping } = req.body.status;
     if (typeof secure === 'boolean') {
       if (secure) {
-        if (user.secure) return res.status(400).json({ error: 'Already secured' });
+        if (user.status.secure) return res.status(400).json({ error: 'Already secured' });
         user.secure_identity = uuidv4();
-        await utils.sendSecureMail(user.email, user.secure_identity);
+        await utils.sendSecureMail(user.email, user.secure_identity, 'set');
       } else {
         user.secure_identity = false;
         user.status.secure = false;
