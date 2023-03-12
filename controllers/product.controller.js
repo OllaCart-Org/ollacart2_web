@@ -108,6 +108,7 @@ exports.forkProduct = async (req, res) => {
   let user = req.user;
   if (!product) return res.status(400).json({ error: 'Product not found' });
   if (!user) return res.status(400).json({ error: 'Not signed in' });
+  if (product.user._id.toString() === user._id.toString()) return res.status(400).json({ error: 'You can not fork from your cart' });
 
   const p_from = await Product.findOne({ user: user._id, _id: {$in: product.forkedIds} });
   if (p_from) return res.status(400).json({ error: 'This is forked from your Cart' });

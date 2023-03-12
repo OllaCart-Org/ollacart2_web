@@ -55,21 +55,12 @@ exports.getFollowingStatus = async (req, res) => {
 }
 
 exports.followUser = async (req, res) => {
-  const { followId, email } = req.body;
+  const { followId } = req.body;
   const followUser = await User.findOne({ _id: followId });
   if (!followUser) return res.status(400).json({ error: 'User not found' });
 
   let user = req.user;  
-  if (!user) {
-    if (!email) return res.status(400).json({ error: 'Email validation failed' });
-    user = await User.findOne({ email });
-    if (!user) {
-      user = new User({ email })
-      user.ce_id = '';
-      const r = await user.save();
-      if (!r) return res.status(400).json({ error: "Failed" });
-    }
-  }
+  if (!user) return res.status(400).json({ error: 'Email validation failed' });
   if (user._id.toString() === followUser._id.toString()) return res.status(400).json({ error: 'You can not follow your cart' });
   
   const following = user.following;
@@ -107,13 +98,16 @@ exports.updateAccountSettings = async (req, res) => {
   if (!user) return res.status(400).json({ error: 'Not signed in' });
 
   if (req.body.shipping) {
-    const { address1, address2, zipcode, country, city } = req.body.shipping;
+    const { line1, line2, postal_code, country, city, name, phone, state } = req.body.shipping;
   
-    user.shipping.address1 = address1 || '';
-    user.shipping.address2 = address2 || '';
-    user.shipping.zipcode = zipcode || '';
+    user.shipping.line1 = line1 || '';
+    user.shipping.line2 = line2 || '';
+    user.shipping.postal_code = postal_code || '';
     user.shipping.country = country || '';
     user.shipping.city = city || '';
+    user.shipping.state = state || '';
+    user.shipping.name = name || '';
+    user.shipping.phone = phone || '';
   }
   if (req.body.status) {
     const { secure, shopping_recommendation, tax, promo_code, anonymous_shopping } = req.body.status;

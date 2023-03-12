@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { Auth, isAdmin } = require('../controllers/auth.controller');
+const { Auth, isAdmin, AuthWithEmail } = require('../controllers/auth.controller');
 
 const { getUsers, followUser, unFollowUser, getFollowingStatus, getAccountSettings, updateAccountSettings } = require('../controllers/user.controller');
 
 router.post('/user/follow/status', Auth, getFollowingStatus);
-router.post('/user/follow', Auth, followUser);
+router.post('/user/follow', Auth, AuthWithEmail, followUser);
 router.post('/user/unfollow', Auth, unFollowUser);
 
 router.post('/user/getaccountsettings', Auth, getAccountSettings);

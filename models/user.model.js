@@ -36,11 +36,14 @@ const userSchema = new mongoose.Schema(
       default: ''
     },
     shipping: {
-      address1: String,
-      address2: String,
+      name: String,
+      phone: String,
       country: String,
       city: String,
-      zipcode: String
+      state: String,
+      postal_code: String,
+      line1: String,
+      line2: String,
     },
     status: {
       secure: {

@@ -65,12 +65,16 @@ const categorySchema = new mongoose.Schema(
       type: String,
       default: 'created'
     },
-    address: {
-      type: String,
-      default: '""'
-    },
-    name: String,
-    phone: String
+    shipping: {
+      name: String,
+      phone: String,
+      country: String,
+      city: String,
+      state: String,
+      postal_code: String,
+      line1: String,
+      line2: String,
+    }
   },
   { timestamps: true }
 );

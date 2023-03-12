@@ -81,22 +81,6 @@ exports.verifyUser = (req, res) => {
   });
 };
 
-exports.Auth = async (req, res, next) => {
-  const { token, ce_id } = req.body;
-  if (!token) return next();
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded || !decoded._id) next();
-    
-    const user = await User.findOne({ _id: decoded._id });
-    await Utils.checkCeID(user, ce_id);
-    req.user = user;
-  } catch {
-    req.user = null;
-  }
-  next();
-};
-
 exports.signout = (req, res) => {
   res.clearCookie('t');
   res.json({ message: 'Signout success' });
@@ -152,11 +136,38 @@ exports.checkSecureVerified = async (req, res) => {
 
 
 
-exports.requireSignin = expressJwt({
-  secret: process.env.JWT_SECRET,
-  // algorithms: ['RS256'],
-  userProperty: 'auth',
-});
+exports.Auth = async (req, res, next) => {
+  const { token, ce_id } = req.body;
+  if (!token) return next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded || !decoded._id) next();
+    
+    const user = await User.findOne({ _id: decoded._id });
+    await Utils.checkCeID(user, ce_id);
+    req.user = user;
+  } catch {
+    req.user = null;
+  }
+  next();
+};
+
+exports.AuthWithEmail = async (req, res, next) => {
+  const { email } = req.body;
+  if(req.user) return next();
+  if(!email) return next();
+  
+  let user = await User.findOne({ email });
+  if (!user) {
+    user = new User({ email })
+    user.ce_id = '';
+    const r = await user.save();
+    if (!r) return next();
+  }
+
+  req.user = user;
+  next();
+}
 
 exports.isAuth = (req, res, next) => {
   let user = req.user;

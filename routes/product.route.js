@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { create, update, updateSequence, remove, productById, listBySearch, getCarts, updateLogo, forkProduct, thumbup, thumbdown } = require('../controllers/product.controller');
 const { getAnalytics } = require('../controllers/admin.controller');
-const { Auth, isAdmin } = require('../controllers/auth.controller');
+const { Auth, isAdmin, AuthWithEmail } = require('../controllers/auth.controller');
 const { userById } = require('../controllers/user.controller');
 
 router.post('/product/create', create);
@@ -12,9 +12,9 @@ router.post('/product/update_sequence', Auth, updateSequence);
 router.post('/product/remove/:productId', Auth, remove);
 router.post('/product/updatelogo/:productId', Auth, updateLogo)
 
-router.post('/product/fork/:productId', Auth, forkProduct)
-router.post('/product/thumbup/:productId', Auth, thumbup)
-router.post('/product/thumbdown/:productId', Auth, thumbdown)
+router.post('/product/fork/:productId', Auth, AuthWithEmail, forkProduct)
+router.post('/product/thumbup/:productId', Auth, AuthWithEmail,thumbup)
+router.post('/product/thumbdown/:productId', Auth, AuthWithEmail,thumbdown)
 
 router.post('/products/by/search', Auth, listBySearch);
 // router.post('/share/:productId', share);

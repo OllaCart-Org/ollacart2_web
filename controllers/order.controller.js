@@ -106,9 +106,11 @@ exports.updateOrder = async (type, data) => {
 
   if (type === 'succeeded') {
     order.totalReceived = data.amount_received / 100;
-    order.name = data.shipping.name;
-    order.phone = data.shipping.phone;
-    order.address = JSON.stringify(data.shipping.address);
+    order.shipping = {
+      name: data.shipping.name,
+      phone: data.shipping.phone,
+      ...data.shipping.address
+    };
 
     const charge = await stripe.charges.retrieve(data.latest_charge);
     order.receiptUrl = charge.receipt_url;
