@@ -16,8 +16,6 @@ const stripeRoutes = require('./routes/stripe.route');
 const messageRoutes = require('./routes/message.route');
 const contactRoutes = require('./routes/contact.route');
 
-// const adminController = require('./controllers/admin');
-
 // app
 const app = express();
 
