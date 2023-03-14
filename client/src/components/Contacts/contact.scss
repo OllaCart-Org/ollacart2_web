@@ -1,0 +1,23 @@
+.contact-form {
+  color: var(--fg);
+  max-width: 350px;
+
+  .form-input {
+    margin-top: 10px;
+    
+    * {
+      color: var(--fg) !important;
+      border-color: var(--fg) !important;
+    }
+    label {
+      color: var(--fg-opacity) !important;
+    }
+  }
+
+  .bottom-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}

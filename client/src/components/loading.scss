@@ -1,0 +1,20 @@
+.loading-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  // background-color: #00000080;
+  // backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  z-index: 10000;
+
+  .loading-spinner {
+    width: 60px !important;
+    height: 60px !important;
+    padding: 10px;
+    color: var(--primary) !important;
+  }
+}

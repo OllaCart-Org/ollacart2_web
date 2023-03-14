@@ -1,0 +1,120 @@
+.MuiMenu-paper.MuiPopover-paper {
+  color: var(--fg) !important;
+  background-color: var(--accent-0) !important;
+}
+
+.profile-page {
+  max-width: 800px;
+  margin: auto;
+  padding: 10px;
+
+  .top-buttons-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .email-header {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  
+    .signout-button {
+      padding: 10px 20px;
+      font-size: 16pt;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid;
+      border-radius: 8px;;
+      cursor: pointer;      
+    }
+  }
+
+  .profile-settings {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+    color: var(--fg);
+
+    .left-side, .right-side {
+      max-width: 100%;
+      width: 350px;
+      margin: 0 auto;
+
+      &.left-side .switch-wrapper {
+        margin-top: 10px;
+      }
+
+      .switch-wrapper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 15px;
+        border-radius: 6px;
+        background-color: var(--accent-0);
+        .text-content {
+          width: 1px;
+          flex-grow: 1;
+        }
+        .MuiSwitch-root {
+          padding: 8px;
+          .MuiSwitch-track {
+            border-radius: 15px;
+          }
+        }
+      }
+  
+      .form-wrapper {
+        margin-top: 10px;
+        border: 3px solid var(--accent-0);
+        border-radius: 10px;
+  
+        .form-content {
+          padding: 10px;
+
+          .two-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+          }
+          .form-control {
+            margin-top: 10px;
+            .form-input { margin-top: 0; }
+
+            .MuiFormLabel-root {
+              color: var(--fg-opacity) !important;
+            }
+            .MuiSelect-root {
+              * {
+                color: var(--fg) !important;
+              }
+            }
+          }
+          .form-input {
+            margin-top: 10px;
+            
+            * {
+              color: var(--fg) !important;
+              border-color: var(--accent-0) !important;
+            }
+            label {
+              color: var(--fg-opacity) !important;
+            }
+          }
+          .bottom-buttons {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+          }
+        }
+      }
+    }
+  }
+}

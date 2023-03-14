@@ -1,0 +1,42 @@
+import React from 'react';
+import { AppBar, Typography, Button, Toolbar, Box, Avatar } from '@material-ui/core';
+import { useHistory } from 'react-router-dom'
+import { useSelector } from "react-redux"
+import Logo from '../../assets/img/Olla - g48.png';
+
+import './layout.scss';
+
+const Layout = ({ children }) => {
+  const history = useHistory();
+  const { email } = useSelector(state => state.auth)
+
+  const goTo = (url) => {
+    history.push(url);
+  }
+  return (
+    <Box className='admin-container'>
+      <AppBar position="static">
+        <Toolbar>
+          <Button onClick={() => goTo('/')}>
+            <img src={Logo} alt="logo" />
+          </Button>
+          <Typography variant="h6" className='logo-text'>
+            OllaCart
+          </Typography>
+          <Button color="inherit" onClick={() => goTo('/admin/analytics')}>Analytics</Button>
+          <Button color="inherit" onClick={() => goTo('/admin/users')}>Users</Button>
+          <Button color="inherit" onClick={() => goTo('/admin/carts')}>Items</Button>
+          <Button color="inherit" onClick={() => goTo('/admin/orders')}>Orders</Button>
+          <Button color="inherit" onClick={() => goTo('/admin/contracts')}>Contracts</Button>
+          <Button color="inherit" onClick={() => goTo('/admin/feedbacks')}>Feedbacks</Button>
+          <Avatar className='avatar'>{email.toUpperCase()[0]}</Avatar>
+        </Toolbar>
+      </AppBar>
+      <Box className='container'>
+        {children}
+      </Box>
+    </Box>
+  )
+}
+
+export default Layout;
