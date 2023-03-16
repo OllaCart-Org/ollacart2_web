@@ -1,7 +1,7 @@
-import { API } from '../config';
 import { store } from '../redux/_helpers';
 import { actions } from '../redux/_actions';
 
+const API_URL = process.env.REACT_APP_API_URL;
 
 const call = (url, _data) => {
   const data = {
@@ -12,7 +12,7 @@ const call = (url, _data) => {
 
   store.dispatch(actions.setLoading(true));
 
-  return fetch(url, {
+  return fetch(API_URL + url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -34,147 +34,155 @@ const call = (url, _data) => {
 
 
 const signin = (email) => {
-  return call(`${API}/signin`, { email });
+  return call(`/signin`, { email });
 }
 
 const request = (email) => {
-  return call(`${API}/request`, { email });
+  return call(`/request`, { email });
 }
 
 const verifyUser = () => {
-  return call(`${API}/verify`, {});
+  return call(`/verify`, {});
 }
 
 const getProducts = (filter) => {
-  return call(`${API}/products/by/search`, filter);
+  return call(`/products/by/search`, filter);
 };
 
 const shareProduct = (productID, shared) => {
-  return call(`${API}/share/${productID}`, { shared });
+  return call(`/share/${productID}`, { shared });
 };
 
 const putCart = (productID, shared, purchased) => {
-  return call(`${API}/putcart/${productID}`, { shared, purchased });
+  return call(`/putcart/${productID}`, { shared, purchased });
 };
 
 const updateProduct = (productID, detail) => {
-  return call(`${API}/product/update/${productID}`, detail);
+  return call(`/product/update/${productID}`, detail);
 }
 
 const updateProductLogo = (productID, logo) => {
-  return call(`${API}/product/updatelogo/${productID}`, { logo });
+  return call(`/product/updatelogo/${productID}`, { logo });
 }
 
 const updateProductSequence = (data) => {
-  return call(`${API}/product/update_sequence`, { data });
+  return call(`/product/update_sequence`, { data });
 }
 
 const removeProduct = (productID) => {
-  return call(`${API}/product/remove/${productID}`);
+  return call(`/product/remove/${productID}`);
 };
 
 const getUsers = (pagination) => {
-  return call(`${API}/admin/getusers/`, { pagination });
+  return call(`/admin/getusers/`, { pagination });
 }
 
 const getCarts = (pagination) => {
-  return call(`${API}/admin/getcarts/`, { pagination });
+  return call(`/admin/getcarts/`, { pagination });
 }
 
 const getOrders = (pagination) => {
-  return call(`${API}/admin/getorders/`, { pagination });
+  return call(`/admin/getorders/`, { pagination });
 }
 
 const getAnalytics = () => {
-  return call(`${API}/admin/getanalytics/`, { });
+  return call(`/admin/getanalytics/`, { });
 }
 
 const getFeedbacks = (pagination) => {
-  return call(`${API}/admin/getfeedbacks/`, { pagination });
+  return call(`/admin/getfeedbacks/`, { pagination });
 }
 
 const getPartnerRequests = (pagination) => {
-  return call(`${API}/admin/getpartnerrequests/`, { pagination });
+  return call(`/admin/getpartnerrequests/`, { pagination });
 }
 
 const getInvestorRequests = (pagination) => {
-  return call(`${API}/admin/getinvestorrequests/`, { pagination });
+  return call(`/admin/getinvestorrequests/`, { pagination });
 }
 
 const verifySecure = (uid) => {
-  return call(`${API}/auth/verifysecure/`, { uid });
+  return call(`/auth/verifysecure/`, { uid });
 }
 
 const verifySignin = (uid) => {
-  return call(`${API}/auth/verifysignin/`, { uid });
+  return call(`/auth/verifysignin/`, { uid });
 }
 
 const checkSecureVerified = (uid) => {
-  return call(`${API}/auth/checkSecureVerified/`, { uid });
+  return call(`/auth/checkSecureVerified/`, { uid });
 }
 
 const fetchPurchaseLink = () => {
-  return call(`${API}/stripe/fetchpurchaselink`, { });
+  return call(`/stripe/fetchpurchaselink`, { });
 }
 
 const createPaymentIntent = () => {
-  return call(`${API}/stripe/createpaymentintent`, { });
+  return call(`/stripe/createpaymentintent`, { });
 }
 
 const fetchProductsByClientSecret = (clientSecret) => {
-  return call(`${API}/order/productsbyclientsecret`, { clientSecret });
+  return call(`/order/productsbyclientsecret`, { clientSecret });
 }
 
 const updateOrderStatusByProduct = (detail) => {
-  return call(`${API}/order/updateorderstatusbyproduct`, { detail });
+  return call(`/order/updateorderstatusbyproduct`, { detail });
+}
+
+const updateShippingNote = (orderId, idx, shippingNote) => {
+  return call(`/order/updateshippingnote/${orderId}`, { idx, shippingNote });
 }
 
 const getOrderedProducts = () => {
-  return call(`${API}/order/getorderedproducts`, { });
+  return call(`/order/getorderedproducts`, { });
+}
+
+const getOrdersByUser = () => {
+  return call(`/order/getordersbyuser`, { });
 }
 
 const getFollowStatus = (followId) => {
-  return call(`${API}/user/follow/status`, { followId });
+  return call(`/user/follow/status`, { followId });
 }
 
 const followUser = (followId, email = '') => {
-  return call(`${API}/user/follow`, { followId, email });
+  return call(`/user/follow`, { followId, email });
 }
 
 const unFollowUser = (followId) => {
-  return call(`${API}/user/unfollow`, { followId });
+  return call(`/user/unfollow`, { followId });
 }
 
 const forkProduct = (productID, email) => {
-  return call(`${API}/product/fork/${productID}`, { email });
+  return call(`/product/fork/${productID}`, { email });
 }
 
 const thumbup = (productID, email) => {
-  return call(`${API}/product/thumbup/${productID}`, { email });
+  return call(`/product/thumbup/${productID}`, { email });
 }
 
 const thumbdown = (productID, email) => {
-  return call(`${API}/product/thumbdown/${productID}`, { email });
+  return call(`/product/thumbdown/${productID}`, { email });
 }
 
 const sendInvestContact = (detail) => {
-  return call(`${API}/contact/invest`, detail);
+  return call(`/contact/invest`, detail);
 }
 
 const sendPartnerContact = (detail) => {
-  return call(`${API}/contact/partner`, detail);
+  return call(`/contact/partner`, detail);
 }
 
 const sendFeedback = (detail) => {
-  return call(`${API}/contact/feedback`, detail);
+  return call(`/contact/feedback`, detail);
 }
 
 const getAccountSettings = () => {
-  return call(`${API}/user/getaccountsettings`, {});
+  return call(`/user/getaccountsettings`, {});
 }
 
 const updateAccountSettings = (detail) => {
-  return call(`${API}/user/updateaccountsettings`, detail);
+  return call(`/user/updateaccountsettings`, detail);
 }
 
 export default {
@@ -202,7 +210,9 @@ export default {
   createPaymentIntent,
   fetchProductsByClientSecret,
   updateOrderStatusByProduct,
+  updateShippingNote,
   getOrderedProducts,
+  getOrdersByUser,
   getFollowStatus,
   followUser,
   unFollowUser,

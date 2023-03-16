@@ -5,5 +5,9 @@ export default {
       return false;
     }
     return true;
+  },
+  getShortID: _id => {
+    if(typeof _id !== 'string') return '';
+    return _id.substring(0, 8);
   }
 }

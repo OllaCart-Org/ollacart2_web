@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Layout from './layout'
-import { Typography, Box, Link, IconButton, Collapse, Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Switch, Chip } from '@material-ui/core';
+import { Typography, Box, Link, IconButton, Collapse, Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Switch, Chip, Button, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
-import { KeyboardArrowUp, KeyboardArrowDown, Check } from '@material-ui/icons';
-import api from '../../api';
 import { useToasts } from 'react-toast-notifications';
+import { KeyboardArrowUp, KeyboardArrowDown, Check, NoteAdd, Update, Close } from '@material-ui/icons';
+import Layout from './layout'
+import AdminDialog from '../../components/Admin/modal';
+import api from '../../api';
 
 const useStyles = makeStyles(() => ({
   tableBox: {
@@ -44,8 +45,8 @@ const useRowStyles = makeStyles({
 });
 
 const OrderRow = (props) => {
-  const { order, orderStatusChanged} = props;
-  const [open, setOpen] = React.useState(false);
+  const { order, orderStatusChanged, openShippingNotesModal} = props;
+  const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 
   const getShippingDetail = (info) => {
@@ -123,6 +124,7 @@ const OrderRow = (props) => {
                     <TableCell align="center">Order Placed</TableCell>
                     <TableCell align="center">Shipped</TableCell>
                     <TableCell align="center">Order Closed</TableCell>
+                    <TableCell align="center">Notes</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -136,6 +138,13 @@ const OrderRow = (props) => {
                       <TableCell align="center"><Switch checked={product.orderStatus > 0} onChange={(e) => orderStatusChanged(e.target.checked, 0, order._id, idx)}/></TableCell>
                       <TableCell align="center"><Switch checked={product.orderStatus > 1} onChange={(e) => orderStatusChanged(e.target.checked, 1, order._id, idx)}/></TableCell>
                       <TableCell align="center"><Switch checked={product.orderStatus > 2} onChange={(e) => orderStatusChanged(e.target.checked, 2, order._id, idx)}/></TableCell>
+                      <TableCell align="center">
+                        {product.orderStatus > 1 &&
+                          <IconButton aria-label="Shipping Notes" size='small' onClick={() => openShippingNotesModal(order._id, idx)}>
+                            <NoteAdd />
+                          </IconButton>
+                        }
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -155,7 +164,9 @@ const Orders = () => {
   const [ orders, setOrders ] = useState([]);
   const [countPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(1);
-  const [page, setPage] = useState(1);  
+  const [page, setPage] = useState(1);
+  const [shippingNotesModalInfo, setShippingNoteModalInfo] = useState({});
+  const [shippingNote, setShippingNote] = useState('');
 
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -164,7 +175,6 @@ const Orders = () => {
   const fetchOrders = useCallback(() => {
     api.getOrders({ page, countPerPage })
       .then((data) => {
-        console.log(data)
         setOrders(data.orders);
         setTotalCount(Math.floor((data.total - 1) / countPerPage) + 1);
       })
@@ -190,6 +200,29 @@ const Orders = () => {
       .catch(err => showToast(err.message));
   }
 
+  const openShippingNotesModal = (_id, idx) => {
+    const order = orders.find(itm => itm._id === _id);
+    setShippingNoteModalInfo({ _id, idx });
+    const product = order.products[idx];
+    setShippingNote(product.shippingNote)
+  }
+
+  const closeShippingNoteModal = () => {
+      setShippingNoteModalInfo({});
+  }
+
+  const saveShippingNote = () => {
+    api.updateShippingNote(shippingNotesModalInfo._id, shippingNotesModalInfo.idx, shippingNote)
+      .then((data) => {
+        const orderIdx = orders.findIndex(o => o._id === data.order?._id);
+        if (orderIdx < 0) return ;
+        orders[orderIdx].products = data.order.products;
+        setOrders([...orders]);
+        closeShippingNoteModal();
+      })
+      .catch(err => showToast(err.message));
+  }
+
   return (
     <Layout>
       <Box marginY={1}>
@@ -210,7 +243,11 @@ const Orders = () => {
           </TableHead>
           <TableBody>
             {orders.map((order, idx) => (
-              <OrderRow key={idx} order={order} orderStatusChanged={orderStatusChanged} />
+              <OrderRow
+                key={idx}
+                order={order}
+                orderStatusChanged={orderStatusChanged}
+                openShippingNotesModal={openShippingNotesModal} />
             ))}
           </TableBody>
         </Table>
@@ -218,6 +255,15 @@ const Orders = () => {
       <Box className={classes.paginationWrapper}>
         <Pagination count={totalCount} page={page} onChange={handlePageChange} color="primary" showFirstButton showLastButton />
       </Box>
+      <AdminDialog title='Shipping Note' open={!!shippingNotesModalInfo._id} onClose={closeShippingNoteModal}>
+        <Box mt={1}>
+          <TextField label="Shipping Note" size="small" variant="outlined" multiline rows={5} fullWidth value={shippingNote} onChange={e => setShippingNote(e.target.value)} />
+          <Box display='flex' gridGap='10px' justifyContent='flex-end' mt={2}>
+            <Button variant="contained" color="primary" size="small" startIcon={<Update />} onClick={saveShippingNote}>Save</Button>
+            <Button variant="contained" size="small" startIcon={<Close />} onClick={closeShippingNoteModal}>Close</Button>
+          </Box>
+        </Box>
+      </AdminDialog>
     </Layout>
   )
 }

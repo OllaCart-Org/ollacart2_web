@@ -8,10 +8,7 @@ import "./payment.css";
 
 import api from '../../api';
 
-import { STRIPE_PUBLIC_KEY } from "../../config";
-
-
-
+const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 export default function App() {

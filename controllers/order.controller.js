@@ -2,6 +2,17 @@ const Order = require('../models/order.model');
 const utils = require('../helpers/utils');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+exports.orderById = (req, res, next, id) => {
+  Order.findById(id)
+    .exec((err, order) => {
+      if (err || !order) {
+        return res.status(400).json({ error: 'Order not found' });
+      }
+      req.order = order;
+      next();
+    });
+};
+
 exports.getProductsByClientSecret = async (req, res) => {
   const { clientSecret } = req.body;
 
@@ -27,6 +38,12 @@ exports.getOrderedProducts = async (req, res) => {
   res.send({ products });
 }
 
+exports.getOrdersByUser = async (req, res) => {
+  const user = req.user;
+  const orders = await Order.find({ user: user._id, status: 'succeeded' }).sort([['createdAt', 'desc']]);
+
+  res.send({ orders });
+}
 
 
 
@@ -66,6 +83,16 @@ exports.updateOrderStatusByProduct = async (req, res) => {
   utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, false);
   utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, true);
   res.json({ order });
+}
+
+exports.updateShippingNote = async (req, res) => {
+  const { idx, shippingNote } = req.body;
+  if (!req.order) return res.status(400).send('Order not found');
+
+  req.order.products[idx].shippingNote = shippingNote || '';
+  const response = await req.order.save();
+  
+  res.send({ order: response });
 }
 
 exports.getOrderCount = async (filter = {}) => {

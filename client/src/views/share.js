@@ -5,9 +5,10 @@ import { FileCopyOutlined, Favorite, FavoriteBorder } from '@material-ui/icons';
 import { useToasts } from 'react-toast-notifications';
 import Layout from './layout';
 import api from '../api';
-import { SHARE_URL } from '../config';
 import Cards from '../components/cards';
 import EmailModal from '../components/Modals/EmailModal';
+
+const SHARE_URL = process.env.REACT_APP_PUBLIC_URL + '/share';
 
 const Share = (props) => {
   const [sharedId, setSharedId] = useState('');

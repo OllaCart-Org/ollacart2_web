@@ -6,8 +6,10 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
-      // required: true,
-      maxlength: 32,
+    },
+    phone: {
+      type: String,
+      trim: true,
     },
     email: {
       type: String,
@@ -36,8 +38,6 @@ const userSchema = new mongoose.Schema(
       default: ''
     },
     shipping: {
-      name: String,
-      phone: String,
       country: String,
       city: String,
       state: String,

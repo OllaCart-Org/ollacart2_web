@@ -11,9 +11,10 @@ import { useSelector } from "react-redux";
 import { useToasts } from 'react-toast-notifications';
 
 import api from "../../api";
-import { PUBLIC_URL } from "../../config";
 
 import './payment.css'
+
+const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
 export default function CheckoutForm(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,10 +58,11 @@ export default function CheckoutForm(props) {
   useEffect(() => {
     api.getAccountSettings()
       .then(data => {
+        const user = data?.user;
         const ship = data?.user?.shipping;
         setDefaultShipping({
-          name: ship?.name || '',
-          phone: ship?.phone || '',
+          name: user.name || '',
+          phone: user.phone || '',
           address: {
             line1: ship?.line1 || '',
             line2: ship?.line2 || '',
@@ -119,7 +121,7 @@ export default function CheckoutForm(props) {
     }
 
     
-    api.updateAccountSettings({ shipping })
+    api.updateAccountSettings({ name: shipping.name, phone: shipping.phone, shipping: shipping.address })
       .then(async () => {
         setIsLoading(true);
         const { error } = await stripe.confirmPayment({
@@ -151,12 +153,7 @@ export default function CheckoutForm(props) {
   }
 
   const addressElementChanged = (event) => {
-    console.log(event.value.address.state);
-    setShipping({
-      name: event.value.name,
-      phone: event.value.phone,
-      ...event.value.address
-    })
+    setShipping(event.value)
   }
 
   if (!defaultLoaded) return '';

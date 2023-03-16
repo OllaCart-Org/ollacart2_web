@@ -8,8 +8,9 @@ import Layout from './layout';
 import api from '../api';
 import CheckoutForm from '../components/Payment/CheckoutForm';
 
-import { STRIPE_PUBLIC_KEY } from "../config";
 import Cards from '../components/cards';
+
+const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 const Purchase = (props) => {

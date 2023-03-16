@@ -8,10 +8,11 @@ import Layout from './layout';
 import api from '../api';
 
 import './profile.scss';
-import { ContactMail, ExitToApp, Feedback, HorizontalSplit, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
+import { AccountBox, ContactMail, ExitToApp, Feedback, HorizontalSplit, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
 
 const Profile = () => {
   const [shipping, setShipping] = useState({});
+  const [profile, setProfile] = useState({});
   const [feedback, setFeedback] = useState({});
   const [status, setStatus] = useState({
     secure: false,
@@ -34,9 +35,12 @@ const Profile = () => {
   useEffect(() => {
     api.getAccountSettings()
       .then(data => {
-        console.log(data);
         setShipping(data?.user?.shipping || {});
         setStatus(data?.user?.status || {});
+        setProfile({
+          name: data?.user?.name || '',
+          phone: data?.user?.phone || '',
+        })
       })
       .catch(err => showToast(err.message));
   }, [showToast])
@@ -52,7 +56,6 @@ const Profile = () => {
   const shippingValueChanged = (e) => {
     shipping[e.target.name] = e.target.value;
     if(e.target.name === 'country') shipping.state = '';
-    console.log(countries)
     setShipping({ ...shipping });
   }
 
@@ -87,6 +90,23 @@ const Profile = () => {
     .then(() => {
         showToast('Feedback sent', 'success');
         resetFeedback();
+      })
+      .catch(err => showToast(err.message));
+  }
+
+  const profileValueChanged = (e) => {
+    profile[e.target.name] = e.target.value;
+    setProfile({ ...profile });
+  }
+
+  const resetProfile = () => {
+    setProfile({});
+  }
+  
+  const saveProfile = () => {
+    api.updateAccountSettings({ name: profile.name, phone: profile.phone })
+    .then(() => {
+        showToast('Saved profile', 'success');
       })
       .catch(err => showToast(err.message));
   }
@@ -148,6 +168,24 @@ const Profile = () => {
           <div className='right-side'>
             <div className='form-wrapper'>
               <div className='switch-wrapper'>
+                <AccountBox />
+                <div className='text-content'>Profile</div>
+                <div className='toolbox'>
+                  <IconButton size='small' color='inherit' onClick={resetProfile}><RotateLeft /></IconButton>
+                </div>
+              </div>
+              <div className='form-content'>
+                <TextField className='form-input' label='Full Name' size='small' variant='outlined' fullWidth color='primary' name='name'
+                  value={profile.name || ''} onChange={profileValueChanged} />
+                <TextField className='form-input' label='Phone' size='small' variant='outlined' fullWidth name='phone'
+                  value={profile.phone || ''} onChange={profileValueChanged} />
+                <div className='bottom-buttons'>
+                  <Button variant='contained' color='primary' size='small' startIcon={<Save />} onClick={saveProfile}>Save</Button>
+                </div>
+              </div>
+            </div>
+            <div className='form-wrapper'>
+              <div className='switch-wrapper'>
                 <ContactMail />
                 <div className='text-content'>Shipping Address</div>
                 <div className='toolbox'>
@@ -155,10 +193,6 @@ const Profile = () => {
                 </div>
               </div>
               <div className='form-content'>
-                <TextField className='form-input' label='Full Name' size='small' variant='outlined' fullWidth color='primary' name='name'
-                  value={shipping.name || ''} onChange={shippingValueChanged} />
-                <TextField className='form-input' label='Phone' size='small' variant='outlined' fullWidth name='phone'
-                  value={shipping.phone || ''} onChange={shippingValueChanged} />
                 <div className='two-inputs'>
                   <FormControl className='form-control' variant="outlined" fullWidth size='small'>
                     <InputLabel id="country-label">Country</InputLabel>

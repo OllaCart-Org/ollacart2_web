@@ -52,6 +52,7 @@ const categorySchema = new mongoose.Schema(
         type: String,
         default: 'initial'
       },
+      shippingNote: String,
       photo: String,
       name: String,
       price: Number,

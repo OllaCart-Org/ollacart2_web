@@ -97,8 +97,14 @@ exports.updateAccountSettings = async (req, res) => {
   const user = req.user;
   if (!user) return res.status(400).json({ error: 'Not signed in' });
 
+  if (typeof req.body.name === 'string') {
+    user.name = req.body.name || '';
+  }
+  if (typeof req.body.phone === 'string') {
+    user.phone = req.body.phone || '';
+  }
   if (req.body.shipping) {
-    const { line1, line2, postal_code, country, city, name, phone, state } = req.body.shipping;
+    const { line1, line2, postal_code, country, city, state } = req.body.shipping;
   
     user.shipping.line1 = line1 || '';
     user.shipping.line2 = line2 || '';
@@ -106,8 +112,6 @@ exports.updateAccountSettings = async (req, res) => {
     user.shipping.country = country || '';
     user.shipping.city = city || '';
     user.shipping.state = state || '';
-    user.shipping.name = name || '';
-    user.shipping.phone = phone || '';
   }
   if (req.body.status) {
     const { secure, shopping_recommendation, tax, promo_code, anonymous_shopping } = req.body.status;
