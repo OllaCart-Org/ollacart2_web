@@ -87,12 +87,16 @@ exports.updateOrderStatusByProduct = async (req, res) => {
 
 exports.updateShippingNote = async (req, res) => {
   const { idx, shippingNote } = req.body;
-  if (!req.order) return res.status(400).send('Order not found');
+  const order = req.order;
+  if (!order) return res.status(400).send('Order not found');
 
-  req.order.products[idx].shippingNote = shippingNote || '';
-  const response = await req.order.save();
-  
+  order.products[idx].shippingNote = shippingNote || '';
+  const response = await order.save();
+
   res.send({ order: response });
+  
+  await order.populate('user').exec();
+  utils.sendShippingNoteMail(order.user.email, order.products[idx].name, shippingNote);
 }
 
 exports.getOrderCount = async (filter = {}) => {

@@ -126,6 +126,22 @@ exports.sendOrderStatusMail = async (_mailTo, productName, productPrice, status,
   })
 }
 
+exports.sendShippingNoteMail = async (mailTo, productName, shippingNote) => {
+  const subject = 'Shipping Note Updated';
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: mailTo,
+      subject,
+      html: `<h4>Product: </h4><p>${productName}</p><h4>Note: </h4><p>${shippingNote}</p>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
 exports.sendNewOrderMail = async (order) => {
   return new Promise(resolve => {
     var mailOptions = {
