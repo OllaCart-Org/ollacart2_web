@@ -1,3 +1,4 @@
+const User = require('../models/user.model');
 const Order = require('../models/order.model');
 const utils = require('../helpers/utils');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -95,8 +96,9 @@ exports.updateShippingNote = async (req, res) => {
 
   res.send({ order: response });
   
-  await order.populate('user').exec();
-  utils.sendShippingNoteMail(order.user.email, order.products[idx].name, shippingNote);
+  const user = await User.findOne({ _id: order.user });
+  if (!user) return;
+  utils.sendShippingNoteMail(user.email, order.products[idx].name, shippingNote);
 }
 
 exports.getOrderCount = async (filter = {}) => {
