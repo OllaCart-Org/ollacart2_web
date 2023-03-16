@@ -13,10 +13,10 @@ export default {
     return _id.substring(0, 8);
   },
   calcPriceWithFee: price => {
-    return price * 0.029 + 0.3 + price;
+    return (price + 0.3) / (1 - 0.029);
   },
   calcStripeFee: price => {
-    return price * 0.029 + 0.3;
+    return (price + 0.3) / (1 - 0.029) - price;
   },
   commaPrice: price => {
     if (typeof price === 'string') return commaNumber(price);
