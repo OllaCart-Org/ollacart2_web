@@ -32,6 +32,7 @@
 
       .modal-content {
         overflow-y: auto;
+        overflow-x: hidden;
         max-height: 70vh;
       }
     }

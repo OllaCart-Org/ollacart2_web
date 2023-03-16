@@ -6,6 +6,7 @@ import NoCard from '../components/nocard';
 import Layout from './layout';
 import api from '../api';
 import OllaCartModal from '../components/modal';
+import utils from '../utils';
 
 import './order.scss';
 
@@ -30,9 +31,25 @@ const Order = () => {
     loadCards();
   }, [showToast])
 
-  const showProductPage = (url) => {
-    window.open(url, '_blank');
+  const getOrderStatusBadge = (orderStatus) => {
+    if (!orderStatus || orderStatus < 1 || orderStatus > 3) return '';
+    let label, color;
+    if(orderStatus === 1) {
+      label = 'Order Placed';
+      color = 'color-placed';
+    } else if(orderStatus === 2) {
+      label = 'Shipped';
+      color = 'color-shipped';
+    } else if(orderStatus === 3) {
+      label = 'Order Closed';
+      color = 'color-closed';
+    }
+    return <div className={'order-status-badge ' + color}>{label}</div>
   }
+
+  // const showProductPage = (url) => {
+  //   window.open(url, '_blank');
+  // }
 
   const showDetail = (card) => {
     setDetailCard(card);
@@ -50,14 +67,42 @@ const Order = () => {
         </div>
       </div>
       {!cards.length &&<NoCard page="order" />}
-      <OllaCartModal>
-        <div className='order-modal-content'>
+      <OllaCartModal title='Order Detail' open={!!detailCard} onClose={() => setDetailCard(null)}>
+        {detailCard && <div className='order-modal-content'>
           <div className='part'>
             <div className='logo-img'>
-              <img src={detailCard.img} alt="logo" />
+              <img src={detailCard.photo} alt="logo" />
             </div>
           </div>
-        </div>
+          <div className='part'>
+            <div className='product-title'>{detailCard.name}</div>
+            {getOrderStatusBadge(detailCard.orderStatus)}
+            {detailCard.shippingNote && <div className='shipping-note'>
+              <div className='title'>Shipping Note</div>
+              <div className='note'>{detailCard.shippingNote}</div>
+            </div>}
+            <div className='price-list'>
+              <div className='title'>Price Summary</div>
+              <div className='price'>
+                <span>Product Price</span>
+                <span>${utils.commaPrice(detailCard.price)}</span>
+              </div>
+              <div className='price'>
+                <span>Shipping Cost</span>
+                <span>$14</span>
+              </div>
+              <div className='price'>
+                <span>Processing Fee</span>
+                <span>${utils.commaPrice(utils.calcStripeFee(detailCard.price + 14))}</span>
+              </div>
+              <div className='spacer' />
+              <div className='price'>
+                <span>Total</span>
+                <span className='total-price'>${utils.commaPrice(utils.calcPriceWithFee(detailCard.price + 14))}</span>
+              </div>
+            </div>
+          </div>
+        </div>}
       </OllaCartModal>
     </Layout>
   );
