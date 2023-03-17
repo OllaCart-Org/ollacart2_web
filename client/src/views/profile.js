@@ -175,7 +175,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className='form-content'>
-                <TextField className='form-input' label='Full Name' size='small' variant='outlined' fullWidth color='primary' name='name'
+                <TextField className='form-input' label='Account Name' size='small' variant='outlined' fullWidth color='primary' name='name'
                   value={profile.name || ''} onChange={profileValueChanged} />
                 <TextField className='form-input' label='Phone' size='small' variant='outlined' fullWidth name='phone'
                   value={profile.phone || ''} onChange={profileValueChanged} />

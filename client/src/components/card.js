@@ -1,10 +1,9 @@
 import React from 'react';
-import { useSelector } from "react-redux"
-import { InsertLink, Close, ZoomOutMap, Add, ThumbUp, ThumbUpOutlined, ThumbDownOutlined, ThumbDown } from '@material-ui/icons'
+import { InsertLink, Close, ZoomOutMap, Add, ThumbUpOutlined, ThumbDownOutlined } from '@material-ui/icons'
 import './card.scss';
+import utils from '../utils';
 
 const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderStatus, fork }) => {
-  const { _id } = useSelector(state => state.auth);
 
   const removeClicked = (e) => {
     e.stopPropagation();
@@ -36,8 +35,32 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
     return <div className={'order-status-badge ' + color}>{label}</div>
   }
 
+  const thumbupDiff = () => {
+    const current = card.likes.length;
+    const before = utils.getStoredThumbCount(card._id).thumbup;
+    const diff = current - before;
+    if (!diff) return 0;
+    return (diff > 0 ? '+' : '-') + diff;
+  }
+
+  const thumbdownDiff = () => {
+    const current = card.dislikes.length;
+    const before = utils.getStoredThumbCount(card._id).thumbdown;
+    const diff = current - before;
+    if (!diff) return 0;
+    return (diff > 0 ? '+' : '-') + diff;
+  }
+
+  const cardClicked = () => {
+    if (hideThumbs) return;
+    utils.setStoredThumbCount(card._id, {
+      thumbup: card.likes.length,
+      thumbdown: card.dislikes.length
+    })
+  }
+
   return (
-    <div className="card-container">
+    <div className="card-container" onClick={cardClicked}>
       <div className='product-img' >
         <img src={card.photo} alt={card.name} className='mb-3'
           style={{ objectFit: 'contain', height: '100%', width: '100%', display: 'flex', marginLeft: 'auto', marginRight: 'auto' }}
@@ -45,14 +68,14 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
         {getOrderStatusBadge()}
         {hideThumbs ? '' : (
           <>
-            <div className='thumb thumb-up'>
-              {card.likes.includes(_id) ? <ThumbUp /> : <ThumbUpOutlined />}
-              <span>{card.likes.length}</span>
-            </div>
-            <div className='thumb thumb-down'>
-              {card.dislikes.includes(_id) ? <ThumbDown /> : <ThumbDownOutlined />}
-              <span>{card.dislikes.length}</span>
-            </div>
+            {thumbupDiff() && <div className='thumb thumb-up'>
+              <ThumbUpOutlined />
+              <span>{thumbupDiff()}</span>
+            </div>}
+            {thumbdownDiff() && <div className='thumb thumb-down'>
+              <ThumbDownOutlined />
+              <span>{thumbdownDiff()}</span>
+            </div>}
           </>
         )}
       </div>

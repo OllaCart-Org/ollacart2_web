@@ -33,5 +33,26 @@ export default {
   },
   openLink: url => {
     window.open(url, '_blank');
+  },
+  getStoredThumbCount: (_id) => {
+    const d = window.localStorage.getItem('ollacart_thumb_count');
+    try {
+      const data = JSON.parse(d) || {};
+      return data[_id] || { thumbup: 0, thumbdown: 0 };
+    } catch(ex) {
+      return { thumbup: 0, thumbdown: 0 };
+    }
+  },
+  setStoredThumbCount: (_id, count) => {
+    const d = window.localStorage.getItem('ollacart_thumb_count');
+    let data = {};
+    try {
+      data = JSON.parse(d) || {};
+    } catch(ex) {
+      data = {};
+      console.log(ex);
+    }
+    data[_id] = count;
+    window.localStorage.setItem('ollacart_thumb_count', JSON.stringify(data));
   }
 }
