@@ -25,7 +25,7 @@ const call = (url, _data) => {
       if(!response.ok) {
         const json = await response.json();
         let error = response.statusText;
-        if (json.error) error = json.error
+        if (json && json.error) error = json.error
         throw Error(error);
       }
       return response.json();
@@ -141,8 +141,8 @@ const getOrdersByUser = () => {
   return call(`/order/getordersbyuser`, { });
 }
 
-const getFollowStatus = (followId) => {
-  return call(`/user/follow/status`, { followId });
+const getShareStatus = (_id) => {
+  return call(`/product/getsharestatus`, { _id });
 }
 
 const followUser = (followId, email = '') => {
@@ -213,7 +213,7 @@ export default {
   updateShippingNote,
   getOrderedProducts,
   getOrdersByUser,
-  getFollowStatus,
+  getShareStatus,
   followUser,
   unFollowUser,
   forkProduct,

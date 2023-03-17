@@ -213,12 +213,40 @@ exports.listBySearch = async (req, res) => {
       }
       res.json({
         size: data.length,
-        data,
-        email: user?.email
+        data
       });
     });
 };
 
+
+exports.getFollowingStatus = async (req, res) => {
+  const { followId } = req.body;
+  const followUser = await User.findOne({ _id: followId });
+  if (!followUser) return res.status(400).json({ error: 'User not found' });
+
+  const followedCount = await User.countDocuments({ following: { $in: [ followId ] } });
+
+  const user = req.user;
+  if (!user) return res.send({ status: false, count: followedCount });
+  const idx = user.following.indexOf(followId);
+  res.send({ status: idx > -1, count: followedCount })
+}
+exports.getShareStatus = async (req, res) => {
+  const { _id } = req.body;
+  const shareUser = await User.findOne({ _id });
+  if (!shareUser) return res.status(400).json({ error: 'Share cart not found' });
+
+  const followedCount = await User.countDocuments({ following: { $in: [ _id ] } });
+
+  let followStatus = false, username = shareUser.name || shareUser.email.split('@')[0];
+
+  const user = req.user;
+  if (user) {
+    const idx = user.following.indexOf(_id);
+    followStatus = idx > -1;
+  }
+  res.send({ followStatus, followedCount, username })
+}
 
 
 

@@ -252,27 +252,6 @@ body {
 }
 
 
-.shared-header {
-  display: flex;
-  justify-content: center;
-  color: var(--primary);
-  font-size: 25px;
-  font-weight: bold;
-  
-  .shared-url {
-    text-decoration: underline;
-
-    svg {
-      margin-left: 15px;
-      color: rgb(150, 150, 150);
-      cursor: pointer;
-
-      &:hover { color: rgb(200, 200, 200); }
-    }
-  }
-}
-
-
 .no-card-container {
   padding-top: 50px;
   max-width: 400px;
@@ -319,21 +298,6 @@ body {
   margin: auto;
 }
 
-.follow-button {
-  width: 250px;
-  padding: 10px 0;
-  font-size: 16pt;
-  margin: 10px 20px 0 auto;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  border: 1px solid;
-  border-radius: 8px;;
-  cursor: pointer;
-}
-
 .ollacart-modal {
   z-index: 300 !important;
   display: flex;
@@ -346,12 +310,6 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-  .shared-header { font-size: 15px; }
-  .shared-url svg {
-    width: 15px;
-    height: 15px;
-    margin-left: 5px;
-  }
   .shop-item { width: 50%; }
   .product-img { height: 50vw; }
 }
@@ -359,7 +317,4 @@ body {
   .menu-item { margin-left: 0; }
   .shop-item { width: 100%; }
   .product-img { height: 50vw; }
-}
-@media screen and (max-width: 390px) {
-  .shared-header { font-size: 13px; }
 }

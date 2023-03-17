@@ -26,35 +26,32 @@ exports.signup = (req, res) => {
 
 exports.signin = async (req, res) => {
   // find the user based on email
-  const email = req.body.email,
-    ce_id = req.body.ce_id;
+  const { email, ce_id } = req.body;
+
+  let user = await User.findOne({ email });
+  if (!user) {
+    utils.sendWelcomeMail(req.body.email);
+
+    user = new User({ email })
+    user.ce_id = '';
+    const r = await user.save();
+    if (!r) return res.status(400).json({ error: "Error occured!" });
+  }
   
-  User.findOne({ email }, async (err, user) => {
-    if (err || !user) {
-      const response = await utils.sendWelcomeMail(req.body.email);
-      if (response.error) return res.status(400).json({ error: "Wrong email!" });
+  if (user.status.secure) {
+    user.secure_identity = uuidv4();
+    await user.save();
+    await utils.sendSecureMail(user.email, user.secure_identity);
+    return res.json({ verify: true, uid: user.secure_identity });
+  }
 
-      user = new User({ email })
-      user.ce_id = '';
-      const r = await user.save();
-      if (!r) return res.status(400).json({ error: "Error occured!" });
-    }
-
-    if (user.status.secure) {
-      user.secure_identity = uuidv4();
-      await user.save();
-      await utils.sendSecureMail(user.email, user.secure_identity);
-      return res.json({ verify: true, uid: user.secure_identity });
-    }
-
-    await Utils.checkCeID(user, ce_id);
-    
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-    res.cookie('t', token, { expire: new Date() + 9999 });
-    
-    const { _id, name, role, email } = user;
-    return res.json({ token, user: { _id, email, role, name } });
-  });
+  await Utils.checkCeID(user, ce_id);
+  
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  res.cookie('t', token, { expire: new Date() + 9999 });
+  
+  const { _id, name, role } = user;
+  return res.json({ token, user: { _id, email, role, name } });
 };
 
 exports.request = async (req, res) => {
@@ -66,19 +63,23 @@ exports.request = async (req, res) => {
   res.json({ email })
 }
 
-exports.verifyUser = (req, res) => {
+exports.verifyUser = async (req, res) => {
   // find the user based on email
   const { token } = req.body;
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  if (!decoded || !decoded._id) return res.status(400).json({ error: "Error occured!" });
-  User.findOne({ _id: decoded._id }, async (err, user) => {
-    if (err || !user) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded || !decoded._id) return res.status(400).json({ error: "Error occured!" });
+    const user = await User.findOne({ _id: decoded._id });
+    if (!user) {
       return res.status(400).json({ error: "Error occured!" });
     }
     
     const { _id, name, email, role } = user;
     return res.json({ token, user: { _id, email, name, role } });
-  });
+  } catch(ex) {
+    console.log(ex);
+    res.status(400).json({ error: 'Invalid token!' });
+  }
 };
 
 exports.signout = (req, res) => {

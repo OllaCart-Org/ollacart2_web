@@ -21,5 +21,17 @@ export default {
   commaPrice: price => {
     if (typeof price === 'string') return commaNumber(price);
     return commaNumber(price.toFixed(2));
+  },
+  checkURL: str => {
+    try {
+      const d = new URL(str);
+      console.log(d);
+      return true;
+    } catch(ex) {
+      return false;
+    }
+  },
+  openLink: url => {
+    window.open(url, '_blank');
   }
 }

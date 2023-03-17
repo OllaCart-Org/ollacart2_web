@@ -47,12 +47,13 @@ const Order = () => {
     return <div className={'order-status-badge ' + color}>{label}</div>
   }
 
-  // const showProductPage = (url) => {
-  //   window.open(url, '_blank');
-  // }
-
   const showDetail = (card) => {
     setDetailCard(card);
+  }
+
+  const noteClicked = () => {
+    if(!utils.checkURL(detailCard.shippingNote)) return;
+    utils.openLink(detailCard.shippingNote);
   }
 
   return (
@@ -61,7 +62,7 @@ const Order = () => {
         <div className='d-flex flex-wrap justify-content-center'>
           {cards.map((card, i) => (
             <div key={i} className={'shop-item'} onClick={() => showDetail(card)}>
-              <Card card={card} showPrice={true} orderStatus={card.orderStatus} />
+              <Card card={card} showPrice={true} orderStatus={card.orderStatus} hideThumbs={true} />
             </div>
           ))}
         </div>
@@ -79,7 +80,7 @@ const Order = () => {
             {getOrderStatusBadge(detailCard.orderStatus)}
             {detailCard.shippingNote && <div className='shipping-note'>
               <div className='title'>Shipping Note</div>
-              <div className='note'>{detailCard.shippingNote}</div>
+              <div className={'note' + (utils.checkURL(detailCard.shippingNote) ? ' link' : '')} onClick={noteClicked}>{detailCard.shippingNote}</div>
             </div>}
             <div className='price-list'>
               <div className='title'>Price Summary</div>

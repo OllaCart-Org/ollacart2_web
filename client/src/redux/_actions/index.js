@@ -42,7 +42,8 @@ function signin(data) {
           _id: data.user._id,
           secure: data.user.secure
         });
-      });
+      })
+      .catch(err => { console.log(err) });
   }
 }
 
@@ -54,14 +55,16 @@ function verifySignin(data) {
     api.verifySignin(uid)
       .then(data => {
         dispatch(setLoading(false));
-        if (!data || data.error) {
-          return dispatch({
-            type: Constants.SIGNIN_FAILED,
-            error: (data && data.error) || 'Signin Failed!'
-          })
-        }
         localStorage.setItem('token', data.token);
         window.location.href = '/home';
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch(setLoading(false));
+        return dispatch({
+          type: Constants.SIGNIN_FAILED,
+          error: (data && data.error) || 'Signin Failed!'
+        })
       });
   }
 }
@@ -74,10 +77,6 @@ function verify(token) {
     }
     api.verifyUser(token)
       .then(data => {
-        if (!data || data.error) {
-          localStorage.setItem('token', '');
-          return ;
-        }
         localStorage.setItem('token', data.token);
         dispatch({
           type: Constants.SIGNIN_SUCCESS,
@@ -87,7 +86,12 @@ function verify(token) {
           secure: data.user.secure
         });
         dispatch(setVerifyLoading('finished'))
-      });
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch(setVerifyLoading('finished'))
+        localStorage.setItem('token', '');
+      })
   }
 }
 

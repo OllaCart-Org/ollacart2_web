@@ -1,8 +1,11 @@
 import React from 'react';
-import { InsertLink, Close, ZoomOutMap, Add } from '@material-ui/icons'
+import { useSelector } from "react-redux"
+import { InsertLink, Close, ZoomOutMap, Add, ThumbUp, ThumbUpOutlined, ThumbDownOutlined, ThumbDown } from '@material-ui/icons'
 import './card.scss';
 
-const Card = ({ card, editable, remove, quickView, showPrice, orderStatus, fork }) => {
+const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderStatus, fork }) => {
+  const { _id } = useSelector(state => state.auth);
+
   const removeClicked = (e) => {
     e.stopPropagation();
     remove();
@@ -40,6 +43,18 @@ const Card = ({ card, editable, remove, quickView, showPrice, orderStatus, fork 
           style={{ objectFit: 'contain', height: '100%', width: '100%', display: 'flex', marginLeft: 'auto', marginRight: 'auto' }}
         />
         {getOrderStatusBadge()}
+        {hideThumbs ? '' : (
+          <>
+            <div className='thumb thumb-up'>
+              {card.likes.includes(_id) ? <ThumbUp /> : <ThumbUpOutlined />}
+              <span>{card.likes.length}</span>
+            </div>
+            <div className='thumb thumb-down'>
+              {card.dislikes.includes(_id) ? <ThumbDown /> : <ThumbDownOutlined />}
+              <span>{card.dislikes.length}</span>
+            </div>
+          </>
+        )}
       </div>
       <div className='d-flex justify-content-end align-items-start'>
         <div className='item-name'>{card.name}</div>

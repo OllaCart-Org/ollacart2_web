@@ -1,0 +1,60 @@
+
+.shared-header {
+  display: flex;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 25px;
+  font-weight: bold;
+  
+  .shared-url {
+    text-decoration: underline;
+
+    svg {
+      margin-left: 15px;
+      color: rgb(150, 150, 150);
+      cursor: pointer;
+
+      &:hover { color: rgb(200, 200, 200); }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 15px;
+    svg {
+      width: 15px;
+      height: 15px;
+      margin-left: 5px;
+    }
+  }
+  @media screen and (max-width: 390px) {
+    font-size: 13px;
+  }
+}
+
+.share-status {
+  margin: 10px 0;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .user-name {
+    color: var(--fg);
+    font-size: 20pt;
+    font-weight: bold;
+  }
+
+  .follow-button {
+    width: 250px;
+    padding: 10px 0;
+    font-size: 16pt;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    border: 1px solid;
+    border-radius: 8px;;
+    cursor: pointer;
+  }
+}

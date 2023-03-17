@@ -12,7 +12,9 @@ import { useToasts } from 'react-toast-notifications';
 
 import api from "../../api";
 
-import './payment.css'
+import './payment.scss'
+import { IconButton } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
@@ -160,6 +162,9 @@ export default function CheckoutForm(props) {
 
   return (
     <div className='Payment-App'>
+      <IconButton aria-label="Close" className='close-button' onClick={props.onClose}>
+        <Close />
+      </IconButton>
       <div className="payment-details">
         <div className="payment-total-price">${commaNumber(totalPrice.toFixed(2))}</div>
         <div className="payment-products">

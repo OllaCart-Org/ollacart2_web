@@ -7,6 +7,7 @@ import Layout from './layout';
 import api from '../api';
 import Cards from '../components/cards';
 import EmailModal from '../components/Modals/EmailModal';
+import './share.scss';
 
 const SHARE_URL = process.env.REACT_APP_PUBLIC_URL + '/share';
 
@@ -15,6 +16,7 @@ const Share = (props) => {
   const [filter, setFilter] = useState({shared: 1, _id: null});
   const [followStatus, setFollowStatus] = useState(false);
   const [followedCount, setFollowedCount] = useState(0);
+  const [sharedUserName, setSharedUserName] = useState('');
   const [showEmailModal, setShowEmailModal] = useState(false);
 
   const { _id } = useSelector(state => state.auth);
@@ -24,13 +26,14 @@ const Share = (props) => {
     addToast(message, { appearance, autoDismiss: true });
   }, [addToast])
 
-  const fetchFollowingStatus = useCallback(() => {
+  const fetchShareStatus = useCallback(() => {
     if (!sharedId) return;
     setFilter({ shared: 1, _id: sharedId });
-    api.getFollowStatus(sharedId)
+    api.getShareStatus(sharedId)
       .then(data => {
-        setFollowStatus(data.status);
-        setFollowedCount(data.count);
+        setSharedUserName(data.username);
+        setFollowStatus(data.followStatus);
+        setFollowedCount(data.followedCount);
       })
       .catch(err => showToast(err.message))
   }, [sharedId, showToast])
@@ -42,8 +45,8 @@ const Share = (props) => {
 
   useEffect(() => {
     if (!sharedId) return
-    fetchFollowingStatus();
-  }, [sharedId, fetchFollowingStatus]);
+    fetchShareStatus();
+  }, [sharedId, fetchShareStatus]);
 
   const copyShareUrl = () => {
     copy(`${SHARE_URL}/${_id}`);
@@ -51,7 +54,7 @@ const Share = (props) => {
 
   const followUser = () => {
     api.followUser(sharedId)
-      .then(fetchFollowingStatus)
+      .then(fetchShareStatus)
       .catch(err => showToast(err.message))
   }
 
@@ -59,14 +62,14 @@ const Share = (props) => {
     api.followUser(sharedId, email)
       .then(() => {
         setShowEmailModal(false);
-        fetchFollowingStatus();
+        fetchShareStatus();
       })
       .catch(err => showToast(err.message))
   }
 
   const unFollowUser = () => {
     api.unFollowUser(sharedId)
-      .then(fetchFollowingStatus)
+      .then(fetchShareStatus)
       .catch(err => showToast(err.message))
   }
 
@@ -85,10 +88,13 @@ const Share = (props) => {
       {sharedId === _id && _id && <div className='shared-header'>
         <div className='shared-url'>ollacart.com/share/{_id}<FileCopyOutlined onClick={copyShareUrl}/></div>
       </div>}
-      <div className='follow-button' onClick={followClicked}>
-        <span>Followers: {followedCount}</span>
-        {sharedId !== _id && !followStatus && <FavoriteBorder /> }
-        {sharedId !== _id && followStatus && <Favorite /> }
+      <div className='share-status'>
+        <div className='user-name'>@ {sharedUserName}</div>
+        <div className='follow-button' onClick={followClicked}>
+          <span>Followers: {followedCount}</span>
+          {sharedId !== _id && !followStatus && <FavoriteBorder /> }
+          {sharedId !== _id && followStatus && <Favorite /> }
+        </div>
       </div>
       {filter._id &&
         <Cards

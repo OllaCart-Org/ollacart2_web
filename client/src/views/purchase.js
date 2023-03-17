@@ -47,6 +47,7 @@ const Purchase = (props) => {
 
   const togglePayment = (value) => {
     if (value) createPaymentIntent();
+    else setOpenPayment(false);
   }
 
   return (
@@ -57,7 +58,7 @@ const Purchase = (props) => {
       <Drawer style={{zIndex: 999}} anchor='right' open={openPayment} onClose={() => togglePayment(false)}>
         { clientSecret &&
           <Elements options={{clientSecret, appearance: { theme: 'stripe' }}} stripe={stripePromise}>
-            <CheckoutForm clientSecret={clientSecret} />
+            <CheckoutForm clientSecret={clientSecret} onClose={() => togglePayment(false)} />
           </Elements> }
       </Drawer>
       <Cards

@@ -41,19 +41,6 @@ exports.update = (req, res) => {
 };
 
 
-exports.getFollowingStatus = async (req, res) => {
-  const { followId } = req.body;
-  const followUser = await User.findOne({ _id: followId });
-  if (!followUser) return res.status(400).json({ error: 'User not found' });
-
-  const followedCount = await User.countDocuments({ following: { $in: [ followId ] } });
-
-  const user = req.user;
-  if (!user) return res.send({ status: false, count: followedCount });
-  const idx = user.following.indexOf(followId);
-  res.send({ status: idx > -1, count: followedCount })
-}
-
 exports.followUser = async (req, res) => {
   const { followId } = req.body;
   const followUser = await User.findOne({ _id: followId });

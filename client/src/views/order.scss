@@ -57,8 +57,10 @@
     margin-top: 20px;
     .note {
       font-size: 14px;
-      font-style: italic;
-      color: var(--primary);
+      &.link {
+        color: var(--primary);
+        cursor: pointer;
+      }
     }
   }
 

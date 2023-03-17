@@ -4,7 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { useToasts } from 'react-toast-notifications';
 
 import CheckoutForm from "./CheckoutForm";
-import "./payment.css";
+import "./payment.scss";
 
 import api from '../../api';
 

@@ -34,9 +34,12 @@
     color: var(--primary);
     font-weight: bold;
     font-size: 15px;
-    margin: 4px 10px 0 0;
+    margin: 4px auto 0 0;
 
-    &.item-price { color: rgb(47 183 89); }
+    &.item-price {
+      margin-right: 0;
+      color: rgb(47 183 89);
+    }
   }
   
   .insert-link, .close-link {
@@ -64,6 +67,22 @@
 
     &.color-placed { background-color: #ff4500; }
     &.color-shipped { background-color: rgb(47 183 89); }
+  }
+
+  .thumb {
+    position: absolute;
+    bottom: 5px;
+    background-color: var(--primary);
+    padding: 3px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 15px;
+    color: var(--fg);
+
+    &.thumb-up { left: 10px; }
+    &.thumb-down { right: 10px; }
   }
 }
 
