@@ -5,7 +5,7 @@ import Cards from '../components/cards';
 const Main = () => {
   return (
     <Layout>
-      <Cards page='home' hideThumbs={true} />
+      <Cards page='home' />
     </Layout>
   )
 };

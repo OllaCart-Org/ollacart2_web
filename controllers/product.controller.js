@@ -205,6 +205,10 @@ exports.listBySearch = async (req, res) => {
     .sort([['sequence', 'desc'], ['createdAt', 'desc']])
     .skip(skip)
     .limit(limit)
+    .populate({
+      path: 'user',
+      select: '_id name email'
+    })
     .exec((err, data) => {
       if (err) {
         return res.status(400).json({

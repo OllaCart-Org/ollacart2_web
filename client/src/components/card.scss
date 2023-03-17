@@ -69,10 +69,8 @@
     &.color-shipped { background-color: rgb(47 183 89); }
   }
 
-  .thumb {
+  .thumb, .user-name {
     position: absolute;
-    bottom: 5px;
-    background-color: var(--primary);
     padding: 3px 10px;
     display: flex;
     align-items: center;
@@ -81,6 +79,16 @@
     border-radius: 15px;
     color: var(--fg);
 
+    &.user-name {
+      top: 5px;
+      right: 10px;
+      background-color: #777;
+    }
+
+    &.thumb {
+      background-color: var(--primary);
+      bottom: 5px;
+    }
     &.thumb-up { left: 10px; }
     &.thumb-down { right: 10px; }
   }

@@ -10,7 +10,7 @@ import QuickView from '../components/quickview';
 import EmailModal from './Modals/EmailModal';
 
 const Cards = (props) => {
-  const { filter, readonly, hideThumbs, page } = props;
+  const { filter, readonly, hideThumbs, showUsername, page } = props;
   const [limit] = useState(props.limit || 12);
   const [skip, setSkip] = useState(0);
   const [size, setSize] = useState(0);
@@ -258,6 +258,7 @@ const Cards = (props) => {
                 <Card
                   card={card}
                   editable={!readonly}
+                  showUsername={showUsername}
                   hideThumbs={hideThumbs}
                   remove={() => removeClicked(card)}
                   fork={() => fork(card)}

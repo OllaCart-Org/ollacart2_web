@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 import { Box, Link, TextField, Typography } from '@material-ui/core';
 import { Add, ChevronLeft, ChevronRight, Close, Delete, Edit, Save, Share, ShoppingCart, ThumbDown, ThumbDownOutlined, ThumbUp, ThumbUpOutlined } from '@material-ui/icons'
 import './quickview.scss';
+import utils from '../utils';
 
 const QuickView = ({ card, close, share, save, remove, updateLogo, putPurchase, previous, next, editable, fork, thumbup, thumbdown }) => {
   const [logo, setLogo] = useState('');
@@ -15,6 +16,10 @@ const QuickView = ({ card, close, share, save, remove, updateLogo, putPurchase, 
   useEffect(() => {
     setLogo(card.photo || '')
     setIsColorShow(false);
+    utils.setStoredThumbCount(card._id, {
+      thumbup: card.likes.length,
+      thumbdown: card.dislikes.length
+    })
   }, [card])
 
   const goPreviewClicked = (e) => {

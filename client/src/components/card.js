@@ -3,7 +3,7 @@ import { InsertLink, Close, ZoomOutMap, Add, ThumbUpOutlined, ThumbDownOutlined 
 import './card.scss';
 import utils from '../utils';
 
-const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderStatus, fork }) => {
+const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, showUsername, orderStatus, fork }) => {
 
   const removeClicked = (e) => {
     e.stopPropagation();
@@ -78,6 +78,11 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
             </div>}
           </>
         )}
+        {showUsername ? (
+          <div className='user-name'>
+            @ {utils.getUsername(card.user)}
+          </div>
+        ) : ''}
       </div>
       <div className='d-flex justify-content-end align-items-start'>
         <div className='item-name'>{card.name}</div>

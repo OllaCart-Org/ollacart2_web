@@ -10,6 +10,7 @@ const Social = (props) => {
         page='social'
         readonly={true}
         filter={filter}
+        showUsername={true}
       />
     </Layout>
   );

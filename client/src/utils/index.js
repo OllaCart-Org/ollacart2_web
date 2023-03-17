@@ -54,5 +54,9 @@ export default {
     }
     data[_id] = count;
     window.localStorage.setItem('ollacart_thumb_count', JSON.stringify(data));
+  },
+  getUsername: (user) => {
+    if (!user) return '';
+    return user.name || (user.email || '').split('@')[0];
   }
 }
