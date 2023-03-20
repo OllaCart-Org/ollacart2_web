@@ -53,6 +53,7 @@ const categorySchema = new mongoose.Schema(
         default: 'initial'
       },
       shippingNote: String,
+      promoCode: String,
       photo: String,
       name: String,
       price: Number,

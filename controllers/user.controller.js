@@ -87,6 +87,9 @@ exports.updateAccountSettings = async (req, res) => {
   if (typeof req.body.name === 'string') {
     user.name = req.body.name || '';
   }
+  if (typeof req.body.username === 'string') {
+    user.username = req.body.username || '';
+  }
   if (typeof req.body.phone === 'string') {
     user.phone = req.body.phone || '';
   }

@@ -3,7 +3,11 @@ const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    username: { //Account Name
+      type: String,
+      trim: true
+    },
+    name: { //Full Name
       type: String,
       trim: true,
     },

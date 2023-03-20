@@ -9,21 +9,6 @@ const utils = require('../helpers/utils');
 
 require('dotenv').config();
 
-exports.signup = (req, res) => {
-  // console.log('req.body', req.body);
-  const user = new User(req.body);
-  user.save((err, user) => {
-    if (err) {
-      return res.status(400).json({
-        err: errorHandler(err),
-      });
-    }
-    res.json({
-      user,
-    });
-  });
-};
-
 exports.signin = async (req, res) => {
   // find the user based on email
   const { email, ce_id } = req.body;

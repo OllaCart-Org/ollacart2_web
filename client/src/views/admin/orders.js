@@ -189,15 +189,25 @@ const Orders = () => {
     setPage(value);
   };
 
-  const orderStatusChanged = (value, type, orderId, productIdx) => {
-    api.updateOrderStatusByProduct({ status: value + type, orderId, productIdx })
+  const updateOrderDetail = (_id, detail) => {
+    api.updateOrderDetail(_id, detail)
       .then((data) => {
-        const orderIdx = orders.findIndex(o => o._id === orderId);
+        const orderIdx = orders.findIndex(o => o._id === data.order?._id);
         if (orderIdx < 0) return ;
-        orders[orderIdx] = data.order;
+        orders[orderIdx].products = data.order.products;
         setOrders([...orders]);
+        closeShippingNoteModal();
       })
-      .catch(err => showToast(err.message));
+      .catch(err => showToast(err.message));    
+  }
+
+  const orderStatusChanged = (value, type, _id, idx) => {
+    const status = value + type;
+    if (status === 2) {
+      setShippingNoteModalInfo({ _id, idx, status });
+      return;
+    }
+    updateOrderDetail(_id, {idx, status});
   }
 
   const openShippingNotesModal = (_id, idx) => {
@@ -212,15 +222,7 @@ const Orders = () => {
   }
 
   const saveShippingNote = () => {
-    api.updateShippingNote(shippingNotesModalInfo._id, shippingNotesModalInfo.idx, shippingNote)
-      .then((data) => {
-        const orderIdx = orders.findIndex(o => o._id === data.order?._id);
-        if (orderIdx < 0) return ;
-        orders[orderIdx].products = data.order.products;
-        setOrders([...orders]);
-        closeShippingNoteModal();
-      })
-      .catch(err => showToast(err.message));
+    updateOrderDetail(shippingNotesModalInfo._id, { ...shippingNotesModalInfo, shippingNote });
   }
 
   return (

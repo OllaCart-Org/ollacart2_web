@@ -57,6 +57,6 @@ export default {
   },
   getUsername: (user) => {
     if (!user) return '';
-    return user.name || (user.email || '').split('@')[0];
+    return user.username || (user.email || '').split('@')[0];
   }
 }

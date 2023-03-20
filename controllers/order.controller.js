@@ -62,43 +62,35 @@ exports.getOrders = async (req, res) => {
   res.send({ success: true, orders, total: await this.getOrderCount({ status: 'succeeded' }) });
 }
 
-exports.updateOrderStatusByProduct = async (req, res) => {
-  const { status, orderId, productIdx } = req.body.detail;
-
-  if (status < 0 || status > 3) return res.status(400).json({ error: 'Invalid Status' });
-
-  const order = await Order.findOne({ _id: orderId }).populate('user').populate('products.product').exec();
-  if (!order) return res.status(400).json({error: 'Not found Order'});
-
-  if (productIdx < 0 || productIdx >= order.products.length) return res.status(400).json({error: 'Not found Product'});
-
-  // [TO DO] Secure this section.
-  const product = order.products[productIdx];
-  product.orderStatus = status;
-  const minStatus = Math.min(...order.products.map(p => p.orderStatus));
-  
-  order.orderStatus = minStatus;
-  
-  await order.save();
-
-  utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, false);
-  utils.sendOrderStatusMail(order.user.email, product.name, product.price, status, true);
-  res.json({ order });
-}
-
-exports.updateShippingNote = async (req, res) => {
-  const { idx, shippingNote } = req.body;
+exports.updateOrderDetail = async (req, res) => {
+  const { idx, shippingNote, promoCode, status } = req.body;
   const order = req.order;
   if (!order) return res.status(400).send('Order not found');
+  if (idx < 0 || idx >= order.products.length) return res.status(400).json({error: 'Not found Product'});
+  const product = order.products[idx];
 
-  order.products[idx].shippingNote = shippingNote || '';
+  if (typeof shippingNote === 'string') {
+    product.shippingNote = shippingNote || '';
+  }
+  if (typeof promoCode === 'string') {
+    product.promoCode = promoCode || '';
+  }
+  if (typeof status === 'number') {
+    if (status < 0 || status > 3) return res.status(400).json({ error: 'Invalid Status' });
+
+    // [TO DO] Secure this section.
+    product.orderStatus = status;
+    const minStatus = Math.min(...order.products.map(p => p.orderStatus));
+    
+    order.orderStatus = minStatus;
+  }
   const response = await order.save();
 
   res.send({ order: response });
   
   const user = await User.findOne({ _id: order.user });
   if (!user) return;
-  utils.sendShippingNoteMail(user.email, order.products[idx].name, shippingNote);
+  utils.sendOrderStatusMail(user.email, product);
 }
 
 exports.getOrderCount = async (filter = {}) => {

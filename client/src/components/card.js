@@ -3,7 +3,7 @@ import { InsertLink, Close, ZoomOutMap, Add, ThumbUpOutlined, ThumbDownOutlined 
 import './card.scss';
 import utils from '../utils';
 
-const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, showUsername, orderStatus, fork }) => {
+const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderStatus, fork }) => {
 
   const removeClicked = (e) => {
     e.stopPropagation();
@@ -51,16 +51,8 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, showUs
     return (diff > 0 ? '+' : '-') + diff;
   }
 
-  const cardClicked = () => {
-    if (hideThumbs) return;
-    utils.setStoredThumbCount(card._id, {
-      thumbup: card.likes.length,
-      thumbdown: card.dislikes.length
-    })
-  }
-
   return (
-    <div className="card-container" onClick={cardClicked}>
+    <div className="card-container">
       <div className='product-img' >
         <img src={card.photo} alt={card.name} className='mb-3'
           style={{ objectFit: 'contain', height: '100%', width: '100%', display: 'flex', marginLeft: 'auto', marginRight: 'auto' }}
@@ -78,11 +70,6 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, showUs
             </div>}
           </>
         )}
-        {showUsername ? (
-          <div className='user-name'>
-            @ {utils.getUsername(card.user)}
-          </div>
-        ) : ''}
       </div>
       <div className='d-flex justify-content-end align-items-start'>
         <div className='item-name'>{card.name}</div>

@@ -113,6 +113,7 @@ const QuickView = ({ card, close, share, save, remove, updateLogo, putPurchase, 
               variant="outlined"
             />}
             <Typography className='quickview-item-link'><Link href={card.url} target='_blank'>{card.url}</Link></Typography>
+            {<Box className='user-name' mt={2}><span>@{utils.getUsername(card.user)}</span></Box>}
           </Box>
         </Box>
       </Box>

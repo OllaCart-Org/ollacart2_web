@@ -108,32 +108,19 @@ exports.sendSecureMail = async (mailTo, uid, type) => {
   }
 }
 
-exports.sendOrderStatusMail = async (_mailTo, productName, productPrice, status, isAdmin) => {
+exports.sendOrderStatusMail = async (mailTo, product) => {
   const message = ['The product order status changed to UnOrdered', 'The product order is placed.', 'The product is in shipping.', 'The product order is closed.'];
-  const mailTo = isAdmin ? 'support@ollacart.com' : _mailTo;
-  const subject = 'OllaCart Order' + (isAdmin ? ' for ' + _mailTo : '');
-  return new Promise(resolve => {
-    var mailOptions = {
-      from: 'support@ollacart.com',
-      to: mailTo,
-      subject,
-      html: `<h4>"${productName + ' $' + productPrice}"</h4><p>${message[status]}</p>`
-    };
-    
-    transporter.sendMail(mailOptions, function(error, info){
-      resolve({ error, info });
-    });
-  })
-}
+  const subject = 'OllaCart Order';
+  let html = `<h4>"${product.name + ' $' + product.price}"</h4><p>${message[product.orderStatus]}</p>`;
+  if (product.orderStatus === 1 && product.promoNote) html += `<p>Promo Code: ${product.promoNote}</p>`;
+  if (product.orderStatus === 2 && product.shippingNote) html += `<p>Shipping Note: ${product.shippingNote}</p>`;
 
-exports.sendShippingNoteMail = async (mailTo, productName, shippingNote) => {
-  const subject = 'Shipping Note Updated';
   return new Promise(resolve => {
     var mailOptions = {
       from: 'support@ollacart.com',
       to: mailTo,
       subject,
-      html: `<h4>Product: </h4><p>${productName}</p><h4>Note: </h4><p>${shippingNote}</p>`
+      html
     };
     
     transporter.sendMail(mailOptions, function(error, info){

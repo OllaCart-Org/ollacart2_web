@@ -146,6 +146,21 @@
           * { width: 100%; color: var(--primary) !important; }
           fieldset { border-color: var(--primary) !important; }
         }
+        
+        .size-item, .user-name {
+          display: flex;
+          justify-content: flex-end;
+          span {
+            color: white;
+            background-color: var(--secondary);
+            border-radius: 15px;
+            padding: 2px 10px;
+          }
+          &.user-name {
+            justify-content: flex-start;
+            span { background-color: #555; }
+          }
+        }
       }
     }
   }
@@ -199,18 +214,6 @@
         border-radius: 0 15px 15px 0;
         padding-right: 5px;
       }
-    }
-  }
-
-
-  .size-item {
-    display: flex;
-    justify-content: flex-end;
-    span {
-      color: white;
-      background-color: var(--secondary);
-      border-radius: 10px;
-      padding: 2px 10px;
     }
   }
 

@@ -39,6 +39,7 @@ const Profile = () => {
         setStatus(data?.user?.status || {});
         setProfile({
           name: data?.user?.name || '',
+          username: data?.user?.username || '',
           phone: data?.user?.phone || '',
         })
       })
@@ -104,7 +105,7 @@ const Profile = () => {
   }
   
   const saveProfile = () => {
-    api.updateAccountSettings({ name: profile.name, phone: profile.phone })
+    api.updateAccountSettings({ name: profile.name, phone: profile.phone, username: profile.username })
     .then(() => {
         showToast('Saved profile', 'success');
       })
@@ -175,7 +176,9 @@ const Profile = () => {
                 </div>
               </div>
               <div className='form-content'>
-                <TextField className='form-input' label='Account Name' size='small' variant='outlined' fullWidth color='primary' name='name'
+                <TextField className='form-input' label='Account Name' size='small' variant='outlined' fullWidth color='primary' name='username'
+                  value={profile.username || ''} onChange={profileValueChanged} />
+                <TextField className='form-input' label='Full Name' size='small' variant='outlined' fullWidth color='primary' name='name'
                   value={profile.name || ''} onChange={profileValueChanged} />
                 <TextField className='form-input' label='Phone' size='small' variant='outlined' fullWidth name='phone'
                   value={profile.phone || ''} onChange={profileValueChanged} />

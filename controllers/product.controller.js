@@ -207,7 +207,7 @@ exports.listBySearch = async (req, res) => {
     .limit(limit)
     .populate({
       path: 'user',
-      select: '_id name email'
+      select: '_id username email'
     })
     .exec((err, data) => {
       if (err) {
@@ -242,7 +242,7 @@ exports.getShareStatus = async (req, res) => {
 
   const followedCount = await User.countDocuments({ following: { $in: [ _id ] } });
 
-  let followStatus = false, username = shareUser.name || shareUser.email.split('@')[0];
+  let followStatus = false, username = shareUser.username || shareUser.email.split('@')[0];
 
   const user = req.user;
   if (user) {

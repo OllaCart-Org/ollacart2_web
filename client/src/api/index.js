@@ -125,12 +125,8 @@ const fetchProductsByClientSecret = (clientSecret) => {
   return call(`/order/productsbyclientsecret`, { clientSecret });
 }
 
-const updateOrderStatusByProduct = (detail) => {
-  return call(`/order/updateorderstatusbyproduct`, { detail });
-}
-
-const updateShippingNote = (orderId, idx, shippingNote) => {
-  return call(`/order/updateshippingnote/${orderId}`, { idx, shippingNote });
+const updateOrderDetail = (orderId, detail) => {
+  return call(`/order/updatedetail/${orderId}`, detail);
 }
 
 const getOrderedProducts = () => {
@@ -209,8 +205,7 @@ export default {
   fetchPurchaseLink,
   createPaymentIntent,
   fetchProductsByClientSecret,
-  updateOrderStatusByProduct,
-  updateShippingNote,
+  updateOrderDetail,
   getOrderedProducts,
   getOrdersByUser,
   getShareStatus,
