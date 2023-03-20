@@ -9,6 +9,7 @@ import api from '../api';
 
 import './profile.scss';
 import { AccountBox, ContactMail, ExitToApp, Feedback, HorizontalSplit, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
+import utils from '../utils';
 
 const Profile = () => {
   const [shipping, setShipping] = useState({});
@@ -35,11 +36,13 @@ const Profile = () => {
   useEffect(() => {
     api.getAccountSettings()
       .then(data => {
-        setShipping(data?.user?.shipping || {});
+        setShipping({
+          ...data?.user?.shipping,
+          name: data?.user?.name || ''
+        });
         setStatus(data?.user?.status || {});
         setProfile({
-          name: data?.user?.name || '',
-          username: data?.user?.username || '',
+          username: utils.getUsername(data?.user),
           phone: data?.user?.phone || '',
         })
       })
@@ -65,7 +68,7 @@ const Profile = () => {
   }
 
   const saveShippingAddress = () => {
-    api.updateAccountSettings({ shipping })
+    api.updateAccountSettings({ shipping, name: shipping.name })
     .then(() => {
         showToast('Saved shipping address', 'success');
       })
@@ -105,7 +108,10 @@ const Profile = () => {
   }
   
   const saveProfile = () => {
-    api.updateAccountSettings({ name: profile.name, phone: profile.phone, username: profile.username })
+    if (!utils.validateUsername(profile.username)) {
+      return showToast('Account name should be less than 14 letters');;
+    }
+    api.updateAccountSettings({ phone: profile.phone, username: profile.username })
     .then(() => {
         showToast('Saved profile', 'success');
       })
@@ -178,8 +184,6 @@ const Profile = () => {
               <div className='form-content'>
                 <TextField className='form-input' label='Account Name' size='small' variant='outlined' fullWidth color='primary' name='username'
                   value={profile.username || ''} onChange={profileValueChanged} />
-                <TextField className='form-input' label='Full Name' size='small' variant='outlined' fullWidth color='primary' name='name'
-                  value={profile.name || ''} onChange={profileValueChanged} />
                 <TextField className='form-input' label='Phone' size='small' variant='outlined' fullWidth name='phone'
                   value={profile.phone || ''} onChange={profileValueChanged} />
                 <div className='bottom-buttons'>
@@ -196,6 +200,8 @@ const Profile = () => {
                 </div>
               </div>
               <div className='form-content'>
+                <TextField className='form-input' label='Full Name' size='small' variant='outlined' fullWidth color='primary' name='name'
+                  value={shipping.name || ''} onChange={shippingValueChanged} />
                 <div className='two-inputs'>
                   <FormControl className='form-control' variant="outlined" fullWidth size='small'>
                     <InputLabel id="country-label">Country</InputLabel>

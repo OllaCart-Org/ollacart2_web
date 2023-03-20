@@ -8,6 +8,10 @@ export default {
     }
     return true;
   },
+  validateUsername: username => {
+    if(username && username.length > 14) return false;
+    return true;
+  },
   getShortID: _id => {
     if(typeof _id !== 'string') return '';
     return _id.substring(0, 8);

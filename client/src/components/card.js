@@ -40,7 +40,7 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
     const before = utils.getStoredThumbCount(card._id).thumbup;
     const diff = current - before;
     if (!diff) return 0;
-    return (diff > 0 ? '+' : '-') + diff;
+    return (diff > 0 ? '+' : '') + diff;
   }
 
   const thumbdownDiff = () => {
