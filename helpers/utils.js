@@ -39,19 +39,25 @@ exports.sendWelcomeMail = async (mailTo) => {
       from: 'support@ollacart.com',
       to: mailTo,
       subject: 'Welcome to OllaCart',
-      html: `<p>Congrats on the first step towards your new online shopping experience.
+      html: `<p>Congrats on the first step towards your new online shopping experience.<br><br>
         As we continue to develop the capabilities of OllaCart, download and use our <a href="${process.env.EXTENSION_URL}">Chrome Extension</a> to select items from any online shopping website and add them to your OllaCart.<br>
-        It is as easy as selecting the extension logo, hovering over the item to confirm details, and selecting either the text or image. From there you have the option to confirm additional information or images by manually selecting information.<br>
-        When on <a href="${process.env.DOMAIN}">OllaCart.com</a>, select the items that you want to publish to your public online shopping cart by turning their outline blue. You may copy and paste the website link at the top of your shared list wherever you want. Add an item to your cart by clicking again to change the outline green.<br>
-        You may now purchase items via OllaCart from any website. We are currently fine-tuning our Purchase-as-a-Service system, and appreciate all feedback.<br><br>
+        It is as easy as selecting the extension logo, hovering over the item to confirm details, and selecting either the text or image when the product information is accurate. 
+        While using the extension you have the option to confirm additional information or images by manually selecting information.<br><br>
+        When signed in to <a href="${process.env.DOMAIN}">OllaCart.com</a>, select the items from your cart that you want to share on OllaCart by clicking them twice to turn their outline blue. 
+        You may copy and paste the website link at the top of your shared list wherever you want so people see your public shopping list with or without an OllaCart account.
+        Add an item to your purchase cart by clicking just once to change the outline green.<br>
+        You may now purchase items via OllaCart from any website. With promo codes activated, you can also save on any website.<br><br>
+        We are currently fine-tuning our Purchase-as-a-Service system, and appreciate all feedback.<br><br>
         Now you can:<br>
         Purchase and share any item from any website through OllaCart.<br><br>
-        In the future, you will be able to:<br>
-        Browse suggested items, shop, and compare.<br>
-        Comment on, like, dislike, and add to your friend's items.<br>
-        Recieve personalized recommendations that aren't ads.<br>
-        Security: Logging in to your account now only requires your email address in order to keep logging in hassle free. Our extension knows which cart to add your items to once you log in on the website. To secure your account we use email verification for login, just confirm your email through the profile page.<br>
-        We appreciate you using OllaCart while we continue to build out the functionality and cannot wait to revolutionize online shopping; making it easier, more fun, and more convenient.<br>
+        Browse shared items, and purchase items anonymously.<br>
+        Like, dislike, share, and add to cart from your friend's items.<br>
+        <br>
+        Soon you will be able to:<br>
+        Comment, recieve personalized recommendations that aren't ads, and comparison shop across different retailers.<br>
+        Get notified of price drops and promotions.<br><br>
+        Security: To secure your account just confirm the security toggle on the account page to require email authentication.<br><br>
+        We appreciate you using OllaCart while we continue to build out the functionality and cannot wait to revolutionize online shopping; making it easier, more fun, and more convenient to shop and save together.<br>
         Have any suggestions? Let us know by responding to this email.</p>`
     };
     
@@ -84,7 +90,7 @@ exports.sendSecureMail = async (mailTo, uid, type) => {
         from: 'support@ollacart.com',
         to: mailTo,
         subject: 'Secure your account',
-        html: `<p>You can secure your account with email verification by clicking the button below to link your extension, email and OllaCart account.</p><a href="${secure_link}">Secure your account</a>`
+        html: `<p>Secure your account with email verification by clicking the button below to link your extension, email and OllaCart account.</p><a href="${secure_link}">Secure your account.</a>`
       };
       
       transporter.sendMail(mailOptions, function(error, info){
@@ -98,7 +104,7 @@ exports.sendSecureMail = async (mailTo, uid, type) => {
         from: 'support@ollacart.com',
         to: mailTo,
         subject: 'Signin to your Account',
-        html: `<p>Your account is secured with email verification. Click the button below to signin to your OllaCart account.</p><a href="${secure_link}">Signin to your Account</a>`
+        html: `<p>Your account is secured with email verification. <br><br>Click the button below to signin to your OllaCart account.</p><a href="${secure_link}">Sign-in to OllaCart.</a>`
       };
       
       transporter.sendMail(mailOptions, function(error, info){
