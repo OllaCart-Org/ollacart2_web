@@ -8,6 +8,10 @@ const { URL } = require('url');
 
 exports.productById = (req, res, next, id) => {
   Product.findById(id)
+    .populate({
+      path: 'user',
+      select: '_id username email'
+    })
     .exec((err, product) => {
       if (err || !product) {
         return res.status(400).json({
