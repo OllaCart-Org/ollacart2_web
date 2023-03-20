@@ -33,10 +33,10 @@
 
 .share-status {
   margin: 10px 0;
-  padding: 0 20px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
+  gap: 10px;
 
   .user-name {
     color: var(--fg);
