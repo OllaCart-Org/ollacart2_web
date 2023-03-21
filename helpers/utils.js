@@ -112,7 +112,7 @@ exports.sendOrderStatusMail = async (mailTo, product) => {
   const message = ['The product order status changed to UnOrdered', 'The product order is placed.', 'The product is in shipping.', 'The product order is closed.'];
   const subject = 'OllaCart Order';
   let html = `<h4>"${product.name + ' $' + product.price}"</h4><p>${message[product.orderStatus]}</p>`;
-  if (product.orderStatus === 1 && product.promoNote) html += `<p>Promo Code: ${product.promoNote}</p>`;
+  if (product.orderStatus === 1 && product.promoCode) html += `<p>Promo Code: ${product.promoCode}</p>`;
   if (product.orderStatus === 2 && product.shippingNote) html += `<p>Shipping Note: ${product.shippingNote}</p>`;
 
   return new Promise(resolve => {

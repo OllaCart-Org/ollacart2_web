@@ -3,7 +3,7 @@ import { Typography, Box, Link, IconButton, Collapse, Avatar, Table, TableBody, 
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import { useToasts } from 'react-toast-notifications';
-import { KeyboardArrowUp, KeyboardArrowDown, Check, NoteAdd, Update, Close } from '@material-ui/icons';
+import { KeyboardArrowUp, KeyboardArrowDown, Check, NoteAdd, Update, Close, CropFree } from '@material-ui/icons';
 import Layout from './layout'
 import AdminDialog from '../../components/Admin/modal';
 import api from '../../api';
@@ -45,7 +45,7 @@ const useRowStyles = makeStyles({
 });
 
 const OrderRow = (props) => {
-  const { order, orderStatusChanged, openShippingNotesModal} = props;
+  const { order, orderStatusChanged, openShippingNotesModal, openPromoCodeModal} = props;
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 
@@ -139,11 +139,18 @@ const OrderRow = (props) => {
                       <TableCell align="center"><Switch checked={product.orderStatus > 1} onChange={(e) => orderStatusChanged(e.target.checked, 1, order._id, idx)}/></TableCell>
                       <TableCell align="center"><Switch checked={product.orderStatus > 2} onChange={(e) => orderStatusChanged(e.target.checked, 2, order._id, idx)}/></TableCell>
                       <TableCell align="center">
-                        {product.orderStatus > 1 &&
-                          <IconButton aria-label="Shipping Notes" size='small' onClick={() => openShippingNotesModal(order._id, idx)}>
-                            <NoteAdd />
-                          </IconButton>
-                        }
+                        <Box display='flex' justifyContent='center' gridGap='5px'>
+                          {product.orderStatus > 0 &&
+                            <IconButton aria-label="Promo Code" size='small' onClick={() => openPromoCodeModal(order._id, idx)}>
+                              <CropFree />
+                            </IconButton>
+                          }
+                          {product.orderStatus > 1 &&
+                            <IconButton aria-label="Shipping Notes" size='small' onClick={() => openShippingNotesModal(order._id, idx)}>
+                              <NoteAdd />
+                            </IconButton>
+                          }
+                        </Box>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -167,6 +174,8 @@ const Orders = () => {
   const [page, setPage] = useState(1);
   const [shippingNotesModalInfo, setShippingNoteModalInfo] = useState({});
   const [shippingNote, setShippingNote] = useState('');
+  const [promoCodeModalInfo, setPromoCodeModalInfo] = useState({});
+  const [promoCode, setPromoCode] = useState('');
 
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -197,15 +206,17 @@ const Orders = () => {
         orders[orderIdx].products = data.order.products;
         setOrders([...orders]);
         closeShippingNoteModal();
+        closePromoCodeModal();
       })
       .catch(err => showToast(err.message));    
   }
 
   const orderStatusChanged = (value, type, _id, idx) => {
     const status = value + type;
-    if (status === 2) {
-      setShippingNoteModalInfo({ _id, idx, status });
-      return;
+    if (status === 1) {
+      return setPromoCodeModalInfo({ _id, idx, status });
+    } else if (status === 2) {
+      return setShippingNoteModalInfo({ _id, idx, status });
     }
     updateOrderDetail(_id, {idx, status});
   }
@@ -214,7 +225,7 @@ const Orders = () => {
     const order = orders.find(itm => itm._id === _id);
     setShippingNoteModalInfo({ _id, idx });
     const product = order.products[idx];
-    setShippingNote(product.shippingNote)
+    setShippingNote(product.shippingNote || '')
   }
 
   const closeShippingNoteModal = () => {
@@ -223,6 +234,21 @@ const Orders = () => {
 
   const saveShippingNote = () => {
     updateOrderDetail(shippingNotesModalInfo._id, { ...shippingNotesModalInfo, shippingNote });
+  }
+
+  const openPromoCodeModal = (_id, idx) => {
+    const order = orders.find(itm => itm._id === _id);
+    setPromoCodeModalInfo({ _id, idx });
+    const product = order.products[idx];
+    setPromoCode(product.promoCode || '')
+  }
+
+  const closePromoCodeModal = () => {
+      setPromoCodeModalInfo({});
+  }
+
+  const savePromoCode = () => {
+    updateOrderDetail(promoCodeModalInfo._id, { ...promoCodeModalInfo, promoCode });
   }
 
   return (
@@ -249,6 +275,7 @@ const Orders = () => {
                 key={idx}
                 order={order}
                 orderStatusChanged={orderStatusChanged}
+                openPromoCodeModal={openPromoCodeModal}
                 openShippingNotesModal={openShippingNotesModal} />
             ))}
           </TableBody>
@@ -263,6 +290,15 @@ const Orders = () => {
           <Box display='flex' gridGap='10px' justifyContent='flex-end' mt={2}>
             <Button variant="contained" color="primary" size="small" startIcon={<Update />} onClick={saveShippingNote}>Save</Button>
             <Button variant="contained" size="small" startIcon={<Close />} onClick={closeShippingNoteModal}>Close</Button>
+          </Box>
+        </Box>
+      </AdminDialog>
+      <AdminDialog title='Promo Code' open={!!promoCodeModalInfo._id} onClose={closePromoCodeModal}>
+        <Box mt={1}>
+          <TextField label="Promo Code" size="small" variant="outlined" multiline rows={5} fullWidth value={promoCode} onChange={e => setPromoCode(e.target.value)} />
+          <Box display='flex' gridGap='10px' justifyContent='flex-end' mt={2}>
+            <Button variant="contained" color="primary" size="small" startIcon={<Update />} onClick={savePromoCode}>Save</Button>
+            <Button variant="contained" size="small" startIcon={<Close />} onClick={closePromoCodeModal}>Close</Button>
           </Box>
         </Box>
       </AdminDialog>

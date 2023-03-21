@@ -144,7 +144,21 @@ exports.thumbup = async (req, res) => {
     likes.push(user._id);
     const idx = dislikes.indexOf(user._id);
     if (idx > -1) dislikes.splice(idx, 1);
-  }  
+
+    setTimeout(async () => {
+      const _p = await Product.findOne({ _id: product._id });
+      if (!_p) return;
+      if (_p.likes.includes(user._id)) {
+        const forkedProducts = await Product.find({_id: {$in: _p.forkedIds}});
+        for (let i = 0; i < forkedProducts.length; i ++) {
+          const { likes, dislikes } = forkedProducts[i];
+          if(likes.includes(user._id) || dislikes.includes(user._id)) continue;
+          likes.push(user._id);
+          await forkedProducts[i].save();
+        }
+      }
+    }, 20000);
+  }
 
   await product.save();
   res.send({ product });

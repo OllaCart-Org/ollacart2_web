@@ -8,7 +8,7 @@ import Layout from './layout';
 import api from '../api';
 
 import './profile.scss';
-import { AccountBox, ContactMail, ExitToApp, Feedback, HorizontalSplit, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
+import { AccountBox, ContactMail, CropFree, ExitToApp, Feedback, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
 import utils from '../utils';
 
 const Profile = () => {
@@ -157,7 +157,7 @@ const Profile = () => {
               <Switch color='primary' name='tax' checked={status.tax} onChange={switchChanged} />
             </div>
             <div className='switch-wrapper'>
-              <HorizontalSplit />
+              <CropFree />
               <div className='text-content'>Include Promo Codes</div>
               <Switch color='primary' name='promo_code' checked={status.promo_code} onChange={switchChanged} />
             </div>

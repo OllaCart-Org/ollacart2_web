@@ -78,6 +78,10 @@ const Order = () => {
           <div className='part'>
             <div className='product-title'>{detailCard.name}</div>
             {getOrderStatusBadge(detailCard.orderStatus)}
+            {detailCard.promoCode && <div className='shipping-note'>
+              <div className='title'>Promo Code</div>
+              <div className={'note' + (utils.checkURL(detailCard.promoCode) ? ' link' : '')} onClick={noteClicked}>{detailCard.promoCode}</div>
+            </div>}
             {detailCard.shippingNote && <div className='shipping-note'>
               <div className='title'>Shipping Note</div>
               <div className={'note' + (utils.checkURL(detailCard.shippingNote) ? ' link' : '')} onClick={noteClicked}>{detailCard.shippingNote}</div>
