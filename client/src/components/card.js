@@ -35,6 +35,11 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
     return <div className={'order-status-badge ' + color}>{label}</div>
   }
 
+  const getPurchaseStatusBadge = () => {
+    if (!card.purchasedStatus || showPrice) return ''
+    return <div className={'order-status-badge bg-red'}>Purchased</div>
+  }
+
   const thumbupDiff = () => {
     const current = card.likes.length;
     const before = utils.getStoredThumbCount(card._id).thumbup;
@@ -57,7 +62,7 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
         <img src={card.photo} alt={card.name} className='mb-3'
           style={{ objectFit: 'contain', height: '100%', width: '100%', display: 'flex', marginLeft: 'auto', marginRight: 'auto' }}
         />
-        {getOrderStatusBadge()}
+        {getOrderStatusBadge() || getPurchaseStatusBadge()}
         {hideThumbs ? '' : (
           <>
             {thumbupDiff() && <div className='thumb thumb-up'>

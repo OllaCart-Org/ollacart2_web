@@ -30,6 +30,11 @@
   --color-indigo: #3F48CC;
 }
 
+.bg-red {
+  background-color: var(--color-red) !important;
+  color: var(--color-light) !important;
+}
+
 * {
   transition: all .3s;
   box-sizing: border-box;
