@@ -53,10 +53,10 @@ exports.verifyUser = async (req, res) => {
   const { token } = req.body;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded || !decoded._id) return res.status(400).json({ error: "Error occured!" });
+    if (!decoded || !decoded._id) return res.status(400).json({ error: "Error occurred!" });
     const user = await User.findOne({ _id: decoded._id });
     if (!user) {
-      return res.status(400).json({ error: "Error occured!" });
+      return res.status(400).json({ error: "Error occurred!" });
     }
     
     const { _id, name, email, role } = user;
@@ -69,7 +69,7 @@ exports.verifyUser = async (req, res) => {
 
 exports.signout = (req, res) => {
   res.clearCookie('t');
-  res.json({ message: 'Signout success' });
+  res.json({ message: 'Sign-out success' });
 };
 
 
