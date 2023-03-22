@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const Order = require('../models/order.model');
+const Product = require('../models/product.model');
 const utils = require('../helpers/utils');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -141,6 +142,9 @@ exports.updateOrder = async (type, data) => {
     order.receiptUrl = charge.receipt_url;
 
     utils.sendNewOrderMail(order);
+
+    const p_ids = order.products.map(p => p.product);
+    await Product.updateMany({ _id: { $in: p_ids } }, { $inc: { purchasedStatus: 1 }, purchased: 0 })
   }
 
   await order.save();  
