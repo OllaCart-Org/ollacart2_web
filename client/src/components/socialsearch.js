@@ -64,6 +64,24 @@ const SocialSearch = ({ search }) => {
     setUsers([...users]);
   }
 
+  const followUser = (user) => {
+    if(user.following) {
+      api.unFollowUser(user._id)
+      .then(() => {
+        user.following = false;
+        setUsers([...users]);
+      })
+      .catch(err => showToast(err.message))
+    } else {
+      api.followUser(user._id)
+      .then(() => {
+        user.following = true;
+        setUsers([...users]);
+      })
+      .catch(err => showToast(err.message))
+    }
+  }
+
   return (
     <ClickAwayListener onClickAway={() => setShowList(false)}>
       <div className='social-search-wraper'>
@@ -88,7 +106,9 @@ const SocialSearch = ({ search }) => {
               <div key={user._id} className='social-user'>
                 <Checkbox checked={user.selected} onChange={(e) => {selectUser(idx, e.target.checked)}} />
                 <div className='user-name'>{user.username}</div>
-                {user.following ? <Star className='star' /> : <StarOutline className='star-outline' />}
+                <div className='user-follow' onClick={() => followUser(user)}>
+                  {user.following ? <Star className='star' /> : <StarOutline />}
+                </div>
               </div>
             ))}
           </div>

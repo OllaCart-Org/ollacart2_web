@@ -41,12 +41,14 @@
           flex-grow: 1;
           white-space: nowrap;
         }
-        .star {
+        .user-follow {
           margin: 0 5px;
-          color: var(--color-yellow);
-        }
-        .star-outline {
-          margin: 0 5px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          .star {
+            color: var(--color-yellow);
+          }
         }
       }
     }
