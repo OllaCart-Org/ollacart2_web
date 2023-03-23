@@ -12,6 +12,7 @@ const Social = () => {
 
   return (
     <Layout>
+      <SocialSearch search={search} />
       <Cards
         page='social'
         readonly={true}
