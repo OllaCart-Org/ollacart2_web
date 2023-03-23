@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Cards from '../components/cards';
+import SocialSearch from '../components/socialsearch';
 import Layout from './layout';
 
-const Social = (props) => {
-  const [filter] = useState({followed: 1});
+const Social = () => {
+  const [filter, setFilter] = useState({social: 1, _ids: []});
+
+  const search = useCallback((_ids) => {
+    setFilter({ social: 1, _ids })
+  }, [])
+
   return (
     <Layout>
       <Cards

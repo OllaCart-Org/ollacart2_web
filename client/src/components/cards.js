@@ -232,6 +232,12 @@ const Cards = (props) => {
       .catch(err => showToast(err.message));
   }
 
+  const getEmailModalTitle = () => {
+    if (emailModalForm.type === 'fork') return 'Add to your OllaCart';
+    if (emailModalForm.type === 'thumbup') return 'ThumbUp';
+    if (emailModalForm.type === 'thumbdown') return 'ThumbDown';
+  }
+
   const onSubmitWithEmail = (email) => {
     if(emailModalForm.type === 'fork') {
       fork(emailModalForm.card, email);
@@ -281,7 +287,7 @@ const Cards = (props) => {
         putPurchase={() => putPurchaseClicked(cards[quickViewCardIdx])}
         updateLogo={(idx) => updateProductLogo(cards[quickViewCardIdx], idx)}
         close={()=>setQuickViewCardIdx(-1)} />}
-      <EmailModal open={!!emailModalForm.open} onClose={() => setEmailModalForm({})} title='Follow Cart' onSubmit={onSubmitWithEmail} />
+      <EmailModal open={!!emailModalForm.open} onClose={() => setEmailModalForm({})} title={getEmailModalTitle()} onSubmit={onSubmitWithEmail} />
     </div>
   );
 };

@@ -201,7 +201,7 @@ exports.remove = (req, res) => {
 exports.listBySearch = async (req, res) => {
   let limit = req.body.limit ? parseInt(req.body.limit) : 100;
   let skip = parseInt(req.body.skip);
-  const { purchased, shared, followed, _id } = req.body;
+  const { purchased, shared, social, _id } = req.body;
 
   const filters = {};
   let user = req.user;
@@ -213,8 +213,8 @@ exports.listBySearch = async (req, res) => {
     filters.user = _id;
     filters.shared = 1;
   }
-  else if (followed) {
-    filters.user = { $in: req.user && req.user.following };
+  else if (social) {
+    filters.user = { $in: req.body._ids || [] };
     filters.shared = 1;
   }
   else filters.user = req.user && req.user._id;
@@ -270,6 +270,12 @@ exports.getShareStatus = async (req, res) => {
   res.send({ followStatus, followedCount, username })
 }
 
+exports.getSocialStatus = async (req, res) => {
+  const user = req.user;
+  const users = await User.find({ _id: { $ne: user?._id } } ).select('username email').exec();
+  const following = user?.following || [];
+  res.send({ following, users });
+}
 
 
 

@@ -141,6 +141,10 @@ const getShareStatus = (_id) => {
   return call(`/product/getsharestatus`, { _id });
 }
 
+const getSocialStatus = (_id) => {
+  return call(`/product/getsocialstatus`, { });
+}
+
 const followUser = (followId, email = '') => {
   return call(`/user/follow`, { followId, email });
 }
@@ -209,6 +213,7 @@ export default {
   getOrderedProducts,
   getOrdersByUser,
   getShareStatus,
+  getSocialStatus,
   followUser,
   unFollowUser,
   forkProduct,

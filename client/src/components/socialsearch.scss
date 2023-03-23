@@ -1,0 +1,54 @@
+.social-search-wraper {
+  width: 300px;
+  margin: auto;
+  margin-top: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  .social-search-text {
+    &, .MuiInputBase-root, label { color: var(--color-light); }
+    fieldset { border-color: var(--color-light); }
+    .adorn-logo {
+      width: 40px;
+      height: 40px;
+      fill: var(--color-light);
+    }
+  }
+
+  .social-list {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 60px;
+    border-radius: 9px;
+    background-color: var(--accent-0);
+    padding: 20px;
+    z-index: 2;
+    display: none;
+    &.show { display: block; } 
+    .social-users {
+      max-height: 300px;
+      overflow-y: auto;
+      .social-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid var(--color-light);
+        &, .MuiButtonBase-root { color: var(--color-light); }
+        .user-name {
+          width: 1px;
+          flex-grow: 1;
+          white-space: nowrap;
+        }
+        .star {
+          margin: 0 5px;
+          color: var(--color-yellow);
+        }
+        .star-outline {
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+}

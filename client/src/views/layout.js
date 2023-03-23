@@ -1,16 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Person, PersonAdd, Share, ShoppingCart, Home, ShoppingBasket, Group } from '@material-ui/icons';
 import { useHistory, useLocation } from 'react-router-dom'
 import { useSelector } from "react-redux"
 import OllaCartModal from '../components/modal'
 import Signin from '../components/signin'
+
+import './layout.scss';
+
+import HomeLogo from '../components/Logo/home';
+import CartLogo from '../components/Logo/cart';
+import ShareLogo from '../components/Logo/share';
+import BagLogo from '../components/Logo/bag';
+import UserLogo from '../components/Logo/user';
+import SocialLogo from '../components/Logo/social';
 
 const Layout = ({ children }) => {
   const { email, _id } = useSelector(state => state.auth);
   const history = useHistory();
   const location = useLocation();
 
-  const [page, setPage] = useState('home');
+  const [page, setPage] = useState('');
   const [openSigninModal, setOpenSigninModal] = useState(false);
 
   
@@ -41,33 +49,33 @@ const Layout = ({ children }) => {
             { email ? (
               <>
                 <div className={'menu-item' + ((page === 'home') ? ' active' : '')}>
-                  <Home onClick={() => goTo('/home')} />
+                  <HomeLogo onClick={() => goTo('/home')} />
                 </div>
                 <div className={'menu-item' + ((page === 'purchase') ? ' active' : '')}>
-                  <ShoppingCart onClick={() => goTo(`/purchase`)} />
+                  <CartLogo onClick={() => goTo(`/purchase`)} />
                 </div>
                 <div className={'menu-item' + ((page === 'share') ? ' active' : '')}>
-                  <Share onClick={() => goTo(`/share/${_id}`)} />
+                  <ShareLogo onClick={() => goTo(`/share/${_id}`)} />
                 </div>
                 <div className={'menu-item' + ((page === 'social') ? ' active' : '')}>
-                  <Group onClick={() => goTo(`/social`)} />
+                  <SocialLogo onClick={() => goTo(`/social`)} />
                 </div>
               </>
             ) : 
               <>
                 <div className={'menu-item' + ((page === 'landing') ? ' active' : '')}>
-                  <Home onClick={() => goTo('/')} />
+                  <HomeLogo onClick={() => goTo('/')} />
                 </div>
               </>
             }
           </div>
           <div className='right-menu'>
             {email && <div className={'menu-item' + ((page === 'order') ? ' active' : '')}>
-              <ShoppingBasket onClick={() => goTo(`/order`)} />
+              <BagLogo onClick={() => goTo(`/order`)} />
             </div>}
             <div className={'menu-item' + ((page === 'profile') ? ' active' : '')}>
-              {email && <Person onClick={() => goTo('/profile')}/>}
-              {!email && <PersonAdd onClick={() => setOpenSigninModal(true)}/>}
+              {email && <UserLogo onClick={() => goTo('/profile')}/>}
+              {!email && <UserLogo onClick={() => setOpenSigninModal(true)}/>}
             </div>
           </div>
         </div>
