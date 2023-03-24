@@ -4,7 +4,7 @@
   .product-img {
     position: relative;
     height: 250px;
-    border: 2px solid var(--primary);
+    border: 2px solid var(--color-blue);
     overflow: hidden;
     border-radius: 10px;
 
@@ -20,13 +20,13 @@
       justify-content:center;
       align-items:center;
       color:#fff;
-      background-color:#260101;
+      background-color:var(--color-indigo);
       box-shadow:0 0 5px 1px #000;
       -webkit-transform:rotate(45deg);
       transform:rotate(45deg);
 
-      &.color-placed { background-color:#ff4500 }
-      &.color-shipped { background-color:#2fb759 }
+      &.color-placed { background-color:var(--color-red) }
+      &.color-shipped { background-color:var(--color-green) }
     }
   }
 
@@ -38,12 +38,12 @@
 
     &.item-price {
       margin-right: 0;
-      color: rgb(47 183 89);
+      color: var(--color-green);
     }
   }
   
   .insert-link, .close-link {
-    svg { color: rgb(150, 150, 150); }
+    svg { color: var(--color-light); }
 
     &:hover svg { opacity: 0.7 };
     &.insert-link {
@@ -60,13 +60,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--fg);
-    background-color: #260101;
-    box-shadow: 0px 0px 5px 1px var(--bg);
+    color: var(--color-light);
+    background-color: var(--color-indigo);
+    box-shadow: 0px 0px 5px 1px var(--color-dark);
     transform: rotate(45deg);
 
-    &.color-placed { background-color: #ff4500; }
-    &.color-shipped { background-color: rgb(47 183 89); }
+    &.color-placed { background-color: var(--color-red); }
+    &.color-shipped { background-color: var(--color-green); }
   }
 
   .thumb, .user-name {
@@ -77,7 +77,7 @@
     justify-content: center;
     gap: 8px;
     border-radius: 15px;
-    color: var(--fg);
+    color: var(--color-light);
 
     &.user-name {
       top: 5px;
@@ -86,7 +86,7 @@
     }
 
     &.thumb {
-      background-color: var(--primary);
+      background-color: var(--color-sea);
       bottom: 5px;
     }
     &.thumb-up { left: 10px; }
@@ -99,12 +99,12 @@
   border-radius: 15px;
 }
 .shop-item.purchased .product-img {
-  border-color: rgb(47 183 89);
+  border-color: var(--color-green);
 }
 .shop-item.shared .product-img {
-  border-color: var(--primary);
+  border-color: var(--color-blue);
 }
 .shop-item.shared.purchased .product-img {
-  background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(to bottom, rgb(47 183 89), var(--primary)) border-box;
+  background: linear-gradient(var(--color-dark2), var(--color-dark2)) padding-box, linear-gradient(to bottom, var(--color-green), var(--color-blue)) border-box;
   border-color: transparent;
 }

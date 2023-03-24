@@ -1,6 +1,5 @@
 .landing-page {
   padding: 30px 0;
-  color: var(--primary);
   text-align: center;
 
   hr {
@@ -32,27 +31,20 @@
     justify-content: center;
     align-items: center;
 
-    img {
-      border: 3px solid;
-      border-radius: 25px;
-      box-shadow: 1px 1px 3px 1px var(--fg);
+    svg {
+      color: var(--color-light);
     }
     
     h2 {
       margin: 15px 0 0;
-      font-size: 30pt;
-      font-weight: bold;
     }
     h3 {
       margin: 15px 0 0;
-      font-size: 24pt;
     }
     
     p, a {
-      font-size: 12pt;
       text-align: center;
       max-width: 550px;
-      color: var(--fg);
       margin: 5px 0;
       text-decoration: none;
     }
@@ -64,20 +56,16 @@
     align-items: center;
     justify-content: center;
     width: min-content;
-    color: var(--fg);
-    border: 1px solid var(--fg);
-    font-size: 18pt;
+    border: 1px solid var(--color-light);
     white-space: nowrap;
     padding: 0 10px;
     border-radius: 7px;
     cursor: pointer;
 
     &:hover {
-      background-color: #fff3;
+      opacity: 0.7;
     }
-    img {
-      width: 80px;
-    }
+    img { width: 60px; }
   }
   
   .carousel-container {
@@ -85,7 +73,6 @@
 
     .carousel-text {
       text-align: center;
-      color: var(--fg);
       min-height: 100px;
       max-width: 600px;
       margin: auto;
@@ -113,8 +100,6 @@
 
     .user-comment {
       position: relative;
-      color: var(--fg);
-      font-size: 16pt;
       max-width: 600px;
       text-align: center;
       
@@ -148,11 +133,9 @@
 
     .footer-link {
       text-decoration: underline;
-      color: var(--primary);
     }
     .footer-button {
-      background-color: var(--primary);
-      color: var(--fg);
+      background-color: var(--color-blue);
       padding: 5px;
       width: 90px;
     }

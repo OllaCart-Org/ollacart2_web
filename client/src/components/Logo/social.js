@@ -2,7 +2,7 @@ import React from 'react';
 
 const UserLogo = (props) => {
   return (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" version="1.1" width="256"
+    <svg {...props} fill="currentColor" xmlns="http://www.w3.org/2000/svg" version="1.1" width="256"
       height="256" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
       <path
         d="M143.545,207.10446294784546 h-28.423000000000002 c-3.073,0 -5.564,-2.491 -5.564,-5.563 s2.491,-5.563 5.564,-5.563 h28.423000000000002 c3.071,0 5.562,2.491 5.562,5.563 S146.616,207.10446294784546 143.545,207.10446294784546 z"

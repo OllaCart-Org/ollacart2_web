@@ -2,7 +2,7 @@ import React from 'react';
 
 const CartLogo = (props) => {
   return (
-    <svg {...props} version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+    <svg {...props} fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
         width="256px" height="256px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
       <path d="M229.474,157.608c0,14.243-10.832,24.672-25.375,24.672c-14.541,0-25.372-10.429-25.372-24.672
         c0-14.239,10.831-24.671,25.372-24.671C218.642,132.938,229.474,143.369,229.474,157.608z M189.155,157.608

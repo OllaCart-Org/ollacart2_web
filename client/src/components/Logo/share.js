@@ -2,7 +2,7 @@ import React from 'react';
 
 const ShareLogo = (props) => {
   return (
-    <svg {...props} version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+    <svg {...props} fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
         width="256px" height="256px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
       <path d="M77.209,128.854c-2.523,0-4.57-2.046-4.57-4.571l-0.002-1.148c-0.01-7.554-0.023-14.69,4.802-22.071
         c11.118-17.01,29.929-21.198,46.812-10.422c0.791,0.505,1.566,1.02,2.332,1.537c2.092,1.413,2.643,4.255,1.229,6.346

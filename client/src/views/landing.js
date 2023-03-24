@@ -11,9 +11,9 @@ import OllaCartModal from '../components/modal';
 import Investor from '../components/Contacts/investor';
 import Partner from '../components/Contacts/partner';
 import Feedback from '../components/Contacts/feedback';
+import OllaCartMultiLogo from '../components/Logo/ollacartmulti';
 import './landing.scss';
 
-import Logo from '../assets/img/Olla - g128.png';
 import WebStore from '../assets/img/chrome-webstore.png';
 import Avatar1 from '../assets/img/avatar1.jpg';
 import Avatar2 from '../assets/img/avatar2.jpg';
@@ -57,12 +57,12 @@ const Landing = () => {
         <div className='landing-top'>
           <div>
             <div className='landing-logo mt-section'>
-              <img src={Logo} alt="logo" />
-              <h2>Shopping OllaCart</h2>
+              <OllaCartMultiLogo className='color-white' />
               <p>OllaCart is a universal, social, online shopping cart. Use our extension to select the image of any product online, which will add it to your OllaCart.</p>
             </div>
             <div className='webstore-download' onClick={openWebStore}>
-              <img src={WebStore} alt="websotre" /> Chrome WebStore
+              <img src={WebStore} alt="websotre" />
+              <h4>Chrome WebStore</h4>
             </div>
           </div>
           {!email && <div className='landing-signin'>
@@ -77,7 +77,7 @@ const Landing = () => {
           <Carousel>
             {SlideImgs.map((itm, idx) => (
               <div key={idx}>
-                <div className='carousel-text'>{itm.text}</div>
+                <p className='carousel-text'>{itm.text}</p>
                 <div className='carousel-item'>
                   <img src={itm.img} alt="slide" />
                 </div>
@@ -94,10 +94,10 @@ const Landing = () => {
         <div className='video-container'>
           <video src={ExtensionVideo} controls/>
         </div>
-        <div className='mt-section user-comments'>
+        <div className='mt-section user-comments color-light'>
           <div className='user-comment'>
             <FormatQuote />
-            The customer service for OllaCart is top-notch. I had an issue with one of my orders and they were quick to respond and resolve the problem. I highly recommend this extension to all my friends and family.
+            <span>The customer service for OllaCart is top-notch. I had an issue with one of my orders and they were quick to respond and resolve the problem. I highly recommend this extension to all my friends and family.</span>
             <FormatQuote />
             <div className='avatar-container'>
               <img src={Avatar1} alt="avatar" />
@@ -105,7 +105,7 @@ const Landing = () => {
           </div>
           <div className='user-comment'>
             <FormatQuote />
-            I've been using this shopping extension for a while now and it's been a real game-changer. Being able to add items to my cart from any shopping site has made online shopping so much easier and more efficient. It's also really user-friendly and doesn't slow down my browser like some other extensions I've tried. Highly recommend it!
+            <span>I've been using this shopping extension for a while now and it's been a real game-changer. Being able to add items to my cart from any shopping site has made online shopping so much easier and more efficient. It's also really user-friendly and doesn't slow down my browser like some other extensions I've tried.<br />Highly recommend it!</span>
             <FormatQuote />
             <div className='avatar-container'>
               <img src={Avatar2} alt="avatar" />
@@ -114,9 +114,9 @@ const Landing = () => {
         </div>
         <hr />
         <div className='inline-footer mb-section'>
-          <div className='footer-button' onClick={() => setShowPartnerModal(true)}>Partners</div>
-          <div className='footer-button' onClick={() => setShowFeedbackModal(true)}>Feedback</div>
-          <div className='footer-button' onClick={() => setShowInvestorModal(true)}>Investors</div>
+          <span className='footer-button' onClick={() => setShowPartnerModal(true)}>Partners</span>
+          <span className='footer-button' onClick={() => setShowFeedbackModal(true)}>Feedback</span>
+          <span className='footer-button' onClick={() => setShowInvestorModal(true)}>Investors</span>
         </div>
         <div className='landing-logo mb-section'>
           <h3>Contact OllaCart</h3>

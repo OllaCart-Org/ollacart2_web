@@ -100,7 +100,7 @@ const QuickView = ({ card, close, share, save, remove, updateLogo, putPurchase, 
           </Box>
           <Box className='right-bar'>
             <Typography variant="h5" gutterBottom>{card.name}</Typography>
-            <Typography variant="h4" gutterBottom style={{color: '#66ceff'}}>${card.price}</Typography>
+            <Typography variant="h5" gutterBottom style={{color: '#66ceff'}}>${card.price}</Typography>
             {editable && card.size && <Box className='size-item'><span>Size: {card.size}</span></Box>}
             {!editMode && <Typography style={{whiteSpace: 'break-spaces'}}>{card.description}</Typography>}
             {editMode && <TextField

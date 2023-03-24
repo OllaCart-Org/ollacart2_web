@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux"
-import { Snackbar } from '@material-ui/core';
 import { useToasts } from 'react-toast-notifications';
 import api from '../api';
 import { actions } from '../redux/_actions';
+import './signin.scss';
 
 const Signin = () => {
   const [value, setValue] = useState('');
   const [interv, setInterv] = useState(null);
   
-  const { error, verifying, secure_identity } = useSelector(state => state.auth);
+  const { verifying, secure_identity } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const { addToast } = useToasts();
 
@@ -45,9 +45,9 @@ const Signin = () => {
   return (
     <div>
       <div className='sign-in'>
-        <div className="input-label">
+        <h3 className="input-label">
           Sign in with your email
-        </div>
+        </h3>
         <div className="input-description">
           To create an account just enter your email and sign in.<br/>
           On your browser, download the extension from the chrome web store to sign up.
@@ -66,9 +66,6 @@ const Signin = () => {
           This account is secured.<br/>Please check your email to complete login.
         </div> : ''}
       </div>
-      <Snackbar open={!!error} autoHideDuration={6000} anchorOrigin={{vertical: 'top', horizontal: 'center'}} onClose={() => dispatch(actions.setError(''))}>
-        <div className="error-msg">{error}</div>
-      </Snackbar>
     </div>
   )
 }

@@ -14,7 +14,6 @@ import Loading from './components/loading';
 import Profile from './views/profile';
 import Secure from './views/secure';
 import Verify from './views/verify';
-import Signin from './views/signin';
 import Landing from './views/landing';
 import Home from './views/home';
 import Share from './views/share';
@@ -95,7 +94,6 @@ function AppContainer() {
               <Redirect key='redirect' to="/home" />
             ]) : ([
               <Route key='landing' path="/" name='landing' exact component={Landing} />,
-              <Route key='signin' path="/signin" name='signin' exact component={Signin} />,
               <Redirect key='redirect' to="/" />
             ])}
           </Switch>

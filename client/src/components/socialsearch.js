@@ -53,7 +53,7 @@ const SocialSearch = ({ search }) => {
       }
     } else {
       for (let i = 0; i < users.length; i ++) {
-        users[i].filtered = users[i].selected || users[i].username.includes(val);
+        users[i].filtered = users[i].selected || users[i].username.toLocaleLowerCase().includes(val.toLocaleLowerCase());
       }
     }
     setValue(val);

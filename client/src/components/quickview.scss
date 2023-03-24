@@ -9,6 +9,7 @@
   align-items: flex-start;
   backdrop-filter: blur(3px);
   background-color: var(--bg-opacity);
+  z-index: 100;
 
   img {
     width: 100%;
@@ -22,9 +23,9 @@
     max-height: calc(100vh - 150px);
     width: 700px;
     padding: 0 15px 15px;
-    border: 10px solid var(--primary);
+    border: 10px solid var(--color-blue);
     border-radius: 10px;
-    background-color: var(--bg);
+    background-color: var(--color-dark2);
     overflow-y: auto;
 
     &::-webkit-scrollbar {
@@ -41,7 +42,7 @@
       top: 0;
       margin-left: auto;
       padding: 5px 0;
-      background-color: var(--bg);
+      background-color: var(--color-dark2);
 
       .top-nav-item {
         display: flex;
@@ -51,7 +52,7 @@
         width: 40px;
         height: 40px;
         cursor: pointer;
-        color: var(--primary);
+        color: var(--color-sea);
 
         &.active { box-shadow: inset 0 0 9px 4px; }
         &:hover { background-color: #ffffff30; }
@@ -63,7 +64,7 @@
       display: flex;
       justify-content: flex-end;
       gap: 10px;
-      color: var(--primary);
+      color: var(--color-sea);
 
       .label-button {
         display: flex;
@@ -71,14 +72,14 @@
         justify-content: space-between;
         gap: 10px;
         min-width: 70px;
-        border: 1px solid var(--primary);
+        border: 1px solid var(--color-blue);
         border-radius: 8px;
         padding: 3px 10px;
         cursor: pointer;
 
         &:hover {
           opacity: 0.8;
-          box-shadow: 0 0 3px 2px var(--primary);
+          box-shadow: 0 0 3px 2px var(--color-blue);
         }
         &:active {
           opacity: 0.7;
@@ -101,7 +102,7 @@
           width: 100%;
           max-height: 400px;
           padding: 10px;
-          border: 2px solid var(--primary);
+          border: 2px solid var(--color-blue);
           border-radius: 7px;
           display: flex;
           justify-content: center;
@@ -116,7 +117,7 @@
             width: 70px;
             height: 80px;
             padding: 3px;
-            border: 1px solid var(--primary);
+            border: 1px solid var(--color-blue);
             border-radius: 4px;
             cursor: pointer;
             overflow: hidden;
@@ -131,34 +132,34 @@
       .right-bar {
         width: 1px;
         flex-grow: 1;
-        color: var(--primary);
+        color: var(--color-light);
 
         .quickview-item-link {
           word-break: break-all;
           text-decoration: underline;
-          color: #66ceff;
+          color: var(--color-indigo);
           margin-top: 30px !important;
         }
         .description-editor {
           width: 100%;
-          color: var(--primary) !important;
+          color: var(--color-blue) !important;
 
-          * { width: 100%; color: var(--primary) !important; }
-          fieldset { border-color: var(--primary) !important; }
+          * { width: 100%; color: var(--color-blue) !important; }
+          fieldset { border-color: var(--color-blue) !important; }
         }
         
         .size-item, .user-name {
           display: flex;
           justify-content: flex-end;
           span {
-            color: white;
-            background-color: var(--secondary);
+            color: color(--color-light);
+            background-color: var(--color-red);
             border-radius: 15px;
             padding: 2px 10px;
           }
           &.user-name {
             justify-content: flex-start;
-            span { background-color: #555; }
+            span { background-color: var(--color-darkblue); }
           }
         }
       }
@@ -169,8 +170,8 @@
     position: absolute;
     top: 40vh;
     border-radius: 50%;
-    background-color: #1e1e1e;
-    color: var(--fg);
+    background-color: var(--color-dark);
+    color: var(--color-light);
     width: 60px;
     height: 60px;
     display: flex;
@@ -195,14 +196,14 @@
       width: 70px;
       height: 30px;
       font-size: 14pt;
-      color: var(--primary);
-      border: 1px solid var(--primary);
+      color: var(--color-blue);
+      border: 1px solid var(--color-blue);
       cursor: pointer;
 
       &:hover { opacity: 0.8; }
       &:active { opacity: 0.7; }
       &.active {
-        background-color: var(--primary);
+        background-color: var(--color-blue);
         color: var(--fg);
       }
       

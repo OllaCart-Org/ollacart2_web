@@ -7,21 +7,21 @@
   .modal-body {
     border-radius: 8px;
     overflow: hidden;
-    background-color: var(--bg);
-    border: 5px solid var(--primary);
+    background-color: var(--color-dark2);
+    border: 5px solid var(--color-blue);
 
     .modal-header {
       position: relative;
       padding: 15px;
       min-height: 45px;
       border-bottom: 1px solid var(--fg-opacity);
-      color: var(--fg);
+      color: var(--color-light);
 
       .close-button {
         position: absolute;
         right: 0;
         top: 0;
-        color: var(--fg);
+        color: var(--color-light);
       }
     }
     
