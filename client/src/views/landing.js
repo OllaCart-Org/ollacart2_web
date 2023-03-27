@@ -21,10 +21,10 @@ import { Box } from '@material-ui/core';
 
 const SlideImgs = [{
     img: SlideImg1,
-    text: 'Select the items that you want to purchase from multiple different sites by turning the product outline green, and select the items that you wish to share with other users and the internet by turning the products outline blue.'
+    text: 'Select the items that you want to purchase from multiple different sites by turning the product outline green, and select the items that you wish to share with other users by turning the outline blue.'
   }, {
     img: SlideImg2,
-    text: 'You may copy and paste the website link at the top of your shared cart wherever you want.'
+    text: 'Copy and paste the website link at the top of your shared cart wherever you want.'
   }, {
     img: SlideImg3,
     text: 'You may now purchase products via OllaCart from any combination of websites. We are currently fine-tuning our purchase-as-a-service system, and appreciate all feedback.'
@@ -50,7 +50,7 @@ const Landing = () => {
           <div>
             <Box className='landing-logo' mt={5}>
               <OllaCartMultiLogo className='color-white' />
-              <p>OllaCart is a universal, social, online shopping cart. Use our extension to select the image of any product online, which will add it to your OllaCart.</p>
+              <p>OllaCart is a universal and social shopping cart. Use the extension to select any product online, which will add it to your OllaCart.</p>
             </Box>
             <div className='webstore-download' onClick={openWebStore}>
               <img src={WebStore} alt="websotre" />
