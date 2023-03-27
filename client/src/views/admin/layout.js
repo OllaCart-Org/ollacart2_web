@@ -1,8 +1,8 @@
 import React from 'react';
-import { AppBar, Typography, Button, Toolbar, Box, Avatar } from '@material-ui/core';
+import { AppBar, Button, Toolbar, Box, Avatar } from '@material-ui/core';
 import { useHistory } from 'react-router-dom'
 import { useSelector } from "react-redux"
-import Logo from '../../assets/img/Olla - g48.png';
+import OllaCartMultiLogo from '../../components/Logo/ollacartmulti';
 
 import './layout.scss';
 
@@ -17,12 +17,10 @@ const Layout = ({ children }) => {
     <Box className='admin-container'>
       <AppBar position="static">
         <Toolbar>
-          <Button onClick={() => goTo('/')}>
-            <img src={Logo} alt="logo" />
+          <Button className='logo-btn' onClick={() => goTo('/')}>
+            <OllaCartMultiLogo />
           </Button>
-          <Typography variant="h6" className='logo-text'>
-            OllaCart
-          </Typography>
+          <Box mr='auto' />
           <Button color="inherit" onClick={() => goTo('/admin/analytics')}>Analytics</Button>
           <Button color="inherit" onClick={() => goTo('/admin/users')}>Users</Button>
           <Button color="inherit" onClick={() => goTo('/admin/carts')}>Items</Button>

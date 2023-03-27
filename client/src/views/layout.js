@@ -12,6 +12,7 @@ import ShareLogo from '../components/Logo/share';
 import BagLogo from '../components/Logo/bag';
 import UserLogo from '../components/Logo/user';
 import SocialLogo from '../components/Logo/social';
+import Footer from '../components/Footer/footer';
 
 const Layout = ({ children }) => {
   const { email, _id } = useSelector(state => state.auth);
@@ -81,6 +82,7 @@ const Layout = ({ children }) => {
         </div>
       </div>
       <div>{children}</div>
+      <Footer />
       <OllaCartModal open={!email && openSigninModal} onClose={() => setOpenSigninModal(false)}>
         <Signin />
       </OllaCartModal>

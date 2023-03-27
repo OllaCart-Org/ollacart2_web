@@ -8,6 +8,7 @@ import NoCard from '../components/nocard';
 import api from '../api';
 import QuickView from '../components/quickview';
 import EmailModal from './Modals/EmailModal';
+import './cards.scss';
 
 const Cards = (props) => {
   const { filter, readonly, hideThumbs, page } = props;
@@ -142,6 +143,10 @@ const Cards = (props) => {
     putCart(card._id, (card.shared ? 0 : 1), card.purchased);
   }
 
+  const singleShareClicked = (card) => {
+    setEmailModalForm({ type: 'singleshare', card, open: true })
+  }
+
   const putPurchaseClicked = (card) => {
     putCart(card._id, card.shared, (card.purchased ? 0 : 1));
   }
@@ -232,11 +237,24 @@ const Cards = (props) => {
       .catch(err => showToast(err.message));
   }
 
-  const getEmailModalTitle = () => {
+  const singleShare = (card, email) => {
+    api.singleShare(card._id, email)
+      .then(() => showToast('Shared successfully', 'success'))
+      .catch(err => showToast(err.message));
+  }
+
+  const getEmailModalTitle = useCallback(() => {
     if (emailModalForm.type === 'fork') return 'Add to your OllaCart';
     if (emailModalForm.type === 'thumbup') return 'ThumbUp';
     if (emailModalForm.type === 'thumbdown') return 'ThumbDown';
-  }
+    if (emailModalForm.type === 'singleshare') return 'Direct Share'
+  }, [emailModalForm]);
+  const getEmailModalButtonName = useCallback(() => {
+    if (emailModalForm.type === 'fork') return 'Add';
+    if (emailModalForm.type === 'thumbup') return 'ThumbUp';
+    if (emailModalForm.type === 'thumbdown') return 'ThumbDown';
+    if (emailModalForm.type === 'singleshare') return 'Share';
+  }, [emailModalForm]);
 
   const onSubmitWithEmail = (email) => {
     if(emailModalForm.type === 'fork') {
@@ -245,9 +263,19 @@ const Cards = (props) => {
       thumbup(emailModalForm.card, email);
     } else if(emailModalForm.type === 'thumbdown') {
       thumbdown(emailModalForm.card, email);
+    } else if(emailModalForm.type === 'singleshare') {
+      singleShare(emailModalForm.card, email);
     }
     setEmailModalForm({});
   }
+
+  const getShopItemClassName = useCallback((card) => {
+    let ret = 'shop-item';
+    if (page !== 'home') return ret;
+    if (card.shared) ret += ' shared';
+    if (card.purchased) ret += ' purchased';
+    return ret;
+  }, [page]);
 
   return (
     <div>
@@ -255,7 +283,7 @@ const Cards = (props) => {
         <div className='d-flex flex-wrap justify-content-center'>
           {cards.map((card, i) => (
             <div key={i}
-              className={'shop-item ' + (card.shared ? 'shared ' : '' ) + (card.purchased ? 'purchased ' : '' )}
+              className={getShopItemClassName(card)}
               onClick={() => itemClicked(card)}
               onDragStart={() => setDragStartIdx(i)}
               onDragEnter={() => setDragEndIdx(i)}
@@ -276,18 +304,19 @@ const Cards = (props) => {
       {!cards.length && <NoCard page={page} />}
       {(quickViewCardIdx > -1) && <QuickView card={cards[quickViewCardIdx]}
         editable={!readonly}
-        fork={() => fork(cards[quickViewCardIdx])}
-        thumbup={() => thumbup(cards[quickViewCardIdx])}
-        thumbdown={() => thumbdown(cards[quickViewCardIdx])}
+        fork={fork}
+        thumbup={thumbup}
+        thumbdown={thumbdown}
         previous={previousQuickView}
         next={nextQuickView}
-        share={() => shareClicked(cards[quickViewCardIdx])}
+        share={shareClicked}
+        singleShare={singleShareClicked}
         save={save}
-        remove={() => removeClicked(cards[quickViewCardIdx])}
-        putPurchase={() => putPurchaseClicked(cards[quickViewCardIdx])}
-        updateLogo={(idx) => updateProductLogo(cards[quickViewCardIdx], idx)}
+        remove={removeClicked}
+        putPurchase={putPurchaseClicked}
+        updateLogo={updateProductLogo}
         close={()=>setQuickViewCardIdx(-1)} />}
-      <EmailModal open={!!emailModalForm.open} onClose={() => setEmailModalForm({})} title={getEmailModalTitle()} onSubmit={onSubmitWithEmail} />
+      <EmailModal open={!!emailModalForm.open} onClose={() => setEmailModalForm({})} title={getEmailModalTitle()} buttonName={getEmailModalButtonName()} onSubmit={onSubmitWithEmail} />
     </div>
   );
 };

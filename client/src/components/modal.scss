@@ -15,7 +15,7 @@
       padding: 15px;
       min-height: 45px;
       border-bottom: 1px solid var(--fg-opacity);
-      color: var(--color-light);
+      color: var(--color-sea);
 
       .close-button {
         position: absolute;
@@ -29,6 +29,7 @@
       position: relative;
       padding: 15px;
       min-width: 300px;
+      color: var(--color-light);
 
       .modal-content {
         overflow-y: auto;

@@ -1,16 +1,10 @@
-import { useState } from 'react';
 import React from 'react';
 import { useSelector } from "react-redux"
-import { Link } from 'react-router-dom';
 import Carousel from 'react-material-ui-carousel'
 import { FormatQuote } from '@material-ui/icons';
 
 import Layout from './layout';
 import Signin from '../components/signin';
-import OllaCartModal from '../components/modal';
-import Investor from '../components/Contacts/investor';
-import Partner from '../components/Contacts/partner';
-import Feedback from '../components/Contacts/feedback';
 import OllaCartMultiLogo from '../components/Logo/ollacartmulti';
 import './landing.scss';
 
@@ -23,6 +17,7 @@ import SlideImg2 from '../assets/img/slide2.jpg';
 import SlideImg3 from '../assets/img/slide3.jpg';
 import SlideImg4 from '../assets/img/slide4.jpg';
 import SlideImg5 from '../assets/img/slide5.jpg';
+import { Box } from '@material-ui/core';
 
 const SlideImgs = [{
     img: SlideImg1,
@@ -43,9 +38,6 @@ const SlideImgs = [{
 
 const Landing = () => {
   const { email } = useSelector(state => state.auth);
-  const [showInvestorModal, setShowInvestorModal] = useState(false);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-  const [showPartnerModal, setShowPartnerModal] = useState(false);
 
   const openWebStore = () => {
     window.open('https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm', '_blank');
@@ -56,10 +48,10 @@ const Landing = () => {
       <div className='landing-page'>
         <div className='landing-top'>
           <div>
-            <div className='landing-logo mt-section'>
+            <Box className='landing-logo' mt={5}>
               <OllaCartMultiLogo className='color-white' />
               <p>OllaCart is a universal, social, online shopping cart. Use our extension to select the image of any product online, which will add it to your OllaCart.</p>
-            </div>
+            </Box>
             <div className='webstore-download' onClick={openWebStore}>
               <img src={WebStore} alt="websotre" />
               <h4>Chrome WebStore</h4>
@@ -94,7 +86,7 @@ const Landing = () => {
         <div className='video-container'>
           <video src={ExtensionVideo} controls/>
         </div>
-        <div className='mt-section user-comments color-light'>
+        <Box className='user-comments color-light' my={5}>
           <div className='user-comment'>
             <FormatQuote />
             <span>The customer service for OllaCart is top-notch. I had an issue with one of my orders and they were quick to respond and resolve the problem. I highly recommend this extension to all my friends and family.</span>
@@ -111,33 +103,8 @@ const Landing = () => {
               <img src={Avatar2} alt="avatar" />
             </div>
           </div>
-        </div>
-        <hr />
-        <div className='inline-footer mb-section'>
-          <span className='footer-button' onClick={() => setShowPartnerModal(true)}>Partners</span>
-          <span className='footer-button' onClick={() => setShowFeedbackModal(true)}>Feedback</span>
-          <span className='footer-button' onClick={() => setShowInvestorModal(true)}>Investors</span>
-        </div>
-        <div className='landing-logo mb-section'>
-          <h3>Contact OllaCart</h3>
-          <p>Phone: <a href="tel:+17034058794">+1 (703) 405-8794</a></p>
-          <p>Email: <a href="mailto:support@ollacart.com">support@ollacart.com</a></p>
-        </div>
-        <div className='inline-footer mb-section'>
-          <Link className='footer-link' to='/terms-of-service'>Terms of Service</Link>
-          <Link className='footer-link' to='/support'>Support</Link>
-          <Link className='footer-link' to='/privacy-policy'>Privacy Policy</Link>
-        </div>
+        </Box>
       </div>
-      <OllaCartModal open={showInvestorModal} onClose={() => setShowInvestorModal(false)} title='Investor Contact'>
-        <Investor onClose={() => setShowInvestorModal(false)} />
-      </OllaCartModal>
-      <OllaCartModal open={showPartnerModal} onClose={() => setShowPartnerModal(false)} title='Partner Contact'>
-        <Partner onClose={() => setShowPartnerModal(false)} />
-      </OllaCartModal>
-      <OllaCartModal open={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} title='Leave Feedback'>
-        <Feedback onClose={() => setShowFeedbackModal(false)} />
-      </OllaCartModal>
     </Layout>
   );
 };

@@ -2,6 +2,7 @@ const _ = require('lodash');
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const Extension = require('../models/extension.model');
+const EmailController = require('./email.controller');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const { takeFirstDecimal } = require('../helpers/utils');
 const { URL } = require('url'); 
@@ -56,7 +57,7 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  let product = req.product;
+  const product = req.product;
   if (!product) return res.status(400).json({ error: 'Product not found' });
 
   const detail = req.body;
@@ -84,7 +85,7 @@ exports.update = async (req, res) => {
 };
 
 exports.updateLogo = async (req, res) => {
-  let product = req.product;
+  const product = req.product;
   if (!product) return res.status(400).json({ error: 'Product not found' });
 
   const { logo } = req.body;
@@ -108,8 +109,8 @@ exports.updateSequence = async (req, res) => {
 }
 
 exports.forkProduct = async (req, res) => {
-  let product = req.product;
-  let user = req.user;
+  const product = req.product;
+  const user = req.user;
   if (!product) return res.status(400).json({ error: 'Product not found' });
   if (!user) return res.status(400).json({ error: 'Not signed in' });
   if (product.user._id.toString() === user._id.toString()) return res.status(400).json({ error: 'You can not add from your cart' });
@@ -132,8 +133,8 @@ exports.forkProduct = async (req, res) => {
 }
 
 exports.thumbup = async (req, res) => {
-  let product = req.product;
-  let user = req.user;
+  const product = req.product;
+  const user = req.user;
   if (!product) return res.status(400).json({ error: 'Product not found' });
   if (!user) return res.status(400).json({ error: 'Not signed in' });
 
@@ -165,8 +166,8 @@ exports.thumbup = async (req, res) => {
 }
 
 exports.thumbdown = async (req, res) => {
-  let product = req.product;
-  let user = req.user;
+  const product = req.product;
+  const user = req.user;
   if (!product) return res.status(400).json({ error: 'Product not found' });
   if (!user) return res.status(400).json({ error: 'Not signed in' });
 
@@ -183,6 +184,16 @@ exports.thumbdown = async (req, res) => {
   res.send({ product });
 }
 
+exports.singleShare = async (req, res) => {
+  const product = req.product;
+  const email = req.body.email;
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+  if (!email) return res.status(400).json({ error: 'Invalid email' });
+
+  EmailController.sendSingleShareEmail(product, email);
+  res.send({});
+}
+
 exports.remove = (req, res) => {
   let product = req.product;
   if (!product) return res.status(400).json({ error: 'Product not found' });
@@ -197,6 +208,12 @@ exports.remove = (req, res) => {
     });
   });
 };
+
+exports.getProduct = async (req, res) => {
+  let product = req.product;
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+  res.send({ product });
+}
 
 exports.listBySearch = async (req, res) => {
   let limit = req.body.limit ? parseInt(req.body.limit) : 100;
@@ -276,6 +293,8 @@ exports.getSocialStatus = async (req, res) => {
   const following = user?.following || [];
   res.send({ following, users });
 }
+
+
 
 
 

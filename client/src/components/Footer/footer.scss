@@ -1,0 +1,26 @@
+
+.ollacart-footer {
+  a { color: var(--color-light); }
+  .inline-footer {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    .footer-link {
+      text-decoration: underline;
+    }
+    .footer-button {
+      background-color: var(--color-blue);
+      padding: 5px;
+      width: 90px;
+    }
+    .footer-link, .footer-button {
+      color: var(--color-light);
+      cursor: pointer;
+      &:hover { opacity: 0.8; }
+      &:active { opacity: 0.7; }      
+    }
+  }
+}

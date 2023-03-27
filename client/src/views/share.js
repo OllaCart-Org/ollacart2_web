@@ -8,6 +8,7 @@ import api from '../api';
 import Cards from '../components/cards';
 import EmailModal from '../components/Modals/EmailModal';
 import './share.scss';
+import { Button } from '@material-ui/core';
 
 const SHARE_URL = process.env.REACT_APP_PUBLIC_URL + '/share';
 
@@ -89,12 +90,14 @@ const Share = (props) => {
         <div className='shared-url'>ollacart.com/share/{_id}<FileCopyOutlined onClick={copyShareUrl}/></div>
       </div>}
       <div className='share-status'>
-        <div className='user-name'>@{sharedUserName}</div>
-        <div className='follow-button' onClick={followClicked}>
-          <span>Followers: {followedCount}</span>
-          {sharedId !== _id && !followStatus && <FavoriteBorder /> }
-          {sharedId !== _id && followStatus && <Favorite /> }
-        </div>
+        <div className='user-name'>@{sharedUserName}</div>        
+        <Button
+          variant="outlined"
+          startIcon={sharedId === _id ? '' : (followStatus ? <Favorite /> : <FavoriteBorder />)}
+          onClick={followClicked}
+        >
+          Followers: {followedCount}
+        </Button>
       </div>
       {filter._id &&
         <Cards
@@ -102,7 +105,7 @@ const Share = (props) => {
           readonly={!_id || sharedId !== _id}
           filter={filter}
         />}
-      {!_id && <EmailModal open={showEmailModal} onClose={() => setShowEmailModal(false)} title='Follow Cart' onSubmit={followUserWithEmail} />}
+      {!_id && <EmailModal open={showEmailModal} onClose={() => setShowEmailModal(false)} title='Follow Cart' buttonName='Follow' onSubmit={followUserWithEmail} />}
     </Layout>
   );
 };

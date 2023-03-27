@@ -52,7 +52,7 @@
         width: 40px;
         height: 40px;
         cursor: pointer;
-        color: var(--color-sea);
+        color: var(--color-turquoise);
 
         &.active { box-shadow: inset 0 0 9px 4px; }
         &:hover { background-color: #ffffff30; }
@@ -64,7 +64,7 @@
       display: flex;
       justify-content: flex-end;
       gap: 10px;
-      color: var(--color-sea);
+      color: var(--color-turquoise);
 
       .label-button {
         display: flex;
@@ -137,12 +137,12 @@
         .quickview-item-link {
           word-break: break-all;
           text-decoration: underline;
-          color: var(--color-indigo);
           margin-top: 30px !important;
+          *{ color: var(--color-sea); }
         }
         .description-editor {
           width: 100%;
-          color: var(--color-blue) !important;
+          textarea { color: var(--color-light) !important; }
 
           * { width: 100%; color: var(--color-blue) !important; }
           fieldset { border-color: var(--color-blue) !important; }

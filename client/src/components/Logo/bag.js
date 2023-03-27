@@ -2,7 +2,7 @@ import React from 'react';
 
 const BagLogo = (props) => {
   return (
-    <svg {...props} fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+    <svg {...props} className="custom-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
         width="256px" height="256px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
       <path d="M137.951,142.258c-7.809,0-13.35-2.621-18.496-5.056c-6.731-3.184-12.545-5.934-23.656-3.192
         c-2.361,0.581-4.75-0.861-5.334-3.225s0.859-4.752,3.225-5.334c14.155-3.492,22.324,0.373,29.533,3.782

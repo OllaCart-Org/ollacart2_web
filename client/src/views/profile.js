@@ -139,10 +139,13 @@ const Profile = () => {
       <div className='profile-page'>
         <div className='top-buttons-wrapper'>
           <div className='email-header'>{email}</div>
-          <div className='signout-button' onClick={signout}>
-            <ExitToApp />
-            <span>Signout</span>
-          </div>
+          <Button
+            variant="outlined"
+            startIcon={<ExitToApp />}
+            onClick={signout}
+          >
+            Sign Out
+          </Button>
         </div>
         <div className='profile-settings'>
           <div className='left-side'>

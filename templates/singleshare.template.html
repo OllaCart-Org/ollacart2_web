@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OllaCart Share</title>
+  
+</head>
+
+<style type="text/css">
+.wrapper {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+.content {
+  margin: auto;
+  max-width: 500px;
+  width: 90%;
+  background-color: #E2E2E2;
+  padding: 30px;
+}
+.logo img {
+  height: 60px;
+}
+.product {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.product-img img {
+  width: 300px;
+}
+.title-price {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.title {
+  font-size: 18pt;
+  font-weight: bold;
+  color: #1446A0;
+}
+.price {
+  font-size: 20pt;
+  font-weight: bold;
+  color: #124A5E;
+  white-space: nowrap;
+}
+.link-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+.link-wrapper a {
+  padding: 10px 20px;
+  background-color: #FF4A4A;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 16pt;
+  color: white;
+}
+.description {
+  margin-top: 10px;
+  font-size: 16pt;
+  width: 100%;
+  white-space: break-spaces;
+}
+</style>
+
+<body>
+  <div class="wrapper">
+    <div class="content">
+      <a class="logo" href="https://www.ollacart.com">
+        <img src="https://i.postimg.cc/9fX3GBf0/ollcart-logo-sml-multi-blu.png" alt="LOGO" />
+      </a>
+      <div class="product">
+        <div class="product-img">
+          <img src="{{photo}}" alt="LOGO" />
+        </div>
+        <div class="title-price">
+          <div class="title">{{ name }}</div>
+          <div class="price">$ {{ price }}</div>
+        </div>
+        <div class="description">{{ description }}</div>
+      </div>
+      <div class="link-wrapper">
+        <a href="{{link}}">View on OllaCart</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

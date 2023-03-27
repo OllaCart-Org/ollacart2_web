@@ -4,9 +4,8 @@
   --bg-opacity: #0a0a0aA0;
   --fg: #eee;
   --fg-opacity: #eee5;
-  --primary: rgb(66, 133, 245);
+  --primary: #4285F5;
   --secondary: #ff4500;
-  --accent-0: #2a2626;
 
   --admin-bg: #f5f5f5;
   --admin-fg: #0a0a0a;
@@ -14,7 +13,7 @@
   --admin-secondary: #f50057;
 
   --color-salmon: #FF4A4A;
-  --color-blue: #1445A1;
+  --color-blue: #1f5bc1;
   --color-darkblue: #124A5E;
   --color-sea: #009EB8;
   --color-yellow: #FFD666;
@@ -22,12 +21,14 @@
   --color-dark: #0A0A08;
   --color-light2: #EBE8FF;
   --color-dark2: #2B2D42;
+  --color-gray: #4c516c;
 
   --color-red: #EC1C24;
   --color-green: #0ED145;
   --color-pink: #B83DBA;
   --color-orange: #FF7F27;
   --color-indigo: #3F48CC;
+  --color-turquoise : #00A8F3;
 }
 
 .bg-red {
@@ -49,6 +50,7 @@
 .color-pink { color: var(--color-pink) !important; }
 .color-orange { color: var(--color-orange) !important; }
 .color-indigo { color: var(--color-indigo) !important; }
+.color-turquoise { color: var(--color-turquoise) !important; }
 
 .bg-salmon { background-color: var(--color-salmon) !important; }
 .bg-blue { background-color: var(--color-blue) !important; }
@@ -64,14 +66,11 @@
 .bg-pink { background-color: var(--color-pink) !important; }
 .bg-orange { background-color: var(--color-orange) !important; }
 .bg-indigo { background-color: var(--color-indigo) !important; }
+.bg-turquoise { background-color: var(--color-turquoise) !important; }
 
 h1, h2, h3, h4, h5, h6, p, span, div { margin: 0; }
 
-h3, .text-title { font-size: 20pt; font-weight: bold; color: var(--color-sea); }
-h4, .text-subtitle { font-size: 16pt; font-weight: bold; color: var(--color-light); }
-h5 { font-size: 14pt; }
-a, p, span, .text-body { font-size: 12pt; font-weight: normal; color: var(--color-light); }
-small .text-small { font-size: 10pt; font-weight: normal; color: var(--color-light); }
+.custom-logo { color: var(--color-light); }
 
 * {
   transition: all .3s;
@@ -122,12 +121,6 @@ body {
 
 
 
-.shop-item {
-  width: 33%;
-  padding: 20px;
-  max-width: 300px;
-  cursor: pointer;
-}
 
 
 
@@ -206,12 +199,4 @@ body {
 .purchase-button {
   max-width: 400px;
   margin: auto;
-}
-
-@media screen and (max-width: 768px) {
-  .shop-item { width: 50%; }
-}
-@media screen and (max-width: 500px) {
-  .menu-item { margin-left: 0; }
-  .shop-item { width: 100%; }
 }

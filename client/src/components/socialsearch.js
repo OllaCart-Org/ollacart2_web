@@ -93,7 +93,7 @@ const SocialSearch = ({ search }) => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SocialLogo className='adorn-logo' />
+                <SocialLogo />
               </InputAdornment>
             ),
           }}

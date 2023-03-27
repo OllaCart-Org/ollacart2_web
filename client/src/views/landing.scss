@@ -125,27 +125,6 @@
     }
   }
 
-  .inline-footer {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-
-    .footer-link {
-      text-decoration: underline;
-    }
-    .footer-button {
-      background-color: var(--color-blue);
-      padding: 5px;
-      width: 90px;
-    }
-    .footer-link, .footer-button {
-      cursor: pointer;
-      &:hover { opacity: 0.8; }
-      &:active { opacity: 0.7; }      
-    }
-  }
-
   @media screen and (max-width: 900px) {
     .landing-signin {
       display: none;

@@ -45,6 +45,10 @@ const verifyUser = () => {
   return call(`/verify`, {});
 }
 
+const getProduct = (productId) => {
+  return call(`/product/detail/${productId}`, {});
+};
+
 const getProducts = (filter) => {
   return call(`/products/by/search`, filter);
 };
@@ -165,6 +169,10 @@ const thumbdown = (productID, email) => {
   return call(`/product/thumbdown/${productID}`, { email });
 }
 
+const singleShare = (productID, email) => {
+  return call(`/product/singleshare/${productID}`, { email });
+}
+
 const sendInvestContact = (detail) => {
   return call(`/contact/invest`, detail);
 }
@@ -189,6 +197,7 @@ export default {
   signin,
   request,
   verifyUser,
+  getProduct,
   getProducts,
   shareProduct,
   putCart,
@@ -219,6 +228,7 @@ export default {
   forkProduct,
   thumbup,
   thumbdown,
+  singleShare,
   sendFeedback,
   sendInvestContact,
   sendPartnerContact,

@@ -1,6 +1,6 @@
 .MuiMenu-paper.MuiPopover-paper {
   color: var(--fg) !important;
-  background-color: var(--accent-0) !important;
+  background-color: var(--color-gray) !important;
 }
 
 .profile-page {
@@ -17,19 +17,6 @@
       color: white;
       font-size: 20px;
       font-weight: bold;
-    }
-  
-    .signout-button {
-      padding: 10px 20px;
-      font-size: 16pt;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border: 1px solid;
-      border-radius: 8px;;
-      cursor: pointer;      
     }
   }
 
@@ -57,7 +44,7 @@
         gap: 15px;
         padding: 10px 15px;
         border-radius: 6px;
-        background-color: var(--accent-0);
+        background-color: var(--color-gray);
         .text-content {
           width: 1px;
           flex-grow: 1;
@@ -72,48 +59,8 @@
   
       .form-wrapper {
         margin-top: 10px;
-        border: 3px solid var(--accent-0);
+        border: 3px solid var(--color-gray);
         border-radius: 10px;
-  
-        .form-content {
-          padding: 10px;
-
-          .two-inputs {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-          }
-          .form-control {
-            margin-top: 10px;
-            .form-input { margin-top: 0; }
-
-            .MuiFormLabel-root {
-              color: var(--fg-opacity) !important;
-            }
-            .MuiSelect-root {
-              * {
-                color: var(--fg) !important;
-              }
-            }
-          }
-          .form-input {
-            margin-top: 10px;
-            
-            * {
-              color: var(--fg) !important;
-              border-color: var(--accent-0) !important;
-            }
-            label {
-              color: var(--fg-opacity) !important;
-            }
-          }
-          .bottom-buttons {
-            margin-top: 10px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-          }
-        }
       }
     }
   }

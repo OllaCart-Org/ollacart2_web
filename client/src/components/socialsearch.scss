@@ -9,11 +9,6 @@
   .social-search-text {
     &, .MuiInputBase-root, label { color: var(--color-light); }
     fieldset { border-color: var(--color-light); }
-    .adorn-logo {
-      width: 40px;
-      height: 40px;
-      fill: var(--color-light);
-    }
   }
 
   .social-list {
@@ -22,7 +17,7 @@
     right: 0;
     top: 60px;
     border-radius: 9px;
-    background-color: var(--accent-0);
+    background-color: var(--color-gray);
     padding: 20px;
     z-index: 2;
     display: none;

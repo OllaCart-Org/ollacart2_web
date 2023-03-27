@@ -4,6 +4,13 @@
   min-height: 100vh;
   background-color: var(--admin-bg);
 
+  .logo-btn {
+    padding: 0;
+    svg {
+      width: 130px;
+      height: 65px;
+    }
+  }
   .logo-text {
     flex-grow: 1;
     margin-left: 10px;

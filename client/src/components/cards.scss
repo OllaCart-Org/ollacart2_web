@@ -1,0 +1,15 @@
+
+.shop-item {
+  width: 33%;
+  padding: 20px;
+  max-width: 300px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .shop-item { width: 50%; }
+}
+
+@media screen and (max-width: 500px) {
+  .shop-item { width: 100%; }
+}
