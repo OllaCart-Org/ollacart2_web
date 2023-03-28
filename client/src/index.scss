@@ -171,6 +171,10 @@ body {
     font-weight: bold;
     color: var(--primary);
     text-align: center;
+    a {
+      color: var(--primary);
+      font-size: 30px;
+    }
   }
 }
 

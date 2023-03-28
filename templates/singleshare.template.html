@@ -72,23 +72,23 @@
 </style>
 
 <body>
-  <div class="wrapper">
-    <div class="content">
+  <div style="display: flex; justify-content: center;">
+    <div class="content" style="max-width: 100%; width: 500px; background-color: #E2E2E2; padding: 30px;">
       <a class="logo" href="https://www.ollacart.com">
-        <img src="https://i.postimg.cc/9fX3GBf0/ollcart-logo-sml-multi-blu.png" alt="LOGO" />
+        <img src="https://i.postimg.cc/9fX3GBf0/ollcart-logo-sml-multi-blu.png" alt="LOGO" style="height: 60px; width: 190px;" />
       </a>
-      <div class="product">
+      <div class="product" style="margin-top: 30px; display: flex; align-items: center; flex-direction: column">
         <div class="product-img">
-          <img src="{{photo}}" alt="LOGO" />
+          <img src="{{photo}}" alt="LOGO" style="width: 300px;" />
         </div>
-        <div class="title-price">
-          <div class="title">{{ name }}</div>
-          <div class="price">$ {{ price }}</div>
+        <div class="title-price" style="margin-top: 10px; width: 100%; display: flex; align-items: flex-start; justify-content: space-between;">
+          <div class="title" style="font-size: 18pt; font-weight: bold; color: #1446A0;">{{ name }}</div>
+          <div class="price" style="font-size: 20pt; font-weight: bold; color: #124A5E; white-space: nowrap">$ {{ price }}</div>
         </div>
-        <div class="description">{{ description }}</div>
+        <div class="description" style="margin-top: 10px; font-size: 16pt; width: 100%; white-space: break-spaces;">{{ description }}</div>
       </div>
-      <div class="link-wrapper">
-        <a href="{{link}}">View on OllaCart</a>
+      <div class="link-wrapper" style="display: flex; margin-top: 20px; justify-content: center;">
+        <a href="{{link}}" style="padding: 10px 20px; background-color: #FF4A4A; border-radius: 4px; text-decoration: none; font-size: 16pt; color: white;">View on OllaCart</a>
       </div>
     </div>
   </div>
