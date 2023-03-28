@@ -45,8 +45,8 @@ const Investor = ({ onClose }) => {
       <TextField className='form-input' label='Company' size='small' variant='outlined' fullWidth color='primary' name='company' onChange={inputValueChanged} />
       <TextField className='form-input' label='Comment' size='small' variant='outlined' fullWidth color='primary' name='comment' onChange={inputValueChanged} multiline rows={4} />
       <Box className='bottom-buttons'>
-        <Button variant='contained' color='primary' onClick={submitHandler}>Submit</Button>
-        <Button variant='contained' onClick={onClose}>Cancel</Button>
+        <Button variant='contained' size='small' color='primary' onClick={submitHandler}>Submit</Button>
+        <Button variant='contained' size='small' onClick={onClose}>Cancel</Button>
       </Box>
     </Box>
   )

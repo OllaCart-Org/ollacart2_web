@@ -59,7 +59,7 @@ const Cards = (props) => {
     return (
       size > 0 &&
       size >= limit && (
-        <Button onClick={loadMore} variant='contained' className='more-btn'>
+        <Button onClick={loadMore} variant='contained' className='more-btn color-light'>
           more <Add />
         </Button>
       )

@@ -101,7 +101,7 @@ const QuickView = ({ card, close, share, singleShare, save, remove, updateLogo, 
           </Box>
           <Box className='right-bar'>
             <Typography variant="h3" gutterBottom>{card.name}</Typography>
-            <Typography variant="h5" gutterBottom style={{color: 'var(--color-turquoise)'}}>${card.price}</Typography>
+            <Typography variant="h5" gutterBottom style={{color: 'var(--color-green)'}}>${card.price}</Typography>
             {editable && card.size && <Box className='size-item'><span>Size: {card.size}</span></Box>}
             {!editMode && <Typography style={{whiteSpace: 'break-spaces'}}>{card.description}</Typography>}
             {editMode && <TextField

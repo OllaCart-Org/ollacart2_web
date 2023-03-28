@@ -2,7 +2,7 @@
 .shared-header {
   display: flex;
   justify-content: center;
-  color: var(--primary);
+  color: var(--color-sea);
   font-size: 25px;
   font-weight: bold;
   
@@ -11,10 +11,8 @@
 
     svg {
       margin-left: 15px;
-      color: rgb(150, 150, 150);
+      color: var(--color-light);
       cursor: pointer;
-
-      &:hover { color: rgb(200, 200, 200); }
     }
   }
 

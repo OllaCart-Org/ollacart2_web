@@ -39,7 +39,7 @@ import { actions } from './redux/_actions';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1f5bc1',
+      main: '#1446A0',
     },
     secondary: {
       main: '#EC1C24'

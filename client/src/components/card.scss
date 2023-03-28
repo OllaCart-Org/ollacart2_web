@@ -31,7 +31,7 @@
   }
 
   .item-name, .item-price {
-    color: var(--primary);
+    color: var(--color-sea);
     font-weight: bold;
     font-size: 15px;
     margin: 4px auto 0 0;
@@ -91,6 +91,27 @@
     }
     &.thumb-up { left: 10px; }
     &.thumb-down { right: 10px; }
+  }
+}
+
+
+.more-btn {
+  background-color: var(--color-opacity) !important;
+  color: var(--color-light) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  outline: none !important;
+  span {
+    text-transform: capitalize;
+    font-size: 30px !important;
+    font-weight: bold !important;
+  }
+  
+  svg {
+    width: 40px;
+    height: 40px;
   }
 }
 

@@ -12,14 +12,14 @@
   --admin-primary: #3f51b5;
   --admin-secondary: #f50057;
 
-  --color-salmon: #FF4A4A;
-  --color-blue: #1f5bc1;
-  --color-darkblue: #124A5E;
-  --color-sea: #009EB8;
-  --color-yellow: #FFD666;
+  --color-salmon: #FF4A49;
+  --color-blue: #1446A0;
+  --color-darkblue: #114B5F;
+  --color-sea: #009FB7;
+  --color-yellow: #FFD766;
   --color-light: #FFFFFF;
-  --color-dark: #0A0A08;
-  --color-light2: #EBE8FF;
+  --color-dark: #0B0A07;
+  --color-light2: #EAE8FF;
   --color-dark2: #2B2D42;
   --color-gray: #4c516c;
 
@@ -127,22 +127,6 @@ body {
 
 
 
-.more-btn {
-  background-color: var(--color-dark2) !important;
-  color: var(--color-blue) !important;
-  font-size: 30px !important;
-  font-weight: bold !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  outline: none !important;
-
-  svg {
-    width: 40px;
-    height: 40px;
-  }
-}
 
 
 .error-msg {
