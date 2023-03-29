@@ -12,6 +12,10 @@
   margin: auto;
   
   .custom-logo { fill: currentColor; }
+  .ollacart-add-button {
+    cursor: pointer;
+    svg { width: 180px; height: auto; }
+  }
   .MuiButton-startIcon, .MuiInputAdornment-positionStart {
     .custom-logo {
       width: 40px;
@@ -102,7 +106,8 @@
     @media screen and (max-width: 500px) {
       padding: 10px 0;
       .menu-item {
-        margin-left: 0;
+        width: 40px !important;
+        height: 40px !important;
       }
     }
   }

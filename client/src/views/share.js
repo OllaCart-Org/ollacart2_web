@@ -90,7 +90,7 @@ const Share = (props) => {
         <div className='shared-url'>ollacart.com/share/{_id}<FileCopyOutlined onClick={copyShareUrl}/></div>
       </div>}
       <div className='share-status'>
-        <div className='user-name'>@{sharedUserName}</div>        
+        <div className='user-name'>@{sharedUserName}</div>
         <Button
           variant="outlined"
           startIcon={sharedId === _id ? '' : (followStatus ? <Favorite /> : <FavoriteBorder />)}

@@ -2,16 +2,25 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import Layout from './layout';
 import api from '../api';
-import { Box, Typography, Link } from '@material-ui/core';
+import { Box, Typography, Link, Button } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import utils from '../utils';
 import './singleshare.scss';
+import { Favorite, FavoriteBorder, ThumbDown, ThumbDownOutlined, ThumbUp, ThumbUpOutlined } from '@material-ui/icons';
+import EmailModal from '../components/Modals/EmailModal';
+import OllaCartAdd from '../components/Logo/ollacartadd';
 
 const SingleShare = (props) => {
   const [productId, setProductId] = useState('');
   const [product, setProduct] = useState(null);
   const [logo, setLogo] = useState('');
+  const [followStatus, setFollowStatus] = useState(false);
+  const [followedCount, setFollowedCount] = useState(0);
+  const [sharedUserName, setSharedUserName] = useState('');
+  const [emailModalForm, setEmailModalForm] = useState({});
 
   const { addToast } = useToasts();
+  const { _id } = useSelector(state => state.auth);
 
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -27,10 +36,25 @@ const SingleShare = (props) => {
       .catch(err => showToast(err.message))
   }, [productId, showToast])
 
+  const fetchShareStatus = useCallback(() => {
+    if (!product?.user?._id) return;
+    api.getShareStatus(product?.user?._id)
+      .then(data => {
+        setSharedUserName(data.username);
+        setFollowStatus(data.followStatus);
+        setFollowedCount(data.followedCount);
+      })
+      .catch(err => showToast(err.message))
+  }, [product, showToast])
+
   useEffect(() => {
     const productid = props.match.params.productid;
     setProductId(productid);
   }, [props]);
+
+  useEffect(() => {
+    fetchShareStatus();
+  }, [fetchShareStatus])
 
   useEffect(() => {
     if (!productId) return
@@ -41,11 +65,110 @@ const SingleShare = (props) => {
     setLogo(product.photos[idx]);
   }
 
+  const fork = (card, email = '') => {
+    if (!_id && !email) return setEmailModalForm({ type: 'fork', card, open: true });
+    api.forkProduct(card._id, email)
+      .then(() => showToast('Added product to your Cart', 'success'))
+      .catch(err => showToast(err.message));
+  }
+
+  const thumbup = (card, email = '') => {
+    if (!_id && !email) return setEmailModalForm({ type: 'thumbup', card, open: true });
+    api.thumbup(card._id, email)
+      .then((data) => {
+        const card = data.product;
+        setProduct(card);
+      })
+      .catch(err => showToast(err.message));
+  }
+
+  const thumbdown = (card, email = '') => {
+    if (!_id && !email) return setEmailModalForm({ type: 'thumbdown', card, open: true });
+    api.thumbdown(card._id, email)
+      .then((data) => {
+        const card = data.product;
+        setProduct(card);
+      })
+      .catch(err => showToast(err.message));
+  }
+  
+  const getEmailModalTitle = useCallback(() => {
+    if (emailModalForm.type === 'fork') return 'Add to your OllaCart';
+    if (emailModalForm.type === 'thumbup') return 'ThumbUp';
+    if (emailModalForm.type === 'thumbdown') return 'ThumbDown';
+    if (emailModalForm.type === 'follow') return 'Follow';
+  }, [emailModalForm]);
+  const getEmailModalButtonName = useCallback(() => {
+    if (emailModalForm.type === 'fork') return 'Add';
+    if (emailModalForm.type === 'thumbup') return 'ThumbUp';
+    if (emailModalForm.type === 'thumbdown') return 'ThumbDown';
+    if (emailModalForm.type === 'follow') return 'Follow';
+  }, [emailModalForm]);
+
+  const onSubmitWithEmail = (email) => {
+    if(emailModalForm.type === 'fork') {
+      fork(emailModalForm.card, email);
+    } else if(emailModalForm.type === 'thumbup') {
+      thumbup(emailModalForm.card, email);
+    } else if(emailModalForm.type === 'thumbdown') {
+      thumbdown(emailModalForm.card, email);
+    } else if(emailModalForm.type === 'follow') {
+      followUserWithEmail(email);
+    }
+    setEmailModalForm({});
+  }
+
+  const followUserWithEmail = (email) => {
+    api.followUser(product.user._id, email)
+      .then(() => {
+        fetchShareStatus();
+      })
+      .catch(err => showToast(err.message))
+  }
+
+  const followUser = () => {
+    api.followUser(product.user._id)
+      .then(fetchShareStatus)
+      .catch(err => showToast(err.message))
+  }
+
+  const unFollowUser = () => {
+    api.unFollowUser(product.user._id)
+      .then(fetchShareStatus)
+      .catch(err => showToast(err.message))
+  }
+
+  const followClicked = () => {
+    if (product.user._id === _id) return;
+    if (!_id) {
+      setEmailModalForm({ type: 'follow', card: product, open: true });
+      return;
+    }
+    if (!followStatus) followUser();
+    else unFollowUser();
+  }
+
   if (!product) return <Layout />
 
   return (
     <Layout>
-      <Box className='singleshare-content'>
+      <Box maxWidth={750} mx='auto'>
+        <Box className='ollacart-add-button' display='flex' justifyContent='flex-end'>
+          <OllaCartAdd onClick={() => fork(product)} />
+        </Box>
+        <Box mt={2} display='flex' justifyContent='space-between' alignItems='center'>
+          <Box fontSize={20}>@{sharedUserName}</Box>
+          <Box display='flex' gridGap={5}>
+            <Button variant='outlined' size='small' onClick={() => thumbup(product)}
+              startIcon={product.likes.includes(_id) ? <ThumbUp /> : <ThumbUpOutlined />}>{product.likes.length}</Button>
+            <Button variant='outlined' size='small' onClick={() => thumbdown(product)}
+              startIcon={product.dislikes.includes(_id) ? <ThumbDown /> : <ThumbDownOutlined />}>{product.dislikes.length}</Button>
+            <Button variant='outlined' size='small' onClick={followClicked}
+              startIcon={followStatus ? <Favorite /> : <FavoriteBorder />}>{followedCount}</Button>
+          </Box>
+        </Box>
+      </Box>
+      <Box className='singleshare-content' mt={1}>
         <Box className='left-bar'>
           <Box className='logo-container' marginTop={1}>
             <img src={logo} alt="img"/>
@@ -66,6 +189,7 @@ const SingleShare = (props) => {
           {<Box className='user-name' mt={2}><span>@{utils.getUsername(product.user)}</span></Box>}
         </Box>
       </Box>
+      <EmailModal open={!!emailModalForm.open} onClose={() => setEmailModalForm({})} title={getEmailModalTitle()} buttonName={getEmailModalButtonName()} onSubmit={onSubmitWithEmail} />
     </Layout>
   );
 };

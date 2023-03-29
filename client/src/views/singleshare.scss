@@ -1,11 +1,18 @@
 
 .singleshare-content {
+  margin: auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  height: 100%;
-  width: 100%;
-  overflow-y: auto;
+  justify-content: space-around;
+  gap: 30px;
+  width: 700px;
+  max-width: 100%;
+  
+  img {
+    width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
 
   .left-bar {
     width: 300px;
@@ -18,7 +25,6 @@
       border-radius: 7px;
       display: flex;
       justify-content: center;
-      img { width: 100%; object-fit: contain; }
     }
     .photo-container {
       display: flex;
@@ -37,14 +43,13 @@
         display: flex;
         align-items: center;
 
-        img { width: 100%; object-fit: contain; }
         &:hover img { scale: 1.2; }
       }
     }
   }
 
   .right-bar {
-    width: 1px;
+    width: 300px;
     flex-grow: 1;
     color: var(--color-light);
 
@@ -76,5 +81,8 @@
         span { background-color: var(--color-darkblue); }
       }
     }
+  }
+  @media screen and (max-width: 768px) {
+    width: 350px;
   }
 }
