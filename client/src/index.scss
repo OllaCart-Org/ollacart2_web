@@ -153,11 +153,12 @@ body {
     margin-top: 20px;
     font-size: 30px;
     font-weight: bold;
-    color: var(--primary);
+    color: var(--color-light);
     text-align: center;
     a {
-      color: var(--primary);
+      color: var(--color-light);
       font-size: 30px;
+      font-weight: bold;
     }
   }
 }
