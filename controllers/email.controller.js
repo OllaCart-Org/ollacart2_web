@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const nunjucks = require('nunjucks');
 const path = require('path');
+const utils = require('../helpers/utils');
+
 nunjucks.configure(path.join(__dirname, "../templates"), { autoescape: true });
 
 const transporter = nodemailer.createTransport({
@@ -17,10 +19,12 @@ const readTemplate = (type, params) => {
 }
 
 exports.sendSingleShareEmail = (product, mailTo) => {
+  let subject = 'Direct Share';
+  if(product?.user) subject += ' from @' + utils.getUsername(product?.user);
   var mailOptions = {
     from: 'support@ollacart.com',
     to: mailTo,
-    subject: 'Direct Share',
+    subject,
     html: readTemplate('singleshare', {
       name: product.name,
       price: product.price,

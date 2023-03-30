@@ -14,6 +14,11 @@ const transporter = nodemailer.createTransport({
 
 const twilioClient = Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
+exports.getUsername = (user) => {
+  if (!user) return '';
+  return user.username || (user.email || '').split('@')[0];
+}
+
 exports.takeFirstDecimal = (str) => {
   try {
     // return parseFloat(str.match(/[\d\.]+/)) || 0;
