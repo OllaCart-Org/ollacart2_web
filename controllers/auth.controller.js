@@ -1,10 +1,9 @@
 const { v4: uuidv4 } = require('uuid');
 const User = require('../models/user.model');
 const Request = require('../models/request.model');
+const EmailController = require('../controllers/email.controller');
 const Utils = require('../helpers/utils');
 const jwt = require('jsonwebtoken'); // to generate signed token
-const expressJwt = require('express-jwt'); // for auth check
-const { errorHandler } = require('../helpers/dbErrorHandler');
 const utils = require('../helpers/utils');
 
 require('dotenv').config();
@@ -15,7 +14,7 @@ exports.signin = async (req, res) => {
 
   let user = await User.findOne({ email });
   if (!user) {
-    utils.sendWelcomeMail(req.body.email);
+    EmailController.sendWelcomeEmail(req.body.email);
 
     user = new User({ email })
     user.ce_id = '';

@@ -14,7 +14,11 @@ const transporter = nodemailer.createTransport({
 });
 
 const readTemplate = (type, params) => {
-  const content = nunjucks.render(`${type}.template.html`, params);
+  const content = nunjucks.render(`${type}.template.html`, {
+    params,
+    siteUrl: process.env.DOMAIN,
+    extensionUrl: process.env.EXTENSION_URL,
+  });
   return content;
 }
 
@@ -32,6 +36,17 @@ exports.sendSingleShareEmail = (product, mailTo) => {
       photo: product.photo,
       link: `${process.env.DOMAIN}/share/together/${product._id}`,
     })
+  };
+  
+  transporter.sendMail(mailOptions);
+}
+
+exports.sendWelcomeEmail = (mailTo) => {
+  var mailOptions = {
+    from: 'support@ollacart.com',
+    to: mailTo,
+    subject: 'Welcome to OllaCart',
+    html: readTemplate('welcome', { })
   };
   
   transporter.sendMail(mailOptions);
