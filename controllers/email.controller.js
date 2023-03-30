@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const readTemplate = (type, params) => {
   const content = nunjucks.render(`${type}.template.html`, {
-    params,
+    ...params,
     siteUrl: process.env.DOMAIN,
     extensionUrl: process.env.EXTENSION_URL,
   });
