@@ -34,6 +34,10 @@ const Layout = ({ children }) => {
     else if (location.pathname.indexOf('/support') === 0) setPage('support');
     else if (location.pathname.indexOf('/signin') === 0) setPage('signin');
     else if (location.pathname.indexOf('/profile') === 0) setPage('profile');
+    else if (location.pathname.indexOf('/share/together') === 0){
+      document.title = 'My OllaCart';
+      setPage('singleshare');
+    }
     else if (location.pathname.indexOf('/share') === 0) setPage('share');
     else if (location.pathname.indexOf('/order') === 0) setPage('order');
     else if (location.pathname.indexOf('/purchase') === 0) setPage('purchase');
@@ -44,6 +48,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className='main-content'>
+      {(page === 'singleshare') && <title>My OllaCart</title>}
       <div className='menu'>
         <div className='d-flex justify-content-between'>
           <div className='right-menu'>

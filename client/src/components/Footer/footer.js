@@ -16,7 +16,7 @@ const Footer = () => {
   const [showPartnerModal, setShowPartnerModal] = useState(false);
 
   return (
-    <>
+    <Box mt={5}>
       <hr />
       <Box className="ollacart-footer" py={5}>
         {!email ?
@@ -48,7 +48,7 @@ const Footer = () => {
           <Feedback onClose={() => setShowFeedbackModal(false)} />
         </OllaCartModal>
       </Box>
-    </>
+    </Box>
   );
 };
 

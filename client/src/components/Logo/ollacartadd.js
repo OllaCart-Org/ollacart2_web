@@ -3,7 +3,7 @@ import React from 'react';
 const OllaCartAdd = (props) => {
   return (
     <svg {...props} className="custom-logo" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-      width="829.77px" height="202.28px" viewBox="0 0 829.77 202.28" enable-background="new 0 0 829.77 202.28">
+      width="829.77px" height="202.28px" viewBox="0 0 829.77 202.28" enableBackground="new 0 0 829.77 202.28">
       <path d="M815.469,202.042H13.791c-7.747,0-14.046-6.301-14.046-14.047V13.812c0-7.745,6.3-14.047,14.046-14.047
         h801.678c7.745,0,14.047,6.302,14.047,14.047v174.184C829.516,195.741,823.214,202.042,815.469,202.042z M13.791,8.918
         c-2.698,0-4.892,2.195-4.892,4.894v174.184c0,2.697,2.194,4.892,4.892,4.892h801.678c2.699,0,4.893-2.194,4.893-4.892V13.812
