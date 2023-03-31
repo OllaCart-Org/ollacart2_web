@@ -47,14 +47,14 @@ exports.sendSecureEmail = (mailTo, user, secureId) => {
   transporter.sendMail(mailOptions);
 }
 
-exports.sendVerifyEmail = (mailTo, user, secureId) => {
+exports.sendVerifyEmail = (mailTo, user, verifyId) => {
   var mailOptions = {
     from: 'support@ollacart.com',
     to: mailTo,
     subject: 'Signin to your Account',
     html: readTemplate('verify', {
       user: utils.getUsername(user),
-      secureUrl: `${process.env.DOMAIN}/verify/${secureId}`
+      verifyUrl: `${process.env.DOMAIN}/verify/${verifyId}`
     })
   };
   
