@@ -25,7 +25,7 @@ exports.signin = async (req, res) => {
   if (user.status.secure) {
     user.secure_identity = uuidv4();
     await user.save();
-    await utils.sendSecureMail(user.email, user.secure_identity);
+    await EmailController.sendSecureMail(user.email, user, user.secure_identity);
     return res.json({ verify: true, uid: user.secure_identity });
   }
 

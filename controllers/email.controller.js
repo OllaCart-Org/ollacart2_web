@@ -22,6 +22,45 @@ const readTemplate = (type, params) => {
   return content;
 }
 
+exports.sendWelcomeEmail = (mailTo) => {
+  var mailOptions = {
+    from: 'support@ollacart.com',
+    to: mailTo,
+    subject: 'Welcome to OllaCart',
+    html: readTemplate('welcome', { })
+  };
+  
+  transporter.sendMail(mailOptions);
+}
+
+exports.sendSecureEmail = (mailTo, user, secureId) => {
+  var mailOptions = {
+    from: 'support@ollacart.com',
+    to: mailTo,
+    subject: 'Secure Account',
+    html: readTemplate('secure', {
+      user: utils.getUsername(user),
+      secureUrl: `${process.env.DOMAIN}/secure/${secureId}`
+    })
+  };
+  
+  transporter.sendMail(mailOptions);
+}
+
+exports.sendVerifyEmail = (mailTo, user, secureId) => {
+  var mailOptions = {
+    from: 'support@ollacart.com',
+    to: mailTo,
+    subject: 'Signin to your Account',
+    html: readTemplate('verify', {
+      user: utils.getUsername(user),
+      secureUrl: `${process.env.DOMAIN}/verify/${secureId}`
+    })
+  };
+  
+  transporter.sendMail(mailOptions);
+}
+
 exports.sendSingleShareEmail = (product, mailTo) => {
   let subject = 'Direct Share';
   if(product?.user) subject += ' from @' + utils.getUsername(product?.user);
@@ -36,17 +75,6 @@ exports.sendSingleShareEmail = (product, mailTo) => {
       photo: product.photo,
       link: `${process.env.DOMAIN}/share/together/${product._id}`,
     })
-  };
-  
-  transporter.sendMail(mailOptions);
-}
-
-exports.sendWelcomeEmail = (mailTo) => {
-  var mailOptions = {
-    from: 'support@ollacart.com',
-    to: mailTo,
-    subject: 'Welcome to OllaCart',
-    html: readTemplate('welcome', { })
   };
   
   transporter.sendMail(mailOptions);

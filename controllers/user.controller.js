@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const User = require('../models/user.model');
-const utils = require('../helpers/utils');
+const EmailController = require('./email.controller');
 
 exports.userById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
@@ -109,7 +109,7 @@ exports.updateAccountSettings = async (req, res) => {
       if (secure) {
         if (user.status.secure) return res.status(400).json({ error: 'Already secured' });
         user.secure_identity = uuidv4();
-        await utils.sendSecureMail(user.email, user.secure_identity, 'set');
+        await EmailController.sendSecureMail(user.email, user, user.secure_identity);
       } else {
         user.secure_identity = false;
         user.status.secure = false;
