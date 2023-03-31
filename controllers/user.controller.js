@@ -109,7 +109,7 @@ exports.updateAccountSettings = async (req, res) => {
       if (secure) {
         if (user.status.secure) return res.status(400).json({ error: 'Already secured' });
         user.secure_identity = uuidv4();
-        await EmailController.sendSecureMail(user.email, user, user.secure_identity);
+        await EmailController.sendSecureEmail(user.email, user, user.secure_identity);
       } else {
         user.secure_identity = false;
         user.status.secure = false;
