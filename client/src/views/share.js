@@ -51,6 +51,7 @@ const Share = (props) => {
 
   const copyShareUrl = () => {
     copy(`${SHARE_URL}/${_id}`);
+    showToast('Copied to Clipboard', 'success');
   }
 
   const followUser = () => {

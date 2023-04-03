@@ -69,16 +69,6 @@ const QuickView = ({ card, close, share, singleShare, save, remove, updateLogo, 
           }
           <Box className='top-nav-item' onClick={close}><Close /></Box>
         </Box>
-        <Box className='thumb-content'>
-          <Box className='label-button' onClick={() => thumbup(card)}>
-            <span>{card.likes.length}</span>
-            {card.likes.includes(_id) ? <ThumbUp /> : <ThumbUpOutlined />}
-          </Box>
-          <Box className='label-button' onClick={() => thumbdown(card)}>
-            <span>{card.dislikes.length}</span>
-            {card.dislikes.includes(_id) ? <ThumbDown /> : <ThumbDownOutlined />}
-          </Box>
-        </Box>
         <Box className='quickview-content'>
           <Box className='left-bar'>
             {/* {card.color && <Box className='custom-switcher' marginLeft='auto'>
@@ -115,6 +105,16 @@ const QuickView = ({ card, close, share, singleShare, save, remove, updateLogo, 
             />}
             <Typography className='quickview-item-link'><Link href={card.url} target='_blank'>{card.url}</Link></Typography>
             {<Box className='user-name' mt={2}><span>@{utils.getUsername(card.user)}</span></Box>}
+            <Box className='thumb-content' mt={3}>
+              <Box className='label-button' onClick={() => thumbup(card)}>
+                <span>{card.likes.length}</span>
+                {card.likes.includes(_id) ? <ThumbUp /> : <ThumbUpOutlined />}
+              </Box>
+              <Box className='label-button' onClick={() => thumbdown(card)}>
+                <span>{card.dislikes.length}</span>
+                {card.dislikes.includes(_id) ? <ThumbDown /> : <ThumbDownOutlined />}
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -33,7 +33,7 @@ const SlideImgs = [{
     text: 'Track your purchases and shipping in our centralized order tracking system.'
   }, {
     img: SlideImg5,
-    text: 'For extra details on any item in your OllaCart, click on the expand logo to investigate.'
+    text: 'Introducing social shopping - follow your favorite shoppers and give feedback!'
   }]
 
 const Landing = () => {
