@@ -11,6 +11,10 @@ const categorySchema = new mongoose.Schema(
     user: {
       type: ObjectId,
       ref: 'User',
+    },
+    deleted: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

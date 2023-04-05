@@ -42,7 +42,8 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
   const category = req.category;
-  await category.remove();
+  category.deleted = true;
+  await category.save();
   res.json({ success: true });
 }
 
@@ -58,9 +59,7 @@ exports.getCategoryCount = async (filter = {}) => {
 
 
 exports.getCategories = async (req, res) => {
-  const { pagination } = req.body;
-
-  const categories = await Category.find()
+  const categories = await Category.find({ deleted: {$ne: true} })
     .sort([['createdAt', 'desc']])
     .populate({
       path: 'user',
