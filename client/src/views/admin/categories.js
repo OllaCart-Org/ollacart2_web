@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from './layout'
 import { Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, TextField } from '@material-ui/core';
-import Pagination from '@material-ui/lab/Pagination';
 import { useToasts } from 'react-toast-notifications';
 import api from '../../api';
 import utils from '../../utils';
@@ -14,31 +13,22 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [categoryModalInfo, setCategoryModalInfo] = useState({});
   const [name, setName] = useState('');
-  const [countPerPage] = useState(30);
-  const [totalCount, setTotalCount] = useState(1);
-  const [page, setPage] = useState(1);
   
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
   }, [addToast]);
 
   const fetchCategories = useCallback(() => {
-    api.getCategories({ page, countPerPage })
+    api.getCategories()
       .then((data) => {
-        console.log(data)
         setCategories(data.categories);
-        setTotalCount(Math.floor((data.total - 1) / countPerPage) + 1);
       })
       .catch(err => showToast(err.message));
-  }, [page, countPerPage, showToast])
+  }, [showToast])
 
   useEffect(() => {
     fetchCategories();
-  }, [page, fetchCategories])
-
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
+  }, [fetchCategories])
 
   const updateCategory = () => {
     api.updateCategory(categoryModalInfo._id, { name })
@@ -118,9 +108,6 @@ const Categories = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box className='pagination-wrapper'>
-        <Pagination count={totalCount} page={page} onChange={handlePageChange} color="primary" showFirstButton showLastButton />
-      </Box>
       <AdminDialog title='Category' open={!!categoryModalInfo.open} onClose={closeCategoryModal}>
         <Box mt={1}>
           <TextField label="Name" size="small" variant="outlined" fullWidth value={name} onChange={e => setName(e.target.value)} />

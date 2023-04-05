@@ -62,7 +62,7 @@ exports.update = async (req, res) => {
 
   const detail = req.body;
   
-  const keys = ['name', 'size', 'description', 'url', 'price', 'keywords', 'purchased', 'shared']
+  const keys = ['name', 'size', 'description', 'url', 'price', 'keywords', 'purchased', 'shared', 'category']
   for (let i = 0; i < keys.length; i ++) {
     const key = keys[i];
     if (!Object.hasOwn(detail, key)) continue;

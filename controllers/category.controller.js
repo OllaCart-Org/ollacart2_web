@@ -62,7 +62,10 @@ exports.getCategories = async (req, res) => {
 
   const categories = await Category.find()
     .sort([['createdAt', 'desc']])
-    .skip((pagination.page - 1) * pagination.countPerPage)
-    .limit(pagination.countPerPage).populate('user').exec();
+    .populate({
+      path: 'user',
+      select: '_id username email'
+    })
+    .exec();
   res.send({ success: true, categories, total: await this.getCategoryCount() });
 }

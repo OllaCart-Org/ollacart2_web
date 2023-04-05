@@ -1,9 +1,10 @@
-.MuiMenu-paper.MuiPopover-paper {
-  color: var(--fg) !important;
-  background-color: var(--color-gray) !important;
-}
 
 .profile-page {
+  .MuiMenu-paper.MuiPopover-paper {
+    color: var(--fg) !important;
+    background-color: var(--color-gray) !important;
+  }
+  
   max-width: 800px;
   margin: auto;
   padding: 10px;

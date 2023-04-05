@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { Typography, Box, Card, CardContent, Link, Button, TextField, InputAdornment, IconButton } from '@material-ui/core';
+import { Typography, Box, Card, CardContent, Link, Button, TextField, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { Close, Delete, Edit, FileCopy, Launch, Update } from '@material-ui/icons';
 import Pagination from '@material-ui/lab/Pagination';
 import { TagsInput } from 'react-tag-input-component';
@@ -10,9 +10,9 @@ import AdminDialog from '../../components/Admin/modal';
 import './carts.scss'
 import copy from 'copy-to-clipboard';
 
-const Carts = () => {
-  
+const Carts = () => {  
   const [carts, setCarts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [countPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(1);
   const [page, setPage] = useState(1);
@@ -32,6 +32,18 @@ const Carts = () => {
       })
       .catch(err => showToast(err.message));
   }, [countPerPage, showToast])
+
+  const fetchCategories = useCallback(() => {
+    api.getCategories()
+      .then((data) => {
+        setCategories(data.categories);
+      })
+      .catch(err => showToast(err.message));
+  }, [showToast])
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
   
   useEffect(() => {
     fetchCarts(page);
@@ -72,7 +84,8 @@ const Carts = () => {
       price: editingCart.price,
       description: editingCart.description,
       url: editingCart.url,
-      keywords: editingCart.keywords
+      keywords: editingCart.keywords,
+      category: editingCart.category || null,
     })
       .then((data) => {
         console.log(data);
@@ -83,6 +96,11 @@ const Carts = () => {
         closeModal();
       })
       .catch(err => showToast(err.message));
+  }
+
+  const getCategoryName = (_id) => {
+    const category = categories.find(cat => cat._id === _id);
+    return category?.name;
   }
 
   return (
@@ -107,9 +125,12 @@ const Carts = () => {
                     <Typography variant="h5" component="h2">{cart.name}</Typography>
                     <Typography variant="h4" component="h2">${cart.price}</Typography>
                   </Box>
-                  {cart.size && <Box className='size'>
-                    Size: <span>{cart.size}</span>
-                  </Box>}
+                  <Box display='flex' justifyContent='space-between' alignItems='center'>
+                    {cart.category && <Box className='category'>{getCategoryName(cart.category)}</Box>}
+                    {cart.size && <Box className='size'>
+                      Size: <span>{cart.size}</span>
+                    </Box>}
+                  </Box>
                   <Box className='description'>
                     <Typography className='break-spaces'>{cart.description}</Typography>
                   </Box>
@@ -153,6 +174,17 @@ const Carts = () => {
                 <TextField label="Price" size="small" type="number" variant="outlined" fullWidth value={editingCart.price}
                   name='price' onChange={inputValueChanged}
                   InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }} />
+              </Box>
+              <Box className='fields'>
+                <FormControl variant="outlined" fullWidth size='small'>
+                  <InputLabel id="category-label">Category</InputLabel>
+                  <Select labelWidth={70} labelId='category-label' name='category' value={editingCart.category || ''} onChange={inputValueChanged}>
+                    <MenuItem value=''>No Category</MenuItem>
+                    {categories.map((c, idx) => (
+                      <MenuItem key={idx} value={c._id}>{c.name}</MenuItem>
+                    ))}
+                  </Select>                  
+                </FormControl>
               </Box>
               <Box className='fields'>
                 <TextField label="Description" size="small" variant="outlined" multiline rows={5} fullWidth value={editingCart.description}
