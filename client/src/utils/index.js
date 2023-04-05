@@ -16,11 +16,13 @@ export default {
     if(typeof _id !== 'string') return '';
     return _id.substring(0, 8);
   },
-  calcPriceWithFee: price => {
-    return (price + 0.3) / (1 - 0.029);
+  calcPriceWithFee: product => {
+    const price = product.price + 14 + (product.tax_status ? product.tax : 0);
+    return (price) / (1 - 0.029);
   },
-  calcStripeFee: price => {
-    return (price + 0.3) / (1 - 0.029) - price;
+  calcStripeFee: product => {
+    const price = product.price + 14 + (product.tax_status ? product.tax : 0);
+    return (price) / (1 - 0.029) - price;
   },
   commaPrice: price => {
     if (typeof price === 'string') return commaNumber(price);

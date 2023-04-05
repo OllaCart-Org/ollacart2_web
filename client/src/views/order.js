@@ -92,18 +92,22 @@ const Order = () => {
                 <span>Product Price</span>
                 <span>${utils.commaPrice(detailCard.price)}</span>
               </div>
+              {detailCard.tax_status && <div className='price'>
+                <span>Tax ({utils.commaPrice(detailCard.taxRate * 100)}%)</span>
+                <span>${utils.commaPrice(detailCard.tax)}</span>
+              </div>}
               <div className='price'>
                 <span>Shipping Cost</span>
                 <span>$14</span>
               </div>
               <div className='price'>
                 <span>Processing Fee</span>
-                <span>${utils.commaPrice(utils.calcStripeFee(detailCard.price + 14))}</span>
+                <span>${utils.commaPrice(utils.calcStripeFee(detailCard))}</span>
               </div>
               <div className='spacer' />
               <div className='price'>
                 <span>Total</span>
-                <span className='total-price'>${utils.commaPrice(utils.calcPriceWithFee(detailCard.price + 14))}</span>
+                <span className='total-price'>${utils.commaPrice(utils.calcPriceWithFee(detailCard))}</span>
               </div>
             </div>
           </div>

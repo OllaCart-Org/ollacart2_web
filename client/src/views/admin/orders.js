@@ -83,7 +83,7 @@ const OrderRow = (props) => {
     <>
       <TableRow className={classes.root}>
         <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+          <IconButton size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
@@ -141,12 +141,12 @@ const OrderRow = (props) => {
                       <TableCell align="center">
                         <Box display='flex' justifyContent='center' gridGap='5px'>
                           {product.orderStatus > 0 &&
-                            <IconButton aria-label="Promo Code" size='small' onClick={() => openPromoCodeModal(order._id, idx)}>
+                            <IconButton size='small' onClick={() => openPromoCodeModal(order._id, idx)}>
                               <CropFree />
                             </IconButton>
                           }
                           {product.orderStatus > 1 &&
-                            <IconButton aria-label="Shipping Notes" size='small' onClick={() => openShippingNotesModal(order._id, idx)}>
+                            <IconButton size='small' onClick={() => openShippingNotesModal(order._id, idx)}>
                               <NoteAdd />
                             </IconButton>
                           }

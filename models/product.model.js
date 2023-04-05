@@ -72,6 +72,10 @@ const productSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'User',
     },
+    category: {
+      type: ObjectId,
+      ref: 'Category'
+    },
     forkId: {
       type: ObjectId,
       ref: 'Product'

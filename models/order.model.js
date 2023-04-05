@@ -35,6 +35,10 @@ const categorySchema = new mongoose.Schema(
       type: String,
       default: 'initial'
     },
+    tax_status: {
+      type: Boolean,
+      default: false
+    },
     receiptUrl: {
       type: String,
       default: ''
@@ -52,6 +56,12 @@ const categorySchema = new mongoose.Schema(
         type: String,
         default: 'initial'
       },
+      tax_status: {
+        type: Boolean,
+        default: false
+      },
+      tax: Number,
+      taxRate: Number,
       shippingNote: String,
       promoCode: String,
       photo: String,

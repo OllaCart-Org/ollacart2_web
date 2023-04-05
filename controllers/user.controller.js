@@ -119,6 +119,11 @@ exports.updateAccountSettings = async (req, res) => {
       user.status.shopping_recommendation = shopping_recommendation;
     }
     if (typeof tax === 'boolean') {
+      if (tax) {
+        if (!user.shipping.country) {
+          return res.status(400).json({ error: 'Update shipping address first' });
+        }
+      }
       user.status.tax = tax;
     }
     if (typeof promo_code === 'boolean') {

@@ -6,7 +6,6 @@ import {
   useElements,
   AddressElement
 } from "@stripe/react-stripe-js";
-import commaNumber from "comma-number";
 import { useSelector } from "react-redux";
 import { useToasts } from 'react-toast-notifications';
 
@@ -15,6 +14,7 @@ import api from "../../api";
 import './payment.scss'
 import { IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
+import utils from "../../utils";
 
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
@@ -47,7 +47,6 @@ export default function CheckoutForm(props) {
             },
             ...data.products.map(itm => {
               itm.description = 'Shipping Cost:  +$14';
-              itm.price += 14;
               return itm;
             })
           ]);
@@ -166,7 +165,7 @@ export default function CheckoutForm(props) {
         <Close />
       </IconButton>
       <div className="payment-details">
-        <div className="payment-total-price">${commaNumber(totalPrice.toFixed(2))}</div>
+        <div className="payment-total-price">${utils.commaPrice(totalPrice.toFixed(2))}</div>
         <div className="payment-products">
           {products.map((itm, idx) => (
             <div key={idx}>
@@ -176,9 +175,10 @@ export default function CheckoutForm(props) {
                 </div>
                 <div className="payment-product-detail">
                   <div className="payment-product-name">{itm.name}</div>
+                  {itm.tax_status && <div className="payment-product-description">Tax ({utils.commaPrice(itm.taxRate * 100)}%): +${itm.tax}</div>}
                   <div className="payment-product-description">{itm.description || ''}</div>
                 </div>
-                <div className="payment-product-price">${commaNumber(itm.price.toFixed(2))}</div>
+                <div className="payment-product-price">${utils.commaPrice(itm.price)}</div>
               </div>
               {(idx === 0) && <hr />}
             </div>

@@ -23,6 +23,7 @@ const Layout = ({ children }) => {
           <Box mr='auto' />
           <Button color="inherit" onClick={() => goTo('/admin/analytics')}>Analytics</Button>
           <Button color="inherit" onClick={() => goTo('/admin/users')}>Users</Button>
+          <Button color="inherit" onClick={() => goTo('/admin/categories')}>Categories</Button>
           <Button color="inherit" onClick={() => goTo('/admin/carts')}>Items</Button>
           <Button color="inherit" onClick={() => goTo('/admin/orders')}>Orders</Button>
           <Button color="inherit" onClick={() => goTo('/admin/contracts')}>Contracts</Button>

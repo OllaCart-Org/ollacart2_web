@@ -81,6 +81,10 @@ const getUsers = (pagination) => {
   return call(`/admin/getusers/`, { pagination });
 }
 
+const getCategories = (pagination) => {
+  return call(`/admin/getcategories/`, { pagination });
+}
+
 const getCarts = (pagination) => {
   return call(`/admin/getcarts/`, { pagination });
 }
@@ -193,6 +197,18 @@ const updateAccountSettings = (detail) => {
   return call(`/user/updateaccountsettings`, detail);
 }
 
+const createCategory = (detail) => {
+  return call(`/category/create`, detail);
+}
+
+const updateCategory = (id, detail) => {
+  return call(`/category/update/${id}`, detail);
+}
+
+const removeCateogory = (id) => {
+  return call(`/category/remove/${id}`, {});
+}
+
 export default {
   signin,
   request,
@@ -205,6 +221,7 @@ export default {
   updateProductLogo,
   removeProduct,
   getUsers,
+  getCategories,
   getCarts,
   getOrders,
   getAnalytics,
@@ -234,4 +251,7 @@ export default {
   sendPartnerContact,
   getAccountSettings,
   updateAccountSettings,
+  removeCateogory,
+  updateCategory,
+  createCategory
 }

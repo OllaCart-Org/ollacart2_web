@@ -1,6 +1,7 @@
 const Product = require('../models/product.model');
 const Order = require('../models/order.model');
 const orderController = require('./order.controller');
+const utils = require('../helpers/utils');
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -109,9 +110,35 @@ exports.createPaymentIntent = async (req, res) => {
     let products = await Product.find({ user: user._id, purchased: 1 });
     products = products.filter(item => item.name && item.url && item.price && item.price >= 0.5);
 
+    const order_products = [];
+
     let total_price = 0;
     for (let i = 0; i < products.length; i ++) {
-      total_price += Math.ceil(products[i].price * 100);
+      const itm = products[i];
+      const order_product = {
+        product: itm._id,
+        photo: itm.photo,
+        name: itm.name,
+        price: Math.ceil(itm.price * 100) / 100,
+        url: itm.url,
+        original_url: itm.original_url,
+        color: itm.color,
+        size: itm.size,
+        domain: itm.domain
+      };
+
+      total_price += Math.ceil(itm.price * 100);
+      if (user.status.tax) {
+        const taxRate = await utils.getTaxRate(user.shipping, itm);
+
+        order_product.tax_status = true;
+        order_product.taxRate = taxRate;
+        order_product.tax = Math.ceil(order_product.price * taxRate * 100) / 100;
+
+        total_price += order_product.tax * 100;
+      }
+
+      order_products.push(order_product)
     }
     if (!products.length) return res.status(400).json({ error: 'No items in purchase cart' });
     total_price += process.env.SHIPPING_COST * 100 * products.length;
@@ -134,18 +161,9 @@ exports.createPaymentIntent = async (req, res) => {
       paymentIntentId: paymentIntent.id,
       totalPrice: total_price / 100,
       totalFee: total_fee / 100,
-      products: products.map(itm => ({
-        product: itm._id,
-        photo: itm.photo,
-        name: itm.name,
-        price: Math.ceil(itm.price * 100) / 100,
-        url: itm.url,
-        original_url: itm.original_url,
-        color: itm.color,
-        size: itm.size,
-        domain: itm.domain
-      })),
-      status: 'created'
+      products: order_products,
+      status: 'created',
+      tax_status: user.status.tax
     });
 
     const order_res = await order.save();
