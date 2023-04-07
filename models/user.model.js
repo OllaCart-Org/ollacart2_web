@@ -74,7 +74,11 @@ const userSchema = new mongoose.Schema(
     following: [{
       type: ObjectId,
       ref: 'User',
-    }]
+    }],
+    invitedBy: {
+      type: ObjectId,
+      ref: 'User'
+    }
   },
   { timestamps: true }
 );

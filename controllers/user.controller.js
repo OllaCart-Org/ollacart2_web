@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const User = require('../models/user.model');
 const EmailController = require('./email.controller');
+const utils = require('../helpers/utils');
 
 exports.userById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
@@ -40,6 +41,19 @@ exports.update = (req, res) => {
   );
 };
 
+
+exports.inviteUser = async (req, res) => {
+  const {email} = req.body;
+  if (!email) return res.status(400).json({ error: 'Invalid email address' });
+  const _old = await User.findOne({ email });
+  if (_old) return res.status(400).json({ error: 'Already exists' });
+
+  const user = new User({ email, invitedBy: req.user });
+  user.secure_identity = uuidv4();
+  await user.save();
+  utils.sendSecureMail(email, user.secure_identity);
+  res.json({ });
+}
 
 exports.followUser = async (req, res) => {
   const { followId } = req.body;

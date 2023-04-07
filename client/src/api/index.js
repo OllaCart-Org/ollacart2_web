@@ -157,6 +157,10 @@ const getSocialStatus = (_id) => {
   return call(`/product/getsocialstatus`, { });
 }
 
+const inviteUser = (email) => {
+  return call(`/user/invite`, { email });
+}
+
 const followUser = (followId, email = '') => {
   return call(`/user/follow`, { followId, email });
 }
@@ -263,5 +267,6 @@ export default {
   removeCateogory,
   updateCategory,
   createCategory,
-  updateTax
+  updateTax,
+  inviteUser
 }

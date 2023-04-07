@@ -54,6 +54,22 @@ exports.sendRequestMail = async (mailTo) => {
   })
 }
 
+exports.sendSecureMail = async (mailTo, uid) => {
+  const secure_link = `${process.env.DOMAIN}/verify/${uid}`;
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: mailTo,
+      subject: 'Signin to your Account',
+      html: `<p>You are invited to OllaCart. Click the button below to accept invitattion to OllaCart.</p><a href="${secure_link}">Accept</a>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
 exports.sendOrderStatusMail = async (mailTo, product) => {
   const message = ['The product order status changed to UnOrdered', 'The product order is placed.', 'The product is in shipping.', 'The product order is closed.'];
   const subject = 'OllaCart Order';

@@ -10,8 +10,13 @@ import api from '../api';
 import './profile.scss';
 import { AccountBox, Add, ContactMail, CropFree, ExitToApp, Feedback, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
 import utils from '../utils';
+import EmailModal from '../components/Modals/EmailModal';
 
 const Profile = () => {
+  const { email } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const { addToast } = useToasts();
+
   const [shipping, setShipping] = useState({});
   const [profile, setProfile] = useState({});
   const [feedback, setFeedback] = useState({});
@@ -24,10 +29,7 @@ const Profile = () => {
   });
   const [countries] = useState(Country.getAllCountries());
   const [states, setStates] = useState([]);
-
-  const { email } = useSelector(state => state.auth);
-  const dispatch = useDispatch();
-  const { addToast } = useToasts();
+  const [emailModalForm, setEmailModalForm] = useState({});
 
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -134,8 +136,18 @@ const Profile = () => {
       .catch(err => showToast(err.message));
   }
 
-  const inviteFriend = () => {
+  const inviteModalOpen = () => {
+    setEmailModalForm({ open: true });
+  }
 
+  const closeModal = () => {
+    setEmailModalForm({ open: false });
+  }
+
+  const onSubmitWithEmail = (email) => {
+    api.inviteUser(email)
+      .then(() => showToast('Invite sent!', 'success'))
+      .catch((err) => showToast(err.message));
   }
 
   return (
@@ -179,7 +191,7 @@ const Profile = () => {
               <Switch color='primary' name='anonymous_shopping' checked={status.anonymous_shopping} onChange={switchChanged} />
             </div>
             <Box mt={3} display='flex' justifyContent='center'>
-              <Button variant='contained' color='primary' size='small' startIcon={<Add />} onClick={inviteFriend}>Invite a friend</Button>
+              <Button variant='contained' color='primary' size='small' startIcon={<Add />} onClick={inviteModalOpen}>Invite a friend</Button>
             </Box>
           </div>
           <div className='right-side'>
@@ -262,6 +274,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <EmailModal open={!!emailModalForm.open} onClose={closeModal} title='Invite' buttonName='Invite' onSubmit={onSubmitWithEmail} />
     </Layout>
   )
 }
