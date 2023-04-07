@@ -29,7 +29,7 @@ import Terms from './views/service/terms';
 import Personal from './views/personal';
 
 import ManageUsers from './views/admin/users';
-import ManageCategories from './views/admin/categories';
+import ManageTaxes from './views/admin/taxes';
 import ManageCarts from './views/admin/carts';
 import ManageOrders from './views/admin/orders';
 import ManageAnalytics from './views/admin/analytics';
@@ -94,7 +94,7 @@ function AppContainer() {
               <Route path="/share/:userid" name='share' exact component={Share} />
               {(role === 'admin') && ([
                 <Route key='users' path="/admin/users" exact component={ManageUsers}/>,
-                <Route key='categories' path="/admin/categories" exact component={ManageCategories}/>,
+                <Route key='taxes' path="/admin/taxes" exact component={ManageTaxes}/>,
                 <Route key='carts' path="/admin/carts" exact component={ManageCarts}/>,
                 <Route key='orders' path="/admin/orders" exact component={ManageOrders}/>,
                 <Route key='analytics' path="/admin/analytics" exact component={ManageAnalytics}/>,

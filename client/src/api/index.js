@@ -85,6 +85,10 @@ const getCategories = (pagination) => {
   return call(`/admin/getcategories/`, { pagination });
 }
 
+const getTaxes = (detail = {}) => {
+  return call(`/admin/gettaxes/`, detail);
+}
+
 const getCarts = (pagination) => {
   return call(`/admin/getcarts/`, { pagination });
 }
@@ -209,6 +213,10 @@ const removeCateogory = (id) => {
   return call(`/category/remove/${id}`, {});
 }
 
+const updateTax = (detail) => {
+  return call(`/tax/update`, detail);
+}
+
 export default {
   signin,
   request,
@@ -222,6 +230,7 @@ export default {
   removeProduct,
   getUsers,
   getCategories,
+  getTaxes,
   getCarts,
   getOrders,
   getAnalytics,
@@ -253,5 +262,6 @@ export default {
   updateAccountSettings,
   removeCateogory,
   updateCategory,
-  createCategory
+  createCategory,
+  updateTax
 }

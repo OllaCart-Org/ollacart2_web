@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Layout from './layout'
-import { Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, TextField } from '@material-ui/core';
+import React, { useState, useCallback } from 'react';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, TextField } from '@material-ui/core';
 import { useToasts } from 'react-toast-notifications';
-import api from '../../api';
-import utils from '../../utils';
+import api from '../../../api';
+import utils from '../../../utils';
 import { Add, Delete, Edit } from '@material-ui/icons';
-import AdminDialog from '../../components/Admin/modal';
+import AdminDialog from '../../../components/Admin/modal';
 
-const Categories = () => {
+const Categories = ({ categories, fetchCategories }) => {
   const { addToast } = useToasts();
 
-  const [categories, setCategories] = useState([]);
   const [categoryModalInfo, setCategoryModalInfo] = useState({});
   const [name, setName] = useState('');
   
@@ -18,17 +16,6 @@ const Categories = () => {
     addToast(message, { appearance, autoDismiss: true });
   }, [addToast]);
 
-  const fetchCategories = useCallback(() => {
-    api.getCategories()
-      .then((data) => {
-        setCategories(data.categories);
-      })
-      .catch(err => showToast(err.message));
-  }, [showToast])
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories])
 
   const updateCategory = () => {
     api.updateCategory(categoryModalInfo._id, { name })
@@ -74,9 +61,8 @@ const Categories = () => {
   }
 
   return (
-    <Layout>
-      <Box display='flex' justifyContent='space-between' marginY={1}>
-        <Typography variant='h4'>Categories</Typography>
+    <>
+      <Box display='flex' justifyContent='flex-end' marginY={2}>
         <Button variant='contained' startIcon={<Add />} color='primary' onClick={createCategoryModalOpen}>Add Category</Button>
       </Box>
       <TableContainer component={Paper}>
@@ -120,7 +106,7 @@ const Categories = () => {
           </Box>
         </Box>
       </AdminDialog>
-    </Layout>
+    </>
   )
 }
 

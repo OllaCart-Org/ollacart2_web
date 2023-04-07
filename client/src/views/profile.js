@@ -212,7 +212,7 @@ const Profile = () => {
                       {countries.map((c, idx) => (
                         <MenuItem key={idx} value={c.isoCode}>{c.name}</MenuItem>
                       ))}
-                    </Select>                  
+                    </Select>
                   </FormControl>
                   <FormControl className='form-control' variant="outlined" fullWidth size='small'>
                     <InputLabel id="state-label">State</InputLabel>
@@ -220,7 +220,7 @@ const Profile = () => {
                       {states.map((c, idx) => (
                         <MenuItem key={idx} value={c.isoCode}>{c.name}</MenuItem>
                       ))}
-                    </Select>                  
+                    </Select>
                   </FormControl>
                 </div>
                 <TextField className='form-input' label='City' size='small' variant='outlined' fullWidth color='primary' name='city'

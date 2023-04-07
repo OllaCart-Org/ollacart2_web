@@ -51,13 +51,6 @@ exports.remove = async (req, res) => {
 
 
 
-
-exports.getCategoryCount = async (filter = {}) => {
-  const count = await Category.countDocuments(filter) || 0;
-  return count;
-}
-
-
 exports.getCategories = async (req, res) => {
   const categories = await Category.find({ deleted: {$ne: true} })
     .sort([['createdAt', 'desc']])
@@ -66,5 +59,5 @@ exports.getCategories = async (req, res) => {
       select: '_id username email'
     })
     .exec();
-  res.send({ success: true, categories, total: await this.getCategoryCount() });
+  res.send({ categories });
 }

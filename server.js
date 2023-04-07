@@ -10,8 +10,9 @@ require('dotenv').config();
 // import routes
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');
-const productRoutes = require('./routes/product.route');
+const taxRoutes = require('./routes/tax.route');
 const categoryRoutes = require('./routes/category.route');
+const productRoutes = require('./routes/product.route');
 const orderRoutes = require('./routes/order.route');
 const stripeRoutes = require('./routes/stripe.route');
 const messageRoutes = require('./routes/message.route');
@@ -57,6 +58,7 @@ app.use(cors());
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', categoryRoutes);
+app.use('/api', taxRoutes);
 app.use('/api', productRoutes);
 app.use('/api', messageRoutes);
 app.use('/api', orderRoutes);
