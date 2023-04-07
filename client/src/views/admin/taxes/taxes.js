@@ -11,7 +11,7 @@ const Categories = ({ categories }) => {
 
   const [taxJson, setTaxJson] = useState({});
   const [tempJson, setTempJson] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(-1);
   const [countries] = useState(Country.getAllCountries());
   
   const showToast = useCallback((message, appearance = 'error') => {
@@ -19,7 +19,6 @@ const Categories = ({ categories }) => {
   }, [addToast]);
 
   const fetchTaxes = useCallback(() => {
-    if (!category) return;
     api.getTaxes({ category })
       .then((data) => {
         setTaxJson(data.tax?.taxJson || {});
@@ -101,7 +100,8 @@ const Categories = ({ categories }) => {
       <Box display='flex' justifyContent='space-between' alignItems='center'>
         <FormControl variant="outlined" style={{minWidth: 130}} size='small'>
           <InputLabel id="category-label">Category</InputLabel>
-          <Select labelWidth={70} labelId='category-label' value={category} onChange={e => setCategory(e.target.value)}>
+          <Select labelWidth={70} labelId='category-label' value={category} placeholder='All' onChange={e => setCategory(e.target.value)}>
+            <MenuItem value={-1}>All</MenuItem>
             {categories.map((c, idx) => (
               <MenuItem key={idx} value={c._id}>{c.name}</MenuItem>
             ))}

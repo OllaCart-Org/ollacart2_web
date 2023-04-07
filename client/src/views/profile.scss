@@ -46,6 +46,16 @@
         padding: 10px 15px;
         border-radius: 6px;
         background-color: var(--color-gray);
+        
+        &.button {
+          margin-top: 10px;
+          padding: 15px;
+          justify-content: center;
+          cursor: pointer;
+
+          &:hover { opacity: 0.8; }
+        }
+
         .text-content {
           width: 1px;
           flex-grow: 1;

@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { useToasts } from 'react-toast-notifications';
-import { Button, FormControl, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from '@material-ui/core';
+import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from '@material-ui/core';
 import { actions } from '../redux/_actions';
 import { Country, State }  from 'country-state-city';
 import Layout from './layout';
 import api from '../api';
 
 import './profile.scss';
-import { AccountBox, ContactMail, CropFree, ExitToApp, Feedback, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
+import { AccountBox, Add, ContactMail, CropFree, ExitToApp, Feedback, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
 import utils from '../utils';
 
 const Profile = () => {
@@ -134,6 +134,10 @@ const Profile = () => {
       .catch(err => showToast(err.message));
   }
 
+  const inviteFriend = () => {
+
+  }
+
   return (
     <Layout>
       <div className='profile-page'>
@@ -174,6 +178,9 @@ const Profile = () => {
               <div className='text-content'>Anonymous Shopping</div>
               <Switch color='primary' name='anonymous_shopping' checked={status.anonymous_shopping} onChange={switchChanged} />
             </div>
+            <Box mt={3} display='flex' justifyContent='center'>
+              <Button variant='contained' color='primary' size='small' startIcon={<Add />} onClick={inviteFriend}>Invite a friend</Button>
+            </Box>
           </div>
           <div className='right-side'>
             <div className='form-wrapper'>

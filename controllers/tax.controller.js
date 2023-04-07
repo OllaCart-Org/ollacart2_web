@@ -2,15 +2,16 @@ const Tax = require('../models/tax.model');
 const Category = require('../models/category.model');
 
 exports.update = async (req, res) => {
-  const { category, taxJson } = req.body;
-  if(!category) return res.status(400).send({ error: 'No Category' });
+  let { category, taxJson } = req.body;
+  if (!category || category === -1) category = null;
 
   await Tax.updateOne({ category }, { $set: { taxJson, user: req.user } }, { upsert: true });
   res.json({ success: true });
 }
 
 exports.getTaxes = async (req, res) => {
-  const { category } = req.body;
+  let { category } = req.body;
+  if(!category || category === -1) category = null;
   
   const tax = await Tax.findOne({ category })
     .populate({
