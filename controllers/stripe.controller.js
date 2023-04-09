@@ -129,7 +129,7 @@ exports.createPaymentIntent = async (req, res) => {
 
       total_price += Math.ceil(itm.price * 100);
       if (user.status.tax) {
-        const taxRate = await utils.getTaxRate(user.shipping, itm);
+        const taxRate = await utils.getTaxRate(user.shipping, itm.category);
 
         order_product.tax_status = true;
         order_product.taxRate = taxRate;

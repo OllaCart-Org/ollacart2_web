@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const Extension = require('../models/extension.model');
+const Tax = require('../models/tax.model');
 const SalesTax = require('sales-tax');
 const Twilio = require('twilio');
 
@@ -115,8 +116,55 @@ exports.sendPurchaseSMS = async (phoneTo, url) => {
   console.log('sendSMS', res);
 }
 
-exports.getTaxRate = async (shipping, product) => {
-  const {country, state} = shipping;
+const getValidTaxRate = (data) => {
+  if (!data && data !== 0) return null;
+  if (typeof data !== 'object') {
+    if (typeof data === 'number') return data;
+    return parseFloat(data) || null;
+  }
+  const rate = data['taxRate'];
+  if (!rate && rate !== 0) return null;
+  if (typeof rate === 'number') return rate;
+  return parseFloat(rate) || null;
+}
+
+const getTaxRateFromJson = (json, country, state, zipcode) => {
+  if (!json || typeof json !== 'object') return null;
+  if (!json[country] && json[country] !== 0) return null;
+  const cJson = json[country];
+
+  let taxRate = null;
+  const cTaxRate = getValidTaxRate(cJson);
+  
+  if (!state) {
+    if (zipcode) {
+      taxRate = getValidTaxRate(cJson[zipcode]);
+    }
+  } else {
+    const sJson = cJson[state];
+    if (!sJson && sJson !== 0);
+    else {
+      const sTaxRate = getValidTaxRate(sJson);
+      if (zipcode) taxRate = getValidTaxRate(sJson[zipcode]);
+      if (taxRate === null) taxRate = sTaxRate;
+    }
+  }
+  if (taxRate === null) taxRate = cTaxRate;
+  if (taxRate === null) return null;
+  return taxRate / 100;
+}
+
+exports.getTaxRate = async (shipping, category) => {
+  const {country, state, postal_code} = shipping;
+  if (category) {
+    const tax = await Tax.findOne({ category });
+    const taxRate = getTaxRateFromJson(tax?.taxJson, country, state, postal_code);
+    if (taxRate !== null) return taxRate;
+  }
+  const tax = await Tax.findOne({ category: null });
+  const taxRate = getTaxRateFromJson(tax?.taxJson, country, state, postal_code);
+  if (taxRate !== null) return taxRate;
+
   if (SalesTax.hasStateSalesTax(country, state)) {
     const res = await SalesTax.getSalesTax(country, state);
     return res.rate || 0;
