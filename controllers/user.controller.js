@@ -1,7 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const User = require('../models/user.model');
 const EmailController = require('./email.controller');
-const utils = require('../helpers/utils');
 
 exports.userById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
@@ -13,12 +12,6 @@ exports.userById = (req, res, next, id) => {
     req.profile = user;
     next();
   });
-};
-
-exports.read = (req, res) => {
-  req.profile.hashed_password = undefined;
-  req.profile.salt = undefined;
-  return res.json(req.profile);
 };
 
 exports.update = (req, res) => {
@@ -50,8 +43,8 @@ exports.inviteUser = async (req, res) => {
 
   const user = new User({ email, invitedBy: req.user });
   user.secure_identity = uuidv4();
+  await EmailController.sendInviteEmail(email, req.user, user.secure_identity);
   await user.save();
-  utils.sendSecureMail(email, user.secure_identity);
   res.json({ });
 }
 

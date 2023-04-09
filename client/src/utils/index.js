@@ -1,4 +1,5 @@
 import commaNumber from "comma-number";
+import queryString from "querystring";
 
 export default {
   validateEmail: email => {
@@ -64,5 +65,10 @@ export default {
   getUsername: (user) => {
     if (!user) return '';
     return user.username || (user.email || '').split('@')[0];
+  },
+  getSearchParams: () => {
+    const searchQuery = window.location.search.replace('?', '');
+    const params = queryString.parse(searchQuery);
+    return params;
   }
 }

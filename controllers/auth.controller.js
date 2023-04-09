@@ -8,6 +8,17 @@ const utils = require('../helpers/utils');
 
 require('dotenv').config();
 
+const generateToken = async (user) => {
+  jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  if (!user.signinStatus) {
+    user.signinStatus = true;
+    if (user.invitedBy) {
+      user.following.push(user.invitedBy);
+    }
+    await user.save();
+  }
+}
+
 exports.signin = async (req, res) => {
   // find the user based on email
   const { email, ce_id } = req.body;
@@ -31,7 +42,7 @@ exports.signin = async (req, res) => {
 
   await Utils.checkCeID(user, ce_id);
   
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  const token = await generateToken(user);
   res.cookie('t', token, { expire: new Date() + 9999 });
   
   const { _id, name, role } = user;
@@ -98,7 +109,7 @@ exports.verifySignin = async (req, res) => {
     user.last_verified = uid;
     await user.save();
 
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    const token = await generateToken(user);
     res.cookie('t', token, { expire: new Date() + 9999 });
     res.json({ token });
   } catch(ex) {

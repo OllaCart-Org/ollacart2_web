@@ -61,6 +61,20 @@ exports.sendVerifyEmail = (mailTo, user, verifyId) => {
   transporter.sendMail(mailOptions);
 }
 
+exports.sendInviteEmail = (mailTo, fromUser, verifyId) => {
+  var mailOptions = {
+    from: 'support@ollacart.com',
+    to: mailTo,
+    subject: 'Invitation to OllaCart',
+    html: readTemplate('invite', {
+      user: utils.getUsername(fromUser),
+      inviteUrl: `${process.env.DOMAIN}/verify/${verifyId}?redirect=social`
+    })
+  };
+  
+  transporter.sendMail(mailOptions);
+}
+
 exports.sendSingleShareEmail = (product, mailTo) => {
   let subject = 'Direct Share';
   if(product?.user) subject += ' from @' + utils.getUsername(product?.user);

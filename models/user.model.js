@@ -78,6 +78,10 @@ const userSchema = new mongoose.Schema(
     invitedBy: {
       type: ObjectId,
       ref: 'User'
+    },
+    signinStatus: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

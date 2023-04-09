@@ -56,7 +56,8 @@ function verifySignin(data) {
       .then(data => {
         dispatch(setLoading(false));
         localStorage.setItem('token', data.token);
-        window.location.href = '/home';
+        const searchParams = utils.getSearchParams();
+        window.location.href = '/' + (searchParams.redirect || '');
       })
       .catch(err => {
         console.log(err);
