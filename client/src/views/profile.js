@@ -146,7 +146,10 @@ const Profile = () => {
 
   const onSubmitWithEmail = (email) => {
     api.inviteUser(email)
-      .then(() => showToast('Invite sent!', 'success'))
+      .then(() => {
+        showToast('Invite sent!', 'success');
+        closeModal();
+      })
       .catch((err) => showToast(err.message));
   }
 

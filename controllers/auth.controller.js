@@ -9,7 +9,6 @@ const utils = require('../helpers/utils');
 require('dotenv').config();
 
 const generateToken = async (user) => {
-  jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
   if (!user.signinStatus) {
     user.signinStatus = true;
     if (user.invitedBy) {
@@ -17,6 +16,7 @@ const generateToken = async (user) => {
     }
     await user.save();
   }
+  return jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
 }
 
 exports.signin = async (req, res) => {
