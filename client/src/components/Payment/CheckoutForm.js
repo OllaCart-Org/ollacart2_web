@@ -26,6 +26,7 @@ export default function CheckoutForm(props) {
   const [defaultLoaded, setDefaultLoaded] = useState(false);
   const [defaultShipping, setDefaultShipping] = useState({});
   const [shipping, setShipping] = useState({});
+  const [additionalProductCount, setAdditionalProductCount] = useState(1);
   
   const { email } = useSelector(state => state.auth);
   const stripe = useStripe();
@@ -39,17 +40,28 @@ export default function CheckoutForm(props) {
   const fetchProducts = useCallback(async () => {
     api.fetchProductsByClientSecret(props.clientSecret)
         .then((data) => {
-          setProducts([{
-              photo: 'https://i.postimg.cc/PJfjfcJq/stripe-icon.png',
-              name: 'Processing Fee',
-              price: data.totalFee,
-              description: 'Stripe Fee (2.9% + 30¢)'
-            },
+          const products = [{
+            photo: 'https://i.postimg.cc/PJfjfcJq/stripe-icon.png',
+            name: 'Processing Fee',
+            price: data.totalFee,
+            description: 'Stripe Fee (2.9% + 30¢)',
+          }];
+          if (data.anonymous_shopping) {
+            products.push({
+              photo: 'https://i.postimg.cc/NFNDxmGc/anonymous.png',
+              name: 'Anonymous Shopping',
+              price: data.anonymous_shopping_fee,
+              description: 'Anonymous Shopping Fee (1%)',
+            });
+            setAdditionalProductCount(2);
+          }
+          products.push(
             ...data.products.map(itm => {
               itm.description = 'Shipping Cost:  +$14';
               return itm;
             })
-          ]);
+          );
+          setProducts(products);
           setTotalPrice(data.totalPrice);
           // setTotalFee(data.totalFee);
         })
@@ -180,7 +192,7 @@ export default function CheckoutForm(props) {
                 </div>
                 <div className="payment-product-price">${utils.commaPrice(itm.price)}</div>
               </div>
-              {(idx === 0) && <hr />}
+              {(idx === additionalProductCount - 1) && <hr />}
             </div>
           ))}
         </div>
