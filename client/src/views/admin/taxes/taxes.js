@@ -3,7 +3,7 @@ import { Box, Button, FormControl, InputLabel, Select, MenuItem, TextField, List
 import { useToasts } from 'react-toast-notifications';
 import {JsonEditor} from "react-jsondata-editor";
 import api from '../../../api';
-import { Add, Delete, Update } from '@material-ui/icons';
+import { Add, Delete, Room, Update } from '@material-ui/icons';
 import { Country, State }  from 'country-state-city';
 import AdminDialog from '../../../components/Admin/modal';
 
@@ -224,7 +224,7 @@ const Categories = ({ categories }) => {
         <Box display='flex' alignItems='center' gridGap={5}>
           <Box width='200px'>
           </Box>
-          <Button variant='contained' startIcon={<Add />} color='primary' onClick={openModal}>Manage Locations</Button>
+          <Button variant='contained' startIcon={<Room />} color='primary' onClick={openModal}>Manage Locations</Button>
           <Button variant='contained' startIcon={<Update />} color='secondary' onClick={updateTaxes}>Update</Button>
         </Box>
       </Box>

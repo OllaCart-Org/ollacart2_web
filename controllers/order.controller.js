@@ -20,12 +20,7 @@ exports.getProductsByClientSecret = async (req, res) => {
 
   const order = await Order.findOne({ clientSecret });
   if(!order) return res.status(400).send({ error: 'fetch failed' });
-  res.send({
-    totalPrice: order.totalPrice,
-    totalFee: order.totalFee,
-    products: order.products,
-    receiptUrl: order.receiptUrl
-  })
+  res.send(order)
 };
 
 exports.getOrderedProducts = async (req, res) => {

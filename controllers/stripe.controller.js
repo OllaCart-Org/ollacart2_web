@@ -144,6 +144,12 @@ exports.createPaymentIntent = async (req, res) => {
     total_price += process.env.SHIPPING_COST * 100 * products.length;
     // total_price = Math.ceil(total_price * 100);
 
+    let anonymous_shopping_fee = 0;
+    if (user.status.anonymous_shopping) {
+      anonymous_shopping_fee = Math.ceil(total_price * 0.01);
+      total_price += anonymous_shopping_fee;
+      anonymous_shopping_fee /= 100;
+    }
     const total_fee = Math.ceil((total_price + 30) / (1 - 0.029) - total_price);
     total_price += total_fee;
 
@@ -163,7 +169,9 @@ exports.createPaymentIntent = async (req, res) => {
       totalFee: total_fee / 100,
       products: order_products,
       status: 'created',
-      tax_status: user.status.tax
+      tax_status: user.status.tax,
+      anonymous_shopping: user.status.anonymous_shopping,
+      anonymous_shopping_fee
     });
 
     const order_res = await order.save();

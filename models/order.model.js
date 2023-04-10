@@ -39,6 +39,11 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    anonymous_shopping: {
+      type: Boolean,
+      default: false
+    },
+    anonymous_shopping_fee: Number,
     receiptUrl: {
       type: String,
       default: ''
