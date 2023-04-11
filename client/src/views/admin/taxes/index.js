@@ -39,7 +39,7 @@ const Users = () => {
       </Box>
       <Tabs value={tab} onChange={handleChange}>
         <Tab label="Categories" value='categories' />
-        <Tab label="Taxes" value='taxes' />
+        <Tab label="Update Tax Rates by Location" value='taxes' />
       </Tabs>
       <Box hidden={tab !== 'categories'}>
         <Categories categories={categories} fetchCategories={fetchCategories} />

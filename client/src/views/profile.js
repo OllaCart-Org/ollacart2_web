@@ -175,7 +175,7 @@ const Profile = () => {
             </div>
             <div className='switch-wrapper'>
               <Receipt />
-              <div className='text-content'>Include tax in Orders</div>
+              <div className='text-content'>Display tax price in Orders</div>
               <Switch color='primary' name='tax' checked={status.tax} onChange={switchChanged} />
             </div>
             <div className='switch-wrapper'>

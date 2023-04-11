@@ -113,6 +113,7 @@ exports.createPaymentIntent = async (req, res) => {
     const order_products = [];
 
     let total_price = 0;
+    let taxPrice = 0, anonymousPrice = 0, shippingPrice = 0, itemsPrice = 0;
     for (let i = 0; i < products.length; i ++) {
       const itm = products[i];
       const order_product = {
@@ -124,33 +125,37 @@ exports.createPaymentIntent = async (req, res) => {
         original_url: itm.original_url,
         color: itm.color,
         size: itm.size,
-        domain: itm.domain
+        domain: itm.domain,
+        taxPrice: 0,
+        anonymousPrice: 0,
+        shippingPrice: parseFloat(process.env.SHIPPING_COST || 14)
       };
-
-      total_price += Math.ceil(itm.price * 100);
-      if (user.status.tax) {
-        const taxRate = await utils.getTaxRate(user.shipping, itm.category);
-
-        order_product.tax_status = true;
-        order_product.taxRate = taxRate;
-        order_product.tax = Math.ceil(order_product.price * taxRate * 100) / 100;
-
-        total_price += order_product.tax * 100;
+      
+      // tax calculate
+      const taxRate = await utils.getTaxRate(user.shipping, itm.category);
+      order_product.taxRate = taxRate;
+      if (taxRate >= 0) {
+        order_product.taxPrice = Math.ceil(order_product.price * taxRate * 100) / 100;
       }
 
-      order_products.push(order_product)
-    }
-    if (!products.length) return res.status(400).json({ error: 'No items in purchase cart' });
-    total_price += process.env.SHIPPING_COST * 100 * products.length;
-    // total_price = Math.ceil(total_price * 100);
+      // anonymous shopping
+      if (user.status.anonymous_shopping) {
+        order_product.anonymousPrice = Math.ceil(order_product.price) / 100;
+      }
 
-    let anonymous_shopping_fee = 0;
-    if (user.status.anonymous_shopping) {
-      anonymous_shopping_fee = Math.ceil(total_price * 0.01);
-      total_price += anonymous_shopping_fee;
-      anonymous_shopping_fee /= 100;
+      order_products.push(order_product);
+
+      taxPrice += order_product.taxPrice;
+      anonymousPrice += order_product.anonymousPrice;
+      shippingPrice += order_product.shippingPrice;
+      itemsPrice += order_product.price;
     }
-    const total_fee = Math.ceil((total_price + 30) / (1 - 0.029) - total_price);
+
+    if (!products.length) return res.status(400).json({ error: 'No items in purchase cart' });
+    total_price = Math.ceil((itemsPrice + taxPrice + anonymousPrice + shippingPrice) * 100);
+
+    // const total_fee = Math.ceil((total_price + 30) / (1 - 0.029) - total_price);
+    const total_fee = 0;
     total_price += total_fee;
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -169,9 +174,11 @@ exports.createPaymentIntent = async (req, res) => {
       totalFee: total_fee / 100,
       products: order_products,
       status: 'created',
-      tax_status: user.status.tax,
       anonymous_shopping: user.status.anonymous_shopping,
-      anonymous_shopping_fee
+      itemsPrice,
+      anonymousPrice,
+      taxPrice,
+      shippingPrice
     });
 
     const order_res = await order.save();

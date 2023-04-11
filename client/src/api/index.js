@@ -32,6 +32,9 @@ const call = (url, _data) => {
     })
 }
 
+const me = () => {
+  return call(`/auth/me`, { });
+}
 
 const signin = (email) => {
   return call(`/signin`, { email });
@@ -222,6 +225,7 @@ const updateTax = (detail) => {
 }
 
 export default {
+  me,
   signin,
   request,
   verifyUser,

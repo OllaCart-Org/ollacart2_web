@@ -19,6 +19,11 @@ const generateToken = async (user) => {
   return jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
 }
 
+exports.me = async (req, res) => {
+  if (!req.user) return res.status(400).json({ error: 'Not signed in' });
+  res.send({ user: req.user });
+}
+
 exports.signin = async (req, res) => {
   // find the user based on email
   const { email, ce_id } = req.body;

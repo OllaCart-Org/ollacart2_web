@@ -35,15 +35,14 @@ const categorySchema = new mongoose.Schema(
       type: String,
       default: 'initial'
     },
-    tax_status: {
-      type: Boolean,
-      default: false
-    },
     anonymous_shopping: {
       type: Boolean,
       default: false
     },
-    anonymous_shopping_fee: Number,
+    itemsPrice: Number,
+    taxPrice: Number,
+    anonymousPrice: Number,
+    shippingPrice: Number,
     receiptUrl: {
       type: String,
       default: ''
@@ -61,12 +60,10 @@ const categorySchema = new mongoose.Schema(
         type: String,
         default: 'initial'
       },
-      tax_status: {
-        type: Boolean,
-        default: false
-      },
-      tax: Number,
       taxRate: Number,
+      taxPrice: Number,
+      shippingPrice: Number,
+      anonymousPrice: Number,
       shippingNote: String,
       promoCode: String,
       photo: String,

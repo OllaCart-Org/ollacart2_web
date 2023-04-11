@@ -5,6 +5,7 @@ const {
   Auth,
   signin,
   signout,
+  me,
   request,
   verifyUser,
   verifySecure,
@@ -12,6 +13,8 @@ const {
   checkSecureVerified
 } = require('../controllers/auth.controller');
 const { userSignupValidator } = require('../validator');
+
+router.post('/auth/me', Auth, me);
 
 router.post('/signin', userSignupValidator, signin);
 router.post('/request', userSignupValidator, request);

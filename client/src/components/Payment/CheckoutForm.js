@@ -19,14 +19,15 @@ import utils from "../../utils";
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
 export default function CheckoutForm(props) {
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [order, setOrder] = useState(0);
   // const [totalFee, setTotalFee] = useState(0);
   const [defaultLoaded, setDefaultLoaded] = useState(false);
   const [defaultShipping, setDefaultShipping] = useState({});
   const [shipping, setShipping] = useState({});
-  const [additionalProductCount, setAdditionalProductCount] = useState(1);
+  const [additionalProductCount, setAdditionalProductCount] = useState(0);
   
   const { email } = useSelector(state => state.auth);
   const stripe = useStripe();
@@ -40,30 +41,27 @@ export default function CheckoutForm(props) {
   const fetchProducts = useCallback(async () => {
     api.fetchProductsByClientSecret(props.clientSecret)
         .then((data) => {
-          const products = [{
-            photo: 'https://i.postimg.cc/PJfjfcJq/stripe-icon.png',
-            name: 'Processing Fee',
-            price: data.totalFee,
-            description: 'Stripe Fee (2.9% + 30¢)',
-          }];
+          // const products = [{
+          //   photo: 'https://i.postimg.cc/PJfjfcJq/stripe-icon.png',
+          //   name: 'Processing Fee',
+          //   price: data.totalFee,
+          //   description: 'Stripe Fee (2.9% + 30¢)',
+          // }];
+          const products = [];
           if (data.anonymous_shopping) {
             products.push({
               photo: 'https://i.postimg.cc/NFNDxmGc/anonymous.png',
               name: 'Anonymous Shopping',
-              price: data.anonymous_shopping_fee,
+              price: data.anonymousPrice,
               description: 'Anonymous Shopping Fee (1%)',
             });
-            setAdditionalProductCount(2);
+            setAdditionalProductCount(1);
           }
           products.push(
-            ...data.products.map(itm => {
-              itm.description = 'Shipping Cost:  +$14';
-              return itm;
-            })
+            ...data.products
           );
           setProducts(products);
-          setTotalPrice(data.totalPrice);
-          // setTotalFee(data.totalFee);
+          setOrder(data);
         })
         .catch(err => showToast(err.message));
   }, [props.clientSecret, showToast])
@@ -88,7 +86,13 @@ export default function CheckoutForm(props) {
         setDefaultLoaded(true);
       })
       .catch(err => showToast(err.message));
-  }, [showToast])
+    
+    api.me()
+      .then(data => {
+        setUser(data.user);
+      })
+      .catch(err => showToast(err.message));
+  }, [showToast]);
 
   useEffect(() => {
     if (!stripe || !props.clientSecret) {
@@ -124,6 +128,13 @@ export default function CheckoutForm(props) {
     });
   }, [stripe, props.clientSecret, fetchProducts, showToast]);
 
+  const getTotalPrice = () => {
+    if (!user || !order) return;
+    let price = order.itemsPrice + order.shippingPrice + order.anonymousPrice;
+    if (user.status.tax) price += order.taxPrice;
+    return utils.commaPrice(price.toFixed(2));
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -132,7 +143,6 @@ export default function CheckoutForm(props) {
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
-
     
     api.updateAccountSettings({ name: shipping.name, phone: shipping.phone, shipping: shipping.address })
       .then(async () => {
@@ -145,11 +155,6 @@ export default function CheckoutForm(props) {
           },
         });
     
-        // This point will only be reached if there is an immediate error when
-        // confirming the payment. Otherwise, your customer will be redirected to
-        // your `return_url`. For some payment methods like iDEAL, your customer will
-        // be redirected to an intermediate site first to authorize the payment, then
-        // redirected to the `return_url`.
         if (error.type === "card_error" || error.type === "validation_error") {
           showToast(error.message);
         } else {
@@ -177,7 +182,7 @@ export default function CheckoutForm(props) {
         <Close />
       </IconButton>
       <div className="payment-details">
-        <div className="payment-total-price">${utils.commaPrice(totalPrice.toFixed(2))}</div>
+        <div className="payment-total-price">${getTotalPrice()}</div>
         <div className="payment-products">
           {products.map((itm, idx) => (
             <div key={idx}>
@@ -187,8 +192,9 @@ export default function CheckoutForm(props) {
                 </div>
                 <div className="payment-product-detail">
                   <div className="payment-product-name">{itm.name}</div>
-                  {itm.tax_status && <div className="payment-product-description">Tax ({utils.commaPrice(itm.taxRate * 100)}%): +${itm.tax}</div>}
-                  <div className="payment-product-description">{itm.description || ''}</div>
+                  {itm.description && <div className="payment-product-description">{itm.description}</div>}
+                  {user?.status.tax && (itm.taxRate > -1) && <div className="payment-product-description">Tax ({utils.commaPrice(itm.taxRate * 100)}%): +${itm.taxPrice}</div>}
+                  {itm.shippingPrice && <div className="payment-product-description">Shipping Cost: +${itm.shippingPrice}</div>}
                 </div>
                 <div className="payment-product-price">${utils.commaPrice(itm.price)}</div>
               </div>

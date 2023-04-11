@@ -155,6 +155,7 @@ const getTaxRateFromJson = (json, country, state, zipcode) => {
 }
 
 exports.getTaxRate = async (shipping, category) => {
+  if (!shipping) return -1;
   const {country, state, postal_code} = shipping;
   if (category) {
     const tax = await Tax.findOne({ category });
