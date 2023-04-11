@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
   PaymentElement,
-  LinkAuthenticationElement,
   useStripe,
   useElements,
   AddressElement
 } from "@stripe/react-stripe-js";
-import { useSelector } from "react-redux";
 import { useToasts } from 'react-toast-notifications';
 
 import api from "../../api";
@@ -23,13 +21,11 @@ export default function CheckoutForm(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [order, setOrder] = useState(0);
-  // const [totalFee, setTotalFee] = useState(0);
   const [defaultLoaded, setDefaultLoaded] = useState(false);
   const [defaultShipping, setDefaultShipping] = useState({});
   const [shipping, setShipping] = useState({});
   const [additionalProductCount, setAdditionalProductCount] = useState(0);
   
-  const { email } = useSelector(state => state.auth);
   const stripe = useStripe();
   const elements = useElements();
   const { addToast } = useToasts();
@@ -204,7 +200,6 @@ export default function CheckoutForm(props) {
         </div>
       </div>
       <form id="payment-form" onSubmit={handleSubmit}>
-        <LinkAuthenticationElement options={{defaultValues: {email}}} id="link-authentication-element" />
         <PaymentElement id="payment-element" options={paymentElementOptions} />
         <AddressElement id="address-element" options={{mode: 'shipping', fields: { phone: 'always' }, defaultValues: defaultShipping}} onChange={addressElementChanged} />
         <button id="pay-now-element" disabled={isLoading || !stripe || !elements}>

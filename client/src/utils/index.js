@@ -31,6 +31,7 @@ export default {
     return price;
   },
   commaPrice: price => {
+    if (!price) return 0;
     if (typeof price === 'string') return commaNumber(price);
     return commaNumber(price.toFixed(2));
   },

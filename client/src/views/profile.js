@@ -8,9 +8,10 @@ import Layout from './layout';
 import api from '../api';
 
 import './profile.scss';
-import { AccountBox, Add, ContactMail, CropFree, ExitToApp, Feedback, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send } from '@material-ui/icons';
+import { AccountBox, Add, ContactMail, CropFree, ExitToApp, Feedback, LocalLibrary, PersonPin, Receipt, RotateLeft, Save, Security, Send, Settings } from '@material-ui/icons';
 import utils from '../utils';
 import EmailModal from '../components/Modals/EmailModal';
+import AnonymousModal from '../components/Profile/anonymousModal';
 
 const Profile = () => {
   const { email } = useSelector(state => state.auth);
@@ -30,6 +31,7 @@ const Profile = () => {
   const [countries] = useState(Country.getAllCountries());
   const [states, setStates] = useState([]);
   const [emailModalForm, setEmailModalForm] = useState({});
+  const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
 
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -191,7 +193,9 @@ const Profile = () => {
             <div className='switch-wrapper'>
               <PersonPin />
               <div className='text-content'>Anonymous Shopping</div>
-              <Switch color='primary' name='anonymous_shopping' checked={status.anonymous_shopping} onChange={switchChanged} />
+              <div className='setting-button'>
+                <IconButton size='small' color='inherit' onClick={() => setAnonymousModalOpen(true)}><Settings /></IconButton>
+              </div>
             </div>
             <Box mt={3} display='flex' justifyContent='center'>
               <Button variant='contained' color='primary' size='small' startIcon={<Add />} onClick={inviteModalOpen}>Invite a friend</Button>
@@ -203,7 +207,7 @@ const Profile = () => {
                 <AccountBox />
                 <div className='text-content'>Profile</div>
                 <div className='toolbox'>
-                  <IconButton size='small' color='inherit' onClick={resetProfile}><RotateLeft /></IconButton>
+                  <IconButton color='inherit' onClick={resetProfile}><RotateLeft /></IconButton>
                 </div>
               </div>
               <div className='form-content'>
@@ -278,6 +282,7 @@ const Profile = () => {
         </div>
       </div>
       <EmailModal open={!!emailModalForm.open} onClose={closeModal} title='Invite' buttonName='Invite' onSubmit={onSubmitWithEmail} />
+      <AnonymousModal open={anonymousModalOpen} onClose={() => setAnonymousModalOpen(false)} status={status} inputChanged={switchChanged} />
     </Layout>
   )
 }

@@ -18,6 +18,20 @@ const createProductPrice = async (productInfo, priceInfo) => {
   }
 }
 
+const getCustomerId = async (user) => {
+  if (!user || !user.email) return null;
+  if (user.checkout?.customerId) {
+    const customer = await stripe.customers.retrieve(user.checkout.customerId);
+    if (!customer) user.checkout.customerId = null;
+  }
+  if (!user.checkout?.customerId) {
+    const customer = await stripe.customers.create({ email: user.email });
+    user.checkout.customerId = customer.id;
+    await user.save();
+  }
+  return user.checkout.customerId;
+}
+
 
 exports.fetchPurchaseLink = async (req, res) => {
   const user = req.user;
@@ -158,12 +172,19 @@ exports.createPaymentIntent = async (req, res) => {
     const total_fee = 0;
     total_price += total_fee;
 
+    const customerId = await getCustomerId(user);
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: total_price,
       currency: "usd",
+      customer: customerId,
+      setup_future_usage: 'off_session',
       automatic_payment_methods: {
         enabled: true,
       },
+      metadata: {
+        type: 'order'
+      }
     });
 
     const order = new Order({

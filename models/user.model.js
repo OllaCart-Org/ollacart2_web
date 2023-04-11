@@ -70,6 +70,14 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: false
       },
+      anonymous_username: {
+        type: Boolean,
+        default: false
+      },
+    },
+    checkout: {
+      customerId: String,
+      anonymous_username: Boolean,
     },
     following: [{
       type: ObjectId,

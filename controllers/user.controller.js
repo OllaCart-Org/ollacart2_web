@@ -111,7 +111,7 @@ exports.updateAccountSettings = async (req, res) => {
     user.shipping.state = state || '';
   }
   if (req.body.status) {
-    const { secure, shopping_recommendation, tax, promo_code, anonymous_shopping } = req.body.status;
+    const { secure, shopping_recommendation, tax, promo_code, anonymous_shopping, anonymous_username } = req.body.status;
     if (typeof secure === 'boolean') {
       if (secure) {
         if (user.status.secure) return res.status(400).json({ error: 'Already secured' });
@@ -138,6 +138,9 @@ exports.updateAccountSettings = async (req, res) => {
     }
     if (typeof anonymous_shopping === 'boolean') {
       user.status.anonymous_shopping = anonymous_shopping;
+    }
+    if (typeof anonymous_username === 'boolean') {
+      user.status.anonymous_username = anonymous_username;
     }
   }
 
