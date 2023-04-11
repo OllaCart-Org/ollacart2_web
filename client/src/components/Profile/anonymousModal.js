@@ -20,7 +20,6 @@ const AnonymousModal = ({ open, onClose, status, inputChanged }) => {
           <Switch color='primary' name='anonymous_gifting' checked={false} disabled />
         </Box>
       </Box>
-              {/* <Switch color='primary' name='anonymous_shopping' checked={status.anonymous_shopping} onChange={switchChanged} /> */}
     </OllaCartModal>
   )
 }

@@ -182,6 +182,7 @@ exports.createPaymentIntent = async (req, res) => {
       automatic_payment_methods: {
         enabled: true,
       },
+      description: 'Payment for new Order',
       metadata: {
         type: 'order'
       }
