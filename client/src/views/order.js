@@ -13,6 +13,7 @@ import './order.scss';
 const Order = () => {
   const [cards, setCards] = useState([]);
   const [detailCard, setDetailCard] = useState(null);
+  const [user, setUser] = useState(null);
 
   const { addToast } = useToasts();
 
@@ -29,6 +30,12 @@ const Order = () => {
         .catch(err => showToast(err.message));
     };
     loadCards();
+
+    api.me()
+      .then(data => {
+        setUser(data.user);
+      })
+      .catch(err => showToast(err.message));
   }, [showToast])
 
   const getOrderStatusBadge = (orderStatus) => {
@@ -92,22 +99,22 @@ const Order = () => {
                 <span>Product Price</span>
                 <span>${utils.commaPrice(detailCard.price)}</span>
               </div>
-              {detailCard.tax_status && <div className='price'>
+              {user?.status.tax && (detailCard.taxRate > -1) && <div className='price'>
                 <span>Tax ({utils.commaPrice(detailCard.taxRate * 100)}%)</span>
-                <span>${utils.commaPrice(detailCard.tax)}</span>
+                <span>+ ${utils.commaPrice(detailCard.taxPrice)}</span>
+              </div>}
+              {detailCard.anonymousPrice && <div className='price'>
+                <span>Anonymous Shopping</span>
+                <span>+ ${utils.commaPrice(detailCard.anonymousPrice)}</span>
               </div>}
               <div className='price'>
                 <span>Shipping Cost</span>
-                <span>$14</span>
-              </div>
-              <div className='price'>
-                <span>Processing Fee</span>
-                <span>${utils.commaPrice(utils.calcStripeFee(detailCard))}</span>
+                <span>+ ${utils.commaPrice(detailCard.shippingPrice)}</span>
               </div>
               <div className='spacer' />
               <div className='price'>
                 <span>Total</span>
-                <span className='total-price'>${utils.commaPrice(utils.calcPriceWithFee(detailCard))}</span>
+                <span className='total-price'>${utils.commaPrice(utils.getTotalPrice(detailCard, user?.status?.tax))}</span>
               </div>
             </div>
           </div>

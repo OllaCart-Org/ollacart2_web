@@ -25,6 +25,11 @@ export default {
     const price = product.price + 14 + (product.tax_status ? product.tax : 0);
     return (price) / (1 - 0.029) - price;
   },
+  getTotalPrice: (product, showTax) => {
+    let price = (product.itemsPrice || product.price) + product.anonymousPrice + product.shippingPrice;
+    if (showTax) price += product.taxPrice;
+    return price;
+  },
   commaPrice: price => {
     if (typeof price === 'string') return commaNumber(price);
     return commaNumber(price.toFixed(2));
