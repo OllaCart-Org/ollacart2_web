@@ -252,8 +252,8 @@ exports.listBySearch = async (req, res) => {
         for (const p of data) {
           const taxRate = await getTaxRate(user.shipping, p.category);
           if (taxRate >= 0) {
-            p.taxPrice = Math.ceil(p.price * taxRate * 100) / 100;
-            p.price += p.taxPrice;
+            p.taxPrice = p.price * taxRate;
+            p.price = Math.ceil((p.price + p.taxPrice) * 100) / 100;
           }
         }
       }

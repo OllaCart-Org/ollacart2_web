@@ -1,5 +1,6 @@
 const Product = require('../models/product.model');
 const Order = require('../models/order.model');
+const User = require('../models/user.model');
 const orderController = require('./order.controller');
 const utils = require('../helpers/utils');
 
@@ -221,6 +222,29 @@ exports.createPaymentIntent = async (req, res) => {
   }
 }
 
+exports.createAnonymousUsernamePaymentIntent = async (req, res) => {
+  const user = req.user;
+  if (!user) return res.status(400).json({ error: 'Not signed in' });
+  
+  const customerId = await getCustomerId(user);
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 500,
+    currency: "usd",
+    customer: customerId,
+    setup_future_usage: 'off_session',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+    description: 'Payment for Anonymous Username',
+    metadata: {
+      type: 'anonymous_username'
+    }
+  });
+
+  res.send({ clientSecret: paymentIntent.client_secret });
+}
+
 exports.receiveWebhook = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   let event, data;
@@ -229,6 +253,17 @@ exports.receiveWebhook = async (req, res) => {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     console.log('stripe webhook', event.type, event);
     data = event.data.object;
+
+    if (data.metadata.type === 'anonymous_username') {
+      const customer = data.customer;
+      if (!customer) return res.send();
+      const user = await User.findOne({ 'checkout.customerId': customer });
+      if (!user) return res.send();
+      user.checkout.anonymous_username = true;
+      user.status.anonymous_username = true;
+      await user.save();
+      return res.send();
+    }
     
     switch(event.type) {
       case 'payment_intent.succeeded':

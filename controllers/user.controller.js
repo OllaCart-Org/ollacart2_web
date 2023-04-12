@@ -140,6 +140,11 @@ exports.updateAccountSettings = async (req, res) => {
       user.status.anonymous_shopping = anonymous_shopping;
     }
     if (typeof anonymous_username === 'boolean') {
+      if (anonymous_username) {
+        if (!user.checkout.anonymous_username) {
+          return res.status(400).json({ error: 'need_purchase' });
+        }
+      }
       user.status.anonymous_username = anonymous_username;
     }
   }

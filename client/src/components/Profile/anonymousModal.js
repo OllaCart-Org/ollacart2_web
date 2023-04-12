@@ -9,7 +9,7 @@ const AnonymousModal = ({ open, onClose, status, inputChanged }) => {
       <Box width={350} maxWidth='100%' padding={1}>
         <Box display='flex' justifyContent='space-between' alignItems='center' gap={5}>
           <Typography variant='h5'>Hide username in social cart</Typography>
-          <Switch color='primary' name='anonymous_username' checked={status.anonymous_username} onChange={inputChanged} disabled />
+          <Switch color='primary' name='anonymous_username' checked={status.anonymous_username} onChange={inputChanged} />
         </Box>
         <Box mt={3} display='flex' justifyContent='space-between' alignItems='center' gap={5}>
           <Typography variant='h5'>Withhold personal data from retailers</Typography>

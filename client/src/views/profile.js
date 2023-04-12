@@ -13,6 +13,8 @@ import utils from '../utils';
 import EmailModal from '../components/Modals/EmailModal';
 import AnonymousModal from '../components/Profile/anonymousModal';
 import PromoCodeModal from '../components/Profile/promocodeModal';
+import AnonymousPurchaseConfirm from '../components/Profile/purchaseConfirm';
+import SimplePurchaseModal from '../components/Payment/SimplePurchase';
 
 const Profile = () => {
   const { email } = useSelector(state => state.auth);
@@ -34,6 +36,8 @@ const Profile = () => {
   const [emailModalForm, setEmailModalForm] = useState({});
   const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
   const [promoCodeModalOpen, setPromoCodeModalOpen] = useState(false);
+  const [anonymousPurchaseConfirm, setAnonymousPurchaseConfirm] = useState(false);
+  const [anonymousClientSecret, setAnonymousClientSecret] = useState(null);
 
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -140,7 +144,13 @@ const Profile = () => {
           })
         }
       })
-      .catch(err => showToast(err.message));
+      .catch(err => {
+        if (err.message === 'need_purchase' && name === 'anonymous_username') {
+          setAnonymousPurchaseConfirm(true);
+          return;
+        }
+        showToast(err.message)
+      });
   }
 
   const inviteModalOpen = () => {
@@ -158,6 +168,15 @@ const Profile = () => {
         closeModal();
       })
       .catch((err) => showToast(err.message));
+  }
+
+  const agreeAnonymousPurchase = () => {
+    setAnonymousPurchaseConfirm(false);
+    api.createAnonymousUsernamePaymentIntent()
+      .then(data => {
+        setAnonymousClientSecret(data.clientSecret);
+      })
+      .catch(err => showToast(err.message));
   }
 
   return (
@@ -289,6 +308,8 @@ const Profile = () => {
       <EmailModal open={!!emailModalForm.open} onClose={closeModal} title='Invite' buttonName='Invite' onSubmit={onSubmitWithEmail} />
       <AnonymousModal open={anonymousModalOpen} onClose={() => setAnonymousModalOpen(false)} status={status} inputChanged={switchChanged} />
       <PromoCodeModal open={promoCodeModalOpen} onClose={() => setPromoCodeModalOpen(false)} inviteModalOpen={inviteModalOpen} />
+      <AnonymousPurchaseConfirm open={anonymousPurchaseConfirm} onClose={() => setAnonymousPurchaseConfirm(false)} agreeAnonymousPurchase={agreeAnonymousPurchase} />
+      <SimplePurchaseModal clientSecret={anonymousClientSecret} redirect='/profile' title='Purchase' open={!!anonymousClientSecret} onClose={() => setAnonymousClientSecret(null)} />
     </Layout>
   )
 }

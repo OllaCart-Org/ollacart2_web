@@ -136,6 +136,10 @@ const createPaymentIntent = () => {
   return call(`/stripe/createpaymentintent`, { });
 }
 
+const createAnonymousUsernamePaymentIntent = () => {
+  return call(`/stripe/createanonymoususernamepaymentintent`, { });
+}
+
 const fetchProductsByClientSecret = (clientSecret) => {
   return call(`/order/productsbyclientsecret`, { clientSecret });
 }
@@ -251,6 +255,7 @@ export default {
   checkSecureVerified,
   fetchPurchaseLink,
   createPaymentIntent,
+  createAnonymousUsernamePaymentIntent,
   fetchProductsByClientSecret,
   updateOrderDetail,
   getOrderedProducts,
