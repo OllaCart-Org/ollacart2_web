@@ -17,7 +17,6 @@ import utils from "../../utils";
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
 export default function CheckoutForm(props) {
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [order, setOrder] = useState(0);
@@ -82,12 +81,6 @@ export default function CheckoutForm(props) {
         setDefaultLoaded(true);
       })
       .catch(err => showToast(err.message));
-    
-    api.me()
-      .then(data => {
-        setUser(data.user);
-      })
-      .catch(err => showToast(err.message));
   }, [showToast]);
 
   useEffect(() => {
@@ -125,9 +118,8 @@ export default function CheckoutForm(props) {
   }, [stripe, props.clientSecret, fetchProducts, showToast]);
 
   const getTotalPrice = () => {
-    if (!user || !order) return;
     let price = order.itemsPrice + order.shippingPrice + order.anonymousPrice;
-    if (user.status.tax) price += order.taxPrice;
+    price += order.taxPrice;
     return utils.commaPrice(price.toFixed(2));
   }
 
@@ -189,7 +181,7 @@ export default function CheckoutForm(props) {
                 <div className="payment-product-detail">
                   <div className="payment-product-name">{itm.name}</div>
                   {itm.description && <div className="payment-product-description">{itm.description}</div>}
-                  {user?.status.tax && (itm.taxRate > -1) && <div className="payment-product-description">Tax ({utils.commaPrice(itm.taxRate * 100)}%): +${itm.taxPrice}</div>}
+                  {(itm.taxRate > -1) && <div className="payment-product-description">Tax ({utils.commaPrice(itm.taxRate * 100)}%): +${itm.taxPrice}</div>}
                   {itm.shippingPrice && <div className="payment-product-description">Shipping Cost: +${itm.shippingPrice}</div>}
                 </div>
                 <div className="payment-product-price">${utils.commaPrice(itm.price)}</div>

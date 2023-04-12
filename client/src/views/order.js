@@ -13,7 +13,6 @@ import './order.scss';
 const Order = () => {
   const [cards, setCards] = useState([]);
   const [detailCard, setDetailCard] = useState(null);
-  const [user, setUser] = useState(null);
 
   const { addToast } = useToasts();
 
@@ -30,12 +29,6 @@ const Order = () => {
         .catch(err => showToast(err.message));
     };
     loadCards();
-
-    api.me()
-      .then(data => {
-        setUser(data.user);
-      })
-      .catch(err => showToast(err.message));
   }, [showToast])
 
   const getOrderStatusBadge = (orderStatus) => {
@@ -99,7 +92,7 @@ const Order = () => {
                 <span>Product Price</span>
                 <span>${utils.commaPrice(detailCard.price)}</span>
               </div>
-              {user?.status.tax && (detailCard.taxRate > -1) && <div className='price'>
+              {(detailCard.taxRate > -1) && <div className='price'>
                 <span>Tax ({utils.commaPrice(detailCard.taxRate * 100)}%)</span>
                 <span>+ ${utils.commaPrice(detailCard.taxPrice)}</span>
               </div>}
@@ -114,7 +107,7 @@ const Order = () => {
               <div className='spacer' />
               <div className='price'>
                 <span>Total</span>
-                <span className='total-price'>${utils.commaPrice(utils.getTotalPrice(detailCard, user?.status?.tax))}</span>
+                <span className='total-price'>${utils.commaPrice(utils.getTotalPrice(detailCard))}</span>
               </div>
             </div>
           </div>

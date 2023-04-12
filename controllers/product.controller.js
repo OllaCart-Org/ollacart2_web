@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 const Extension = require('../models/extension.model');
 const EmailController = require('./email.controller');
 const { errorHandler } = require('../helpers/dbErrorHandler');
-const { takeFirstDecimal } = require('../helpers/utils');
+const { takeFirstDecimal, getTaxRate } = require('../helpers/utils');
 const { URL } = require('url'); 
 
 exports.productById = (req, res, next, id) => {
@@ -225,8 +225,6 @@ exports.listBySearch = async (req, res) => {
   if (purchased) filters.purchased = 1;
 
   if (shared) {
-    user = await User.findOne({ _id });
-    if (!user) return res.status(400).json({ error: 'Not corret url' });
     filters.user = _id;
     filters.shared = 1;
   }
@@ -244,11 +242,20 @@ exports.listBySearch = async (req, res) => {
       path: 'user',
       select: '_id username email'
     })
-    .exec((err, data) => {
+    .exec(async (err, data) => {
       if (err) {
         return res.status(400).json({
           error: 'Products not found',
         });
+      }
+      if(user && user.status?.tax) {
+        for (const p of data) {
+          const taxRate = await getTaxRate(user.shipping, p.category);
+          if (taxRate >= 0) {
+            p.taxPrice = Math.ceil(p.price * taxRate * 100) / 100;
+            p.price += p.taxPrice;
+          }
+        }
       }
       res.json({
         size: data.length,
