@@ -12,6 +12,7 @@ import { AccountBox, Add, ContactMail, CropFree, ExitToApp, Feedback, LocalLibra
 import utils from '../utils';
 import EmailModal from '../components/Modals/EmailModal';
 import AnonymousModal from '../components/Profile/anonymousModal';
+import PromoCodeModal from '../components/Profile/promocodeModal';
 
 const Profile = () => {
   const { email } = useSelector(state => state.auth);
@@ -32,6 +33,7 @@ const Profile = () => {
   const [states, setStates] = useState([]);
   const [emailModalForm, setEmailModalForm] = useState({});
   const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
+  const [promoCodeModalOpen, setPromoCodeModalOpen] = useState(false);
 
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -129,6 +131,9 @@ const Profile = () => {
         if (name === 'secure' && checked) {
           showToast('Secure email sent', 'success');
         } else {
+          if (name === 'promo_code' && checked) {
+            setPromoCodeModalOpen(true);
+          }
           setStatus({
             ...status,
             [name]: checked
@@ -283,6 +288,7 @@ const Profile = () => {
       </div>
       <EmailModal open={!!emailModalForm.open} onClose={closeModal} title='Invite' buttonName='Invite' onSubmit={onSubmitWithEmail} />
       <AnonymousModal open={anonymousModalOpen} onClose={() => setAnonymousModalOpen(false)} status={status} inputChanged={switchChanged} />
+      <PromoCodeModal open={promoCodeModalOpen} onClose={() => setPromoCodeModalOpen(false)} inviteModalOpen={inviteModalOpen} />
     </Layout>
   )
 }
