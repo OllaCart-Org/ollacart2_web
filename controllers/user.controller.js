@@ -84,7 +84,11 @@ exports.unFollowUser = async (req, res) => {
 
 exports.getAccountSettings = async (req, res) => {
   if (!req.user) return res.status(400).json({ error: 'Not signed in' });
-  res.json({ user: req.user });
+  const invitation = {
+    sent: await this.getUserCount({ invitedBy: req.user._id }),
+    accepted: await this.getUserCount({ invitedBy: req.user._id, signinStatus: true })
+  }
+  res.json({ user: req.user, invitation });
 }
 
 exports.updateAccountSettings = async (req, res) => {

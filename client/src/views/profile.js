@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from "react-redux"
 import { useToasts } from 'react-toast-notifications';
-import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, Switch, TextField } from '@material-ui/core';
+import { Box, Button, FormControl, IconButton, InputLabel, MenuItem, Select, Switch, TextField, Typography } from '@material-ui/core';
 import { actions } from '../redux/_actions';
 import { Country, State }  from 'country-state-city';
 import Layout from './layout';
@@ -15,6 +15,7 @@ import AnonymousModal from '../components/Profile/anonymousModal';
 import PromoCodeModal from '../components/Profile/promocodeModal';
 import AnonymousPurchaseConfirm from '../components/Profile/purchaseConfirm';
 import SimplePurchaseModal from '../components/Payment/SimplePurchase';
+import RecommendationModal from '../components/Profile/recommendationModal';
 
 const Profile = () => {
   const { email } = useSelector(state => state.auth);
@@ -33,9 +34,11 @@ const Profile = () => {
   });
   const [countries] = useState(Country.getAllCountries());
   const [states, setStates] = useState([]);
+  const [invitationStatus, setInvitationStatus] = useState({});
   const [emailModalForm, setEmailModalForm] = useState({});
   const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
   const [promoCodeModalOpen, setPromoCodeModalOpen] = useState(false);
+  const [recommendationModalOpen, setRecommendationModalOpen] = useState(false);
   const [anonymousPurchaseConfirm, setAnonymousPurchaseConfirm] = useState(false);
   const [anonymousClientSecret, setAnonymousClientSecret] = useState(null);
 
@@ -54,7 +57,8 @@ const Profile = () => {
         setProfile({
           username: utils.getUsername(data?.user),
           phone: data?.user?.phone || '',
-        })
+        });
+        setInvitationStatus(data?.invitation);
       })
       .catch(err => showToast(err.message));
   }, [showToast])
@@ -138,6 +142,9 @@ const Profile = () => {
           if (name === 'promo_code' && checked) {
             setPromoCodeModalOpen(true);
           }
+          if (name === 'shopping_recommendation' && checked) {
+            setRecommendationModalOpen(true);
+          }
           setStatus({
             ...status,
             [name]: checked
@@ -165,6 +172,7 @@ const Profile = () => {
     api.inviteUser(email)
       .then(() => {
         showToast('Invite sent!', 'success');
+        setInvitationStatus({ ...invitationStatus, sent: (invitationStatus?.sent || 0) + 1 });
         closeModal();
       })
       .catch((err) => showToast(err.message));
@@ -194,6 +202,21 @@ const Profile = () => {
         </div>
         <div className='profile-settings'>
           <div className='left-side'>
+            <Box className='form-wrapper'>
+              <Box p={3}>
+                <Box display='flex' justifyContent='space-between'>
+                  <Typography>Invitation sent:</Typography>
+                  <Typography>{invitationStatus?.sent || 0}</Typography>
+                </Box>
+                <Box mt={1} display='flex' justifyContent='space-between'>
+                  <Typography>Invitation accepted:</Typography>
+                  <Typography className='color-turquoise'>{invitationStatus?.accepted || 0}</Typography>
+                </Box>
+                <Box mt={2} display='flex' justifyContent='center'>
+                  <Button variant='contained' color='primary' size='small' startIcon={<Add />} onClick={inviteModalOpen}>Invite a friend</Button>
+                </Box>
+              </Box>
+            </Box>
             <div className='switch-wrapper'>
               <Security />
               <div className='text-content'>Secure my Account</div>
@@ -221,9 +244,6 @@ const Profile = () => {
                 <IconButton size='small' color='inherit' onClick={() => setAnonymousModalOpen(true)}><Settings /></IconButton>
               </div>
             </div>
-            <Box mt={3} display='flex' justifyContent='center'>
-              <Button variant='contained' color='primary' size='small' startIcon={<Add />} onClick={inviteModalOpen}>Invite a friend</Button>
-            </Box>
           </div>
           <div className='right-side'>
             <div className='form-wrapper'>
@@ -308,6 +328,7 @@ const Profile = () => {
       <EmailModal open={!!emailModalForm.open} onClose={closeModal} title='Invite' buttonName='Invite' onSubmit={onSubmitWithEmail} />
       <AnonymousModal open={anonymousModalOpen} onClose={() => setAnonymousModalOpen(false)} status={status} inputChanged={switchChanged} />
       <PromoCodeModal open={promoCodeModalOpen} onClose={() => setPromoCodeModalOpen(false)} inviteModalOpen={inviteModalOpen} />
+      <RecommendationModal open={recommendationModalOpen} onClose={() => setRecommendationModalOpen(false)} inviteModalOpen={inviteModalOpen} />
       <AnonymousPurchaseConfirm open={anonymousPurchaseConfirm} onClose={() => setAnonymousPurchaseConfirm(false)} agreeAnonymousPurchase={agreeAnonymousPurchase} />
       <SimplePurchaseModal clientSecret={anonymousClientSecret} redirect='/profile' title='Purchase' open={!!anonymousClientSecret} onClose={() => setAnonymousClientSecret(null)} />
     </Layout>
