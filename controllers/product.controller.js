@@ -200,8 +200,11 @@ exports.singleShare = async (req, res) => {
 }
 
 exports.anonymousShare = async (req, res) => {
+  const user = req.user;
   const product = req.product;
   const email = req.body.email;
+  if (!user) return res.status(400).json({ error: 'Not signed in' });
+  if (!user?.status?.anonymous_username) return res.status(400).json({ error: 'Toggle this feature on from account settings first' });
   if (!product) return res.status(400).json({ error: 'Product not found' });
   if (!email) return res.status(400).json({ error: 'Invalid email' });
 
