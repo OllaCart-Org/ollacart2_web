@@ -49,8 +49,8 @@ const Signin = () => {
           Sign in with your email
         </h3>
         <div className="input-description">
-          To create an account just enter your email and sign in.<br/>
-          On your browser, download the extension from the chrome web store to sign up.
+          To create an OllaCart it is as easy as entering your email.<br/>
+          On your browser, download the extension from the <a target="_blank" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm">Chrome Webstore</a>.
         </div>
         <div className="input-text">
           <input value={value} onChange={(e) => setValue(e.target.value)}/>
