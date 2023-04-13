@@ -192,6 +192,10 @@ const singleShare = (productID, email) => {
   return call(`/product/singleshare/${productID}`, { email });
 }
 
+const anonymousShare = (productID, email) => {
+  return call(`/product/anonymousshare/${productID}`, { email });
+}
+
 const sendInvestContact = (detail) => {
   return call(`/contact/invest`, detail);
 }
@@ -268,6 +272,7 @@ export default {
   thumbup,
   thumbdown,
   singleShare,
+  anonymousShare,
   sendFeedback,
   sendInvestContact,
   sendPartnerContact,

@@ -8,7 +8,7 @@ const AnonymousModal = ({ open, onClose, status, inputChanged }) => {
     <OllaCartModal open={open} onClose={onClose} title='Anonymous Shopping'>
       <Box width={350} maxWidth='100%' padding={1}>
         <Box display='flex' justifyContent='space-between' alignItems='center' gap={5}>
-          <Typography variant='h5'>Hide username in social cart</Typography>
+          <Typography variant='h5'>Enable anonymous item sharing</Typography>
           <Switch color='primary' name='anonymous_username' checked={status.anonymous_username} onChange={inputChanged} />
         </Box>
         <Box mt={3} display='flex' justifyContent='space-between' alignItems='center' gap={5}>

@@ -93,3 +93,21 @@ exports.sendSingleShareEmail = (product, mailTo) => {
   
   transporter.sendMail(mailOptions);
 }
+
+exports.sendAnonymousShareEmail = (product, mailTo) => {
+  let subject = 'Anonymous Share';
+  var mailOptions = {
+    from: 'support@ollacart.com',
+    to: mailTo,
+    subject,
+    html: readTemplate('singleshare', {
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      photo: product.photo,
+      link: `${process.env.DOMAIN}/share/together/${product.anonymousId}`,
+    })
+  };
+  
+  transporter.sendMail(mailOptions);
+}

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { create, update, updateSequence, remove, productById, getProduct, listBySearch, getCarts, updateLogo, forkProduct, thumbup, thumbdown, singleShare, getShareStatus, getSocialStatus } = require('../controllers/product.controller');
+const { create, update, updateSequence, remove, productById, getProduct, listBySearch, getCarts, updateLogo, forkProduct, thumbup, thumbdown, singleShare, anonymousShare, getShareStatus, getSocialStatus } = require('../controllers/product.controller');
 const { getAnalytics } = require('../controllers/admin.controller');
 const { Auth, isAdmin, AuthWithEmail } = require('../controllers/auth.controller');
 const { userById } = require('../controllers/user.controller');
@@ -20,6 +20,7 @@ router.post('/product/thumbup/:productId', Auth, AuthWithEmail, thumbup)
 router.post('/product/thumbdown/:productId', Auth, AuthWithEmail, thumbdown)
 
 router.post('/product/singleshare/:productId', Auth, singleShare)
+router.post('/product/anonymousshare/:productId', Auth, anonymousShare)
 
 router.post('/product/detail/:productId', Auth, getProduct);
 router.post('/products/by/search', Auth, listBySearch);

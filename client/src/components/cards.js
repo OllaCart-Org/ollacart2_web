@@ -15,6 +15,7 @@ const Cards = (props) => {
   const [limit] = useState(props.limit || 12);
   const [skip, setSkip] = useState(0);
   const [size, setSize] = useState(0);
+  const [user, setUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [quickViewCardIdx, setQuickViewCardIdx] = useState(-1);
   const [emailModalForm, setEmailModalForm] = useState({});
@@ -26,7 +27,11 @@ const Cards = (props) => {
   
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
-  }, [addToast])
+  }, [addToast]);
+
+  useEffect(() => {
+    api.me().then(data => { setUser(data.user) })
+  }, [])
 
   useEffect(() => {
     const loadCards = () => {
@@ -147,6 +152,14 @@ const Cards = (props) => {
     setEmailModalForm({ type: 'singleshare', card, open: true })
   }
 
+  const anonymousShareClicked = (card) => {
+    if (!user?.status?.anonymous_username) {
+      showToast('Toggle this feature on from account settings first.');
+      return;
+    }
+    setEmailModalForm({ type: 'anonymousshare', card, open: true })
+  }
+
   const putPurchaseClicked = (card) => {
     putCart(card._id, card.shared, (card.purchased ? 0 : 1));
   }
@@ -243,17 +256,25 @@ const Cards = (props) => {
       .catch(err => showToast(err.message));
   }
 
+  const anonymousShare = (card, email) => {
+    api.anonymousShare(card._id, email)
+      .then(() => showToast('Shared successfully', 'success'))
+      .catch(err => showToast(err.message));
+  }
+
   const getEmailModalTitle = useCallback(() => {
     if (emailModalForm.type === 'fork') return 'Add to your OllaCart';
     if (emailModalForm.type === 'thumbup') return 'ThumbUp';
     if (emailModalForm.type === 'thumbdown') return 'ThumbDown';
     if (emailModalForm.type === 'singleshare') return 'Direct Share'
+    if (emailModalForm.type === 'anonymousshare') return 'Anonymous Share'
   }, [emailModalForm]);
   const getEmailModalButtonName = useCallback(() => {
     if (emailModalForm.type === 'fork') return 'Add';
     if (emailModalForm.type === 'thumbup') return 'ThumbUp';
     if (emailModalForm.type === 'thumbdown') return 'ThumbDown';
     if (emailModalForm.type === 'singleshare') return 'Share';
+    if (emailModalForm.type === 'anonymousshare') return 'Share';
   }, [emailModalForm]);
 
   const onSubmitWithEmail = (email) => {
@@ -265,6 +286,8 @@ const Cards = (props) => {
       thumbdown(emailModalForm.card, email);
     } else if(emailModalForm.type === 'singleshare') {
       singleShare(emailModalForm.card, email);
+    } else if(emailModalForm.type === 'anonymousshare') {
+      anonymousShare(emailModalForm.card, email);
     }
     setEmailModalForm({});
   }
@@ -311,6 +334,8 @@ const Cards = (props) => {
         next={nextQuickView}
         share={shareClicked}
         singleShare={singleShareClicked}
+        anonymousShare={anonymousShareClicked}
+        anonymousShareAllowed={!!user?.status?.anonymous_username}
         save={save}
         remove={removeClicked}
         putPurchase={putPurchaseClicked}

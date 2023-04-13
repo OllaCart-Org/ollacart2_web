@@ -3,6 +3,10 @@ const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema(
   {
+    anonymousId: {
+      type: String,
+      default: ''
+    },
     name: {
       type: String,
       trim: true,

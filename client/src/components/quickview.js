@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux"
-import { Box, Link, TextField, Typography } from '@material-ui/core';
-import { Add, ChevronLeft, ChevronRight, Close, Delete, Edit, Save, Share, ShoppingCart, Telegram, ThumbDown, ThumbDownOutlined, ThumbUp, ThumbUpOutlined } from '@material-ui/icons'
+import { Box, Link, TextField, Tooltip, Typography, Zoom } from '@material-ui/core';
+import { Add, ChevronLeft, ChevronRight, Close, Delete, Edit, PersonPin, Save, Share, ShoppingCart, Telegram, ThumbDown, ThumbDownOutlined, ThumbUp, ThumbUpOutlined } from '@material-ui/icons'
 import './quickview.scss';
 import utils from '../utils';
 
-const QuickView = ({ card, close, share, singleShare, save, remove, updateLogo, putPurchase, previous, next, editable, fork, thumbup, thumbdown }) => {
+const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousShareAllowed, save, remove, updateLogo, putPurchase, previous, next, editable, fork, thumbup, thumbdown }) => {
   const [logo, setLogo] = useState('');
   const [isColorShow, setIsColorShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -56,7 +56,14 @@ const QuickView = ({ card, close, share, singleShare, save, remove, updateLogo, 
             <>
               {share && <Box className={'top-nav-item ' + (card.shared ? 'active' : '')} onClick={() => share(card)}><Share /></Box>}
               {putPurchase && <Box className={'top-nav-item ' + (card.purchased ? 'active' : '')} onClick={() => putPurchase(card)}><ShoppingCart /></Box>}
-              {singleShare && <Box className='top-nav-item mr-auto' onClick={() => singleShare(card)}><Telegram /></Box>}
+              {singleShare && <Box className='top-nav-item' onClick={() => singleShare(card)}><Telegram /></Box>}
+              {anonymousShare && ( anonymousShareAllowed ?
+                <Box className='top-nav-item mr-auto' onClick={() => anonymousShare(card)}><PersonPin /></Box>
+              :
+                <Tooltip title='Toggle this feature on from Account Settings first.' placement='top' arrow TransitionComponent={Zoom}>
+                  <Box className='top-nav-item mr-auto' onClick={() => anonymousShare(card)}><PersonPin /></Box>
+                </Tooltip>
+              )}
               {save && !editMode && <Box className='top-nav-item' onClick={editClicked}><Edit /></Box>}
               {save && editMode && <Box className='top-nav-item' onClick={saveClicked}><Save /></Box>}
               {remove && <Box className='top-nav-item' onClick={() => remove(card)}><Delete /></Box>}

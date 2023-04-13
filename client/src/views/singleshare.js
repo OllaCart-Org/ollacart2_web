@@ -36,15 +36,15 @@ const SingleShare = (props) => {
   }, [productId, showToast])
 
   const fetchShareStatus = useCallback(() => {
-    if (!product?.user?._id) return;
-    api.getShareStatus(product?.user?._id)
-      .then(data => {
-        // setSharedUserName(data.username);
-        // setFollowStatus(data.followStatus);
-        // setFollowedCount(data.followedCount);
-      })
-      .catch(err => showToast(err.message))
-  }, [product, showToast])
+    // if (!product?.user?._id) return;
+    // api.getShareStatus(product?.user?._id)
+    //   .then(data => {
+    //     setSharedUserName(data.username);
+    //     setFollowStatus(data.followStatus);
+    //     setFollowedCount(data.followedCount);
+    //   })
+    //   .catch(err => showToast(err.message))
+  }, [])
 
   useEffect(() => {
     const productid = props.match.params.productid;
@@ -75,7 +75,10 @@ const SingleShare = (props) => {
     if (!_id && !email) return setEmailModalForm({ type: 'thumbup', card, open: true });
     api.thumbup(card._id, email)
       .then((data) => {
-        const card = data.product;
+        const card = {
+          ...data.product,
+          user: product.user
+        };
         setProduct(card);
       })
       .catch(err => showToast(err.message));
@@ -85,7 +88,10 @@ const SingleShare = (props) => {
     if (!_id && !email) return setEmailModalForm({ type: 'thumbdown', card, open: true });
     api.thumbdown(card._id, email)
       .then((data) => {
-        const card = data.product;
+        const card = {
+          ...data.product,
+          user: product.user
+        };
         setProduct(card);
       })
       .catch(err => showToast(err.message));
@@ -169,7 +175,7 @@ const SingleShare = (props) => {
           <Typography variant="h5" gutterBottom style={{color: 'var(--color-turquoise)'}}>${product.price}</Typography>
           <Typography style={{whiteSpace: 'break-spaces'}}>{product.description}</Typography>
           <Typography className='quickview-item-link'><Link href={product.url} target='_blank'>{product.url}</Link></Typography>
-          {<Box className='user-name' mt={2}><span>@{utils.getUsername(product.user)}</span></Box>}
+          {product.user?.email && <Box className='user-name' mt={2}><span>@{utils.getUsername(product.user)}</span></Box>}
         </Box>
       </Box>
       <Box maxWidth={750} mx='auto' mt={5}>

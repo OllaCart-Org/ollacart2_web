@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { v4: uuidv4 } = require('uuid');
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const Extension = require('../models/extension.model');
@@ -7,21 +8,25 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 const { takeFirstDecimal, getTaxRate } = require('../helpers/utils');
 const { URL } = require('url'); 
 
-exports.productById = (req, res, next, id) => {
-  Product.findById(id)
-    .populate({
-      path: 'user',
-      select: '_id username email'
-    })
-    .exec((err, product) => {
-      if (err || !product) {
-        return res.status(400).json({
-          error: 'Product not found',
-        });
-      }
-      req.product = product;
-      next();
-    });
+exports.productById = async (req, res, next, id) => {
+  let product = null;
+  try {
+    product = await Product.findById(id)
+      .populate({
+        path: 'user',
+        select: '_id username email'
+      })
+      .exec();
+  } catch (ex) {
+  }
+  
+  if (!product) {
+    product = await Product.findOne({ anonymousId: id });
+    if (!product) return res.status(400).json({ error: 'Product not found' });
+  }
+
+  req.product = product;
+  next();
 };
 
 exports.create = async (req, res) => {
@@ -191,6 +196,21 @@ exports.singleShare = async (req, res) => {
   if (!email) return res.status(400).json({ error: 'Invalid email' });
 
   EmailController.sendSingleShareEmail(product, email);
+  res.send({});
+}
+
+exports.anonymousShare = async (req, res) => {
+  const product = req.product;
+  const email = req.body.email;
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+  if (!email) return res.status(400).json({ error: 'Invalid email' });
+
+  if (!product.anonymousId) {
+    product.anonymousId = uuidv4();
+    await product.save();
+  }
+
+  EmailController.sendAnonymousShareEmail(product, email);
   res.send({});
 }
 
