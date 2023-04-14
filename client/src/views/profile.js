@@ -14,6 +14,7 @@ import EmailModal from '../components/Modals/EmailModal';
 import AnonymousModal from '../components/Profile/anonymousModal';
 import PromoCodeModal from '../components/Profile/promocodeModal';
 import AnonymousPurchaseConfirm from '../components/Profile/purchaseConfirm';
+import AnonymousShoppingConfirm from '../components/Profile/anonymousShoppingConfirm';
 import SimplePurchaseModal from '../components/Payment/SimplePurchase';
 import RecommendationModal from '../components/Profile/recommendationModal';
 
@@ -39,6 +40,7 @@ const Profile = () => {
   const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
   const [promoCodeModalOpen, setPromoCodeModalOpen] = useState(false);
   const [recommendationModalOpen, setRecommendationModalOpen] = useState(false);
+  const [anonymousShoppingConfirm, setAnonymousShoppingConfirm] = useState(false);
   const [anonymousPurchaseConfirm, setAnonymousPurchaseConfirm] = useState(false);
   const [anonymousClientSecret, setAnonymousClientSecret] = useState(null);
 
@@ -134,6 +136,10 @@ const Profile = () => {
 
   const switchChanged = (e) => {
     const { name, checked } = e.target;
+    if (name === 'anonymous_shopping' && checked) {
+      setAnonymousShoppingConfirm(true);
+      return;
+    }
     api.updateAccountSettings({ status: { [name]: checked } })
     .then(() => {
         if (name === 'secure' && checked) {
@@ -144,6 +150,10 @@ const Profile = () => {
           }
           if (name === 'shopping_recommendation' && checked) {
             setRecommendationModalOpen(true);
+          }
+          if (name === 'tax') {
+            if (checked) showToast('Product prices now include sales tax.', 'success');
+            else showToast('Product prices no longer include sales tax.', 'success');
           }
           setStatus({
             ...status,
@@ -185,6 +195,18 @@ const Profile = () => {
         setAnonymousClientSecret(data.clientSecret);
       })
       .catch(err => showToast(err.message));
+  }
+
+  const agreeAnonymousShopping = () => {
+    api.updateAccountSettings({ status: { 'anonymous_shopping': true } })
+    .then(() => {
+      setAnonymousShoppingConfirm(false);
+      setStatus({
+        ...status,
+        'anonymous_shopping': true
+      })
+    })
+    .catch(err => { showToast(err.message) });
   }
 
   return (
@@ -329,6 +351,7 @@ const Profile = () => {
       <AnonymousModal open={anonymousModalOpen} onClose={() => setAnonymousModalOpen(false)} status={status} inputChanged={switchChanged} />
       <PromoCodeModal open={promoCodeModalOpen} onClose={() => setPromoCodeModalOpen(false)} inviteModalOpen={inviteModalOpen} />
       <RecommendationModal open={recommendationModalOpen} onClose={() => setRecommendationModalOpen(false)} inviteModalOpen={inviteModalOpen} />
+      <AnonymousShoppingConfirm open={anonymousShoppingConfirm} onClose={() => setAnonymousShoppingConfirm(false)} agreeAnonymousShopping={agreeAnonymousShopping} />
       <AnonymousPurchaseConfirm open={anonymousPurchaseConfirm} onClose={() => setAnonymousPurchaseConfirm(false)} agreeAnonymousPurchase={agreeAnonymousPurchase} />
       <SimplePurchaseModal clientSecret={anonymousClientSecret} redirect='/profile' title='Purchase' open={!!anonymousClientSecret} onClose={() => setAnonymousClientSecret(null)} />
     </Layout>

@@ -10,6 +10,8 @@ const NoCard = ({page}) => {
         {(page === 'home') && <>Add any item you wish to share or purchase to OllaCart using our <a target="_blank" rel="noopener noreferrer" href="https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm">Chrome Extension</a>.</>}
         {(page === 'purchase') && <>Add items to your purchase cart by clicking on the item once to turn the outline green.</>}
         {(page === 'share') && <>Add items to your shared cart by clicking on the item twice to turn the outline blue.</>}
+        {(page === 'order') && <>Items go here after purchase for tracking.</>}
+        {(page === 'social') && <>Follow users and their shared items appear here.</>}
       </div>
       <LinearProgress />
     </div>
