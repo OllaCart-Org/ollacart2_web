@@ -62,12 +62,13 @@ exports.sendVerifyEmail = (mailTo, user, verifyId) => {
 }
 
 exports.sendInviteEmail = (mailTo, fromUser, verifyId) => {
+  const username = utils.getUsername(fromUser);
   var mailOptions = {
     from: 'support@ollacart.com',
     to: mailTo,
-    subject: 'Invitation to OllaCart',
+    subject: `Invitation to OllaCart from ${username}`,
     html: readTemplate('invite', {
-      user: utils.getUsername(fromUser),
+      user: username,
       inviteUrl: `${process.env.DOMAIN}/verify/${verifyId}?redirect=social`
     })
   };
