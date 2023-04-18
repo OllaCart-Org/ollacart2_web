@@ -255,6 +255,7 @@ exports.receiveWebhook = async (req, res) => {
     data = event.data.object;
 
     if (data.metadata.type === 'anonymous_username') {
+      if (event.type !== 'payment_intent.succeeded') return res.send();
       const customer = data.customer;
       if (!customer) return res.send();
       const user = await User.findOne({ 'checkout.customerId': customer });
