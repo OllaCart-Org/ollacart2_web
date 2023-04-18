@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Typography, Box, Link, IconButton, Collapse, Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Switch, Chip, Button, TextField } from '@material-ui/core';
+import { Typography, Box, Link, IconButton, Collapse, Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Switch, Chip, Button, TextField, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import { useToasts } from 'react-toast-notifications';
-import { KeyboardArrowUp, KeyboardArrowDown, Check, NoteAdd, Update, Close, CropFree } from '@material-ui/icons';
+import { KeyboardArrowUp, KeyboardArrowDown, Check, NoteAdd, Update, Close, CropFree, PersonPin } from '@material-ui/icons';
 import Layout from './layout'
 import AdminDialog from '../../components/Admin/modal';
 import api from '../../api';
@@ -97,10 +97,15 @@ const OrderRow = (props) => {
         <TableCell align="center">$ {order.totalFee}</TableCell>
         <TableCell align="center">$ {order.totalPrice}</TableCell>
         <TableCell align="center">{order.products.length}</TableCell>
+        <TableCell align="center">
+          <Box display='flex' flexWrap='wrap' justifyContent='center' gridGap='5px' >
+            {order.anonymous_shopping && <Tooltip title="Anonymous Shopping" arrow placement='top'><PersonPin /></Tooltip>}
+          </Box>
+        </TableCell>
         <TableCell align="center">{orderStatusDetail(order.orderStatus)}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1} marginLeft='auto' maxWidth={400}>
               <Table size="small" aria-label="purchases">
@@ -257,7 +262,7 @@ const Orders = () => {
         <Typography variant='h4'>All Orders</Typography>
       </Box>
       <TableContainer component={Paper} className={classes.tableBox}>
-        <Table stickyHeader className={classes.table} aria-label="simple table">
+        <Table stickyHeader className={classes.table}>
           <TableHead>
             <TableRow>
               <TableCell width={80}></TableCell>
@@ -267,6 +272,7 @@ const Orders = () => {
               <TableCell align="center">Total Price</TableCell>
               <TableCell align="center">Items</TableCell>
               <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
