@@ -273,7 +273,7 @@ const Profile = () => {
                 <AccountBox />
                 <div className='text-content'>Profile</div>
                 <div className='toolbox'>
-                  <IconButton color='inherit' onClick={resetProfile}><RotateLeft /></IconButton>
+                  <IconButton size='small' color='inherit' onClick={resetProfile}><RotateLeft /></IconButton>
                 </div>
               </div>
               <div className='form-content'>
