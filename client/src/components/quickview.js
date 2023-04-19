@@ -124,9 +124,9 @@ const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousS
                 {card.dislikes.includes(_id) ? <ThumbDown /> : <ThumbDownOutlined />}
               </Box>
             </Box>
-            <Box className='ollacart-add-button mr-auto ml-auto' my={2} display='flex' justifyContent='center'>
+            {!editable && <Box className='ollacart-add-button mr-auto ml-auto' my={2} display='flex' justifyContent='center'>
               <OllaCartAdd onClick={() => fork(card)} />
-            </Box>
+            </Box>}
           </Box>
         </Box>
       </Box>

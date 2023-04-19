@@ -3,7 +3,8 @@
 
   .product-img {
     position: relative;
-    height: 250px;
+    // height: 250px;
+    aspect-ratio: 4 / 3;
     border: 2px solid var(--color-blue);
     overflow: hidden;
     border-radius: 10px;
