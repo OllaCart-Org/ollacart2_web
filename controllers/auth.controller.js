@@ -13,6 +13,12 @@ const generateToken = async (user) => {
     user.signinStatus = true;
     if (user.invitedBy) {
       user.following.push(user.invitedBy);
+
+      const invitedUser = await User.findOne({ _id: user.invitedBy });
+      if (invitedUser) {
+        invitedUser.following.push(user._id);
+        await invitedUser.save();
+      }
     }
     await user.save();
   }
@@ -30,7 +36,7 @@ exports.signin = async (req, res) => {
 
   let user = await User.findOne({ email });
   if (!user) {
-    EmailController.sendWelcomeEmail(req.body.email);
+    EmailController.sendWelcomeEmail(email);
 
     user = new User({ email })
     user.ce_id = '';
@@ -160,6 +166,7 @@ exports.AuthWithEmail = async (req, res, next) => {
   
   let user = await User.findOne({ email });
   if (!user) {
+    EmailController.sendWelcomeEmail(email);
     user = new User({ email })
     user.ce_id = '';
     const r = await user.save();

@@ -271,8 +271,8 @@ const Orders = () => {
               <TableCell align="center">Stripe Fee</TableCell>
               <TableCell align="center">Total Price</TableCell>
               <TableCell align="center">Items</TableCell>
+              <TableCell align="center">Anonymous</TableCell>
               <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

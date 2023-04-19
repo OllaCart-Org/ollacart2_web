@@ -3,7 +3,7 @@ import { InsertLink, Close, ZoomOutMap, Add, ThumbUpOutlined, ThumbDownOutlined 
 import './card.scss';
 import utils from '../utils';
 
-const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderStatus, fork }) => {
+const Card = ({ card, editable, showFullControl, hideThumbs, remove, quickView, showPrice, orderStatus, fork }) => {
 
   const removeClicked = (e) => {
     e.stopPropagation();
@@ -76,7 +76,7 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
           </>
         )}
       </div>
-      <div className='d-flex justify-content-end align-items-start'>
+      <div className='card-footer d-flex justify-content-end align-items-start'>
         <div className='item-name'>{card.name}</div>
         {showPrice ? 
           <div className='item-price'>${card.price}</div>
@@ -85,12 +85,14 @@ const Card = ({ card, editable, hideThumbs, remove, quickView, showPrice, orderS
             {!editable ?
               <>
                 <div className='close-link'><span onClick={forkClicked}><Add /></span></div>
-                <div className='insert-link'><a onClick={e=>e.stopPropagation()} href={card.url} rel="noopener noreferrer" target="_blank"><InsertLink /></a></div>
               </>
             :
               <>
-                <div className='close-link'><span onClick={quickViewClicked} ><ZoomOutMap /></span></div>
-                <div className='insert-link'><a onClick={e=>e.stopPropagation()} href={card.url} rel="noopener noreferrer" target="_blank"><InsertLink /></a></div>
+                {showFullControl &&
+                  <>
+                    <div className='close-link'><span onClick={quickViewClicked} ><ZoomOutMap /></span></div>
+                    <div className='insert-link hide-sm'><a onClick={e=>e.stopPropagation()} href={card.url} rel="noopener noreferrer" target="_blank"><InsertLink /></a></div>
+                  </>}
                 <div className='close-link'><span onClick={removeClicked} ><Close /></span></div>
               </>
             }

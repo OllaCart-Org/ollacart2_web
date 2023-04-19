@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux"
 import { Box, Link, TextField, Tooltip, Typography, Zoom } from '@material-ui/core';
-import { Add, ChevronLeft, ChevronRight, Close, Delete, Edit, PersonPin, Save, Share, ShoppingCart, Telegram, ThumbDown, ThumbDownOutlined, ThumbUp, ThumbUpOutlined } from '@material-ui/icons'
+import { ChevronLeft, ChevronRight, Close, Delete, Edit, PersonPin, Save, Share, ShoppingCart, Telegram, ThumbDown, ThumbDownOutlined, ThumbUp, ThumbUpOutlined } from '@material-ui/icons'
 import './quickview.scss';
 import utils from '../utils';
+import OllaCartAdd from './Logo/ollacartadd';
 
 const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousShareAllowed, save, remove, updateLogo, putPurchase, previous, next, editable, fork, thumbup, thumbdown }) => {
   const [logo, setLogo] = useState('');
@@ -52,7 +53,7 @@ const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousS
     <Box className='quickview-container' onClick={close}>
       <Box className='quickview' onClick={(e) => e.stopPropagation()}>
         <Box className='top-nav'>
-          {editable && (
+          {editable ?
             <>
               {share && <Box className={'top-nav-item ' + (card.shared ? 'active' : '')} onClick={() => share(card)}><Share /></Box>}
               {putPurchase && <Box className={'top-nav-item ' + (card.purchased ? 'active' : '')} onClick={() => putPurchase(card)}><ShoppingCart /></Box>}
@@ -67,14 +68,13 @@ const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousS
               {save && !editMode && <Box className='top-nav-item' onClick={editClicked}><Edit /></Box>}
               {save && editMode && <Box className='top-nav-item' onClick={saveClicked}><Save /></Box>}
               {remove && <Box className='top-nav-item' onClick={() => remove(card)}><Delete /></Box>}
+              <Box className='top-nav-item' onClick={close}><Close /></Box>
             </>
-          )}
-          {!editable &&
+          :
             <>
-              {fork && <Box className='top-nav-item mr-auto' onClick={() => fork(card)}><Add /></Box>}
+              <Box className='nav-absolute' onClick={close}><Box className='absolute-nav-item'><Close /></Box></Box>
             </>
           }
-          <Box className='top-nav-item' onClick={close}><Close /></Box>
         </Box>
         <Box className='quickview-content'>
           <Box className='left-bar'>
@@ -97,7 +97,9 @@ const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousS
             </Box>
           </Box>
           <Box className='right-bar'>
-            <Typography variant="h3" gutterBottom>{card.name}</Typography>
+            <Box marginRight={editable ? 0 : 6}>
+              <Typography variant="h3" gutterBottom>{card.name}</Typography>
+            </Box>
             <Typography variant="h5" gutterBottom style={{color: 'var(--color-green)'}}>${card.price}</Typography>
             {editable && card.size && <Box className='size-item'><span>Size: {card.size}</span></Box>}
             {!editMode && <Typography style={{whiteSpace: 'break-spaces'}}>{card.description}</Typography>}
@@ -121,6 +123,9 @@ const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousS
                 <span>{card.dislikes.length}</span>
                 {card.dislikes.includes(_id) ? <ThumbDown /> : <ThumbDownOutlined />}
               </Box>
+            </Box>
+            <Box className='ollacart-add-button mr-auto ml-auto' my={2} display='flex' justifyContent='center'>
+              <OllaCartAdd onClick={() => fork(card)} />
             </Box>
           </Box>
         </Box>

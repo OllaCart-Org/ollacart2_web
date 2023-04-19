@@ -315,6 +315,7 @@ const Cards = (props) => {
                 <Card
                   card={card}
                   editable={!readonly}
+                  showFullControl={page === 'home'}
                   hideThumbs={hideThumbs}
                   remove={() => removeClicked(card)}
                   fork={() => fork(card)}
