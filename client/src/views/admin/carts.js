@@ -10,14 +10,14 @@ import AdminDialog from '../../components/Admin/modal';
 import './carts.scss'
 import copy from 'copy-to-clipboard';
 
-const Carts = () => {  
+const Carts = () => {
   const [carts, setCarts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [countPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(1);
   const [page, setPage] = useState(1);
   const [editingCart, setEditingCart] = useState(null);
-  
+
   const { addToast } = useToasts();
 
   const showToast = useCallback((message, appearance = 'error') => {
@@ -44,7 +44,7 @@ const Carts = () => {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
-  
+
   useEffect(() => {
     fetchCarts(page);
   }, [page, fetchCarts]);
@@ -52,7 +52,7 @@ const Carts = () => {
   const handlePageChange = (event, value) => {
     setPage(value);
   };
-  
+
   const removeClicked = (cart) => {
     api.removeProduct(cart._id)
       .then(() => {
@@ -64,6 +64,7 @@ const Carts = () => {
   const editClicked = (cart) => {
     setEditingCart({
       ...cart,
+      photos: [ ...cart.photos ],
       keywords: [...cart.keywords]
     })
   }
@@ -77,6 +78,20 @@ const Carts = () => {
     setEditingCart({ ...editingCart });
   }
 
+  const removeEditingCartPhoto = (idx, e) => {
+    e.stopPropagation();
+    editingCart.photos.splice(idx, 1);
+    setEditingCart({ ...editingCart });
+  }
+
+  const setEditingCartLogo = (idx) => {
+    if (!editingCart.photos[idx]) return;
+    const temp = editingCart.photo;
+    editingCart.photo = editingCart.photos[idx];
+    editingCart.photos[idx] = temp;
+    setEditingCart({ ...editingCart });
+  }
+
   const updateInfo = () => {
     api.updateProduct(editingCart._id, {
       name: editingCart.name,
@@ -86,13 +101,15 @@ const Carts = () => {
       url: editingCart.url,
       keywords: editingCart.keywords,
       category: editingCart.category || null,
+      photo: editingCart.photo,
+      photos: editingCart.photos
     })
       .then((data) => {
         console.log(data);
         const idx = carts.findIndex(cart => cart._id === data._id);
         if (idx === -1) return;
         carts[idx] = data;
-        setCarts([ ...carts ]);
+        setCarts([...carts]);
         closeModal();
       })
       .catch(err => showToast(err.message));
@@ -114,7 +131,7 @@ const Carts = () => {
             <Card className='card' key={cart.name + idx}>
               <CardContent className='card-content'>
                 <Box className='photo'>
-                  <img src={cart.photo} alt="logo"/>
+                  <img src={cart.photo} alt="logo" />
                 </Box>
                 <Box className='card-body'>
                   <Box className='action-buttons'>
@@ -137,7 +154,7 @@ const Carts = () => {
                   <Box className='photos'>
                     {cart.photos.map((photo, idx) => (
                       <Box className='additional-photo' key={idx}>
-                        <img src={photo} alt="Additional"/>
+                        <img src={photo} alt="Additional" />
                       </Box>
                     ))}
                   </Box>
@@ -160,7 +177,7 @@ const Carts = () => {
         <Box className='pagination-wrapper'>
           <Pagination count={totalCount} page={page} onChange={handlePageChange} color="primary" showFirstButton showLastButton />
         </Box>
-        { editingCart && <AdminDialog title='Update Information' open={!!editingCart} onClose={closeModal}>
+        {editingCart && <AdminDialog title='Update Information' open={!!editingCart} onClose={closeModal}>
           <Box className='update-info-modal'>
             <Box className='content'>
               <Box className='top-email'>{editingCart.user && editingCart.user.email}</Box>
@@ -183,7 +200,7 @@ const Carts = () => {
                     {categories.map((c, idx) => (
                       <MenuItem key={idx} value={c._id}>{c.name}</MenuItem>
                     ))}
-                  </Select>                  
+                  </Select>
                 </FormControl>
               </Box>
               <Box className='fields'>
@@ -193,16 +210,29 @@ const Carts = () => {
               {editingCart.original_url && <Box className='fields'>
                 <TextField label="Picked Link" size="small" variant="outlined" fullWidth value={editingCart.original_url} disabled InputProps={{
                   endAdornment: <InputAdornment position='end'><IconButton onClick={() => copy(editingCart.original_url)}><FileCopy /></IconButton></InputAdornment>
-                }}/>
+                }} />
               </Box>}
               <Box className='fields'>
                 <TextField label="Item Link" size="small" variant="outlined" fullWidth value={editingCart.url}
                   name='url' onChange={inputValueChanged} InputProps={{
                     endAdornment: <InputAdornment position='end'><IconButton onClick={() => window.open(editingCart.url, '_blank')}><Launch /></IconButton></InputAdornment>
-                  }}/>
+                  }} />
               </Box>
               <Box className='fields'>
                 <TagsInput value={editingCart.keywords} onChange={val => editingCart.keywords = val} placeHolder="keyword" />
+              </Box>
+              <Box className='photos'>
+                <Box className='photo logo'>
+                  <img src={editingCart.photo} alt='logo' />
+                </Box>
+                {editingCart.photos.map((photo, idx) => (
+                  <Box className='photo' key={idx} onClick={() => setEditingCartLogo(idx)}>
+                    <img src={photo} alt="Additional" />
+                    <IconButton className='remove-button' size='small' onClick={(e) => removeEditingCartPhoto(idx, e)}>
+                      <Close />
+                    </IconButton>
+                  </Box>
+                ))}
               </Box>
             </Box>
             <Box className='footer'>
@@ -210,7 +240,7 @@ const Carts = () => {
               <Button variant="contained" size="small" startIcon={<Close />} onClick={closeModal}>Close</Button>
             </Box>
           </Box>
-        </AdminDialog> }
+        </AdminDialog>}
       </Box>
     </Layout>
   )

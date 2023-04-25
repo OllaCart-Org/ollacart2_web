@@ -120,6 +120,7 @@ exports.fetchPurchaseLink = async (req, res) => {
 exports.createPaymentIntent = async (req, res) => {
   const user = req.user;
   if (!user) return res.status(400).send({ error: 'not signin' });
+  if (!utils.checkShippingInfo(user.shipping)) return res.status(400).send({ error: 'Please fill in shipping information first' });
 
   try {
     let products = await Product.find({ user: user._id, purchased: 1 });

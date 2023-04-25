@@ -67,7 +67,7 @@ exports.update = async (req, res) => {
 
   const detail = req.body;
   
-  const keys = ['name', 'size', 'description', 'url', 'price', 'keywords', 'purchased', 'shared', 'category']
+  const keys = ['name', 'size', 'description', 'url', 'price', 'keywords', 'purchased', 'shared', 'category', 'photo', 'photos']
   for (let i = 0; i < keys.length; i ++) {
     const key = keys[i];
     if (!Object.hasOwn(detail, key)) continue;
@@ -131,6 +131,31 @@ exports.forkProduct = async (req, res) => {
     user: user._id,
     forkId: product._id,
     forkedIds
+  })
+  const response = await newProduct.save();
+  if (!response) return res.status(400).json({ error: 'Add failed' });
+  res.json(response);
+}
+
+exports.adminAddProduct = async (req, res) => {
+  const product = req.product;
+  const user = await User.findOne({ _id: req.body.userID });
+  if (!product) return res.status(400).json({ error: 'Product not found' });
+  if (!user) return res.status(400).json({ error: 'Not signed in' });
+  if (product.user._id.toString() === user._id.toString()) return res.status(400).json({ error: 'You can not add to your cart' });
+  
+  const p_from = await Product.findOne({ user: user._id, _id: {$in: product.forkedIds} });
+  if (p_from) return res.status(400).json({ error: `This is added from user's Cart` });
+  const p_already = await Product.findOne({ user: user._id, forkedIds: product._id });
+  if (p_already) return res.status(400).json({ error: 'Already added' });
+  
+  const forkedIds = [ ...product.forkedIds, product._id ];
+  const newProduct = new Product({
+    ..._.pick(product, ['name', 'description', 'keywords', 'price', 'photo', 'photos', 'url', 'original_url', 'domain']),
+    user: user._id,
+    forkId: product._id,
+    forkedIds,
+    addedBy: req.user._id
   })
   const response = await newProduct.save();
   if (!response) return res.status(400).json({ error: 'Add failed' });
@@ -331,12 +356,13 @@ exports.getSocialStatus = async (req, res) => {
 
 exports.getCarts = async (req, res) => {
   const { pagination } = req.body;
+  const filter = req.body.filter || {};
 
-  const carts = await Product.find()
+  const carts = await Product.find(filter)
     .sort([['sequence', 'desc'], ['createdAt', 'desc']])
     .skip((pagination.page - 1) * pagination.countPerPage)
     .limit(pagination.countPerPage).populate('user').exec();
-  res.send({ success: true, carts, total: await this.getProductCount() });
+  res.send({ success: true, carts, total: await this.getProductCount(filter) });
 }
 
 

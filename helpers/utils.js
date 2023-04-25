@@ -176,3 +176,12 @@ exports.getTaxRate = async (shipping, category) => {
   }
   return 0;
 }
+
+exports.checkShippingInfo = shipping => {
+  if (!shipping) return false;
+  if (!shipping.country) return false;
+  if (shipping.country === 'CA' || shipping.country === 'US') {
+    if (!shipping.state) return false;
+  }
+  return true;
+}

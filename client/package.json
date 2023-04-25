@@ -16,6 +16,7 @@
     "comma-number": "^2.1.0",
     "copy-to-clipboard": "^3.3.2",
     "country-state-city": "^3.1.2",
+    "moment": "^2.29.4",
     "querystring": "^0.2.1",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.1.1",

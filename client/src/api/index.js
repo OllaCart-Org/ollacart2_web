@@ -92,8 +92,8 @@ const getTaxes = (detail = {}) => {
   return call(`/admin/gettaxes/`, detail);
 }
 
-const getCarts = (pagination) => {
-  return call(`/admin/getcarts/`, { pagination });
+const getCarts = (pagination, filter = {}) => {
+  return call(`/admin/getcarts/`, { pagination, filter });
 }
 
 const getOrders = (pagination) => {
@@ -178,6 +178,10 @@ const unFollowUser = (followId) => {
 
 const forkProduct = (productID, email) => {
   return call(`/product/fork/${productID}`, { email });
+}
+
+const adminAddProduct = (userID, productID) => {
+  return call(`/product/adminadd/${productID}`, { userID });
 }
 
 const thumbup = (productID, email) => {
@@ -269,6 +273,7 @@ export default {
   followUser,
   unFollowUser,
   forkProduct,
+  adminAddProduct,
   thumbup,
   thumbdown,
   singleShare,

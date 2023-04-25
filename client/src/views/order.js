@@ -28,7 +28,11 @@ const Order = () => {
         })
         .catch(err => showToast(err.message));
     };
-    loadCards();
+    if (window.location.href) {
+      setTimeout(loadCards, 1000);
+    } else {
+      loadCards();
+    }
   }, [showToast])
 
   const getOrderStatusBadge = (orderStatus) => {

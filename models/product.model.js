@@ -95,7 +95,11 @@ const productSchema = new mongoose.Schema(
     dislikes: [{
       type: ObjectId,
       ref: 'User',
-    }]
+    }],
+    addedBy: {
+      type: ObjectId,
+      ref: 'User'
+    }
   },
   { timestamps: true }
 );

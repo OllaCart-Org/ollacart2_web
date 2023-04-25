@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Layout from './layout'
-import { Typography, Box, Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip } from '@material-ui/core';
+import { Typography, Box, Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, IconButton } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import { useToasts } from 'react-toast-notifications';
 import api from '../../api';
+import { Add } from '@material-ui/icons';
+import SuggestModal from '../../components/Admin/SuggestModal';
 
 const Users = () => {
   const { addToast } = useToasts();
@@ -12,6 +14,7 @@ const Users = () => {
   const [countPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(1);
   const [page, setPage] = useState(1);
+  const [suggestModalInfo, setSuggestModalInfo] = useState({open: false});
   
   const showToast = useCallback((message, appearance = 'error') => {
     addToast(message, { appearance, autoDismiss: true });
@@ -35,6 +38,14 @@ const Users = () => {
     setPage(value);
   };
 
+  const showSuggestModal = (user) => {
+    setSuggestModalInfo({ open: true, user });
+  }
+
+  const closeSuggestModal = () => {
+    setSuggestModalInfo({ open: false });
+  }
+
   return (
     <Layout>
       <Box marginY={1}>
@@ -49,6 +60,7 @@ const Users = () => {
               <TableCell align="center">Role</TableCell>
               <TableCell align="center">Extension ID</TableCell>
               <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Suggest Product</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -67,6 +79,9 @@ const Users = () => {
                     {user.status?.anonymous_shopping && <Chip size='small' color='secondary' label='Anonymous' />}
                   </Box>
                 </TableCell>
+                <TableCell align="center">
+                  <IconButton color='secondary' size='small' onClick={() => showSuggestModal(user)}><Add /></IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -75,6 +90,7 @@ const Users = () => {
       <Box className='pagination-wrapper'>
         <Pagination count={totalCount} page={page} onChange={handlePageChange} color="primary" showFirstButton showLastButton />
       </Box>
+      <SuggestModal open={suggestModalInfo.open} onClose={closeSuggestModal} user={suggestModalInfo.user} />
     </Layout>
   )
 }
