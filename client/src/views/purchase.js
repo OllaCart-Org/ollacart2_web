@@ -10,6 +10,7 @@ import CheckoutForm from '../components/Payment/CheckoutForm';
 
 import Cards from '../components/cards';
 import CartMultiLogo from '../components/Logo/cartmulti';
+import ShippingModal from '../components/Profile/shippingModal';
 
 const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
@@ -18,6 +19,7 @@ const Purchase = (props) => {
   const [filter] = useState({purchased: 1});
   const [openPayment, setOpenPayment] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
+  const [shippingModalOpen, setShippingModalOpen] = useState(false);
 
   const { addToast } = useToasts();
 
@@ -43,7 +45,13 @@ const Purchase = (props) => {
         setClientSecret(data.clientSecret);
         setOpenPayment(true);
       })
-      .catch(err => showToast(err.message));
+      .catch(err => {
+        if (err.message === 'shipping') {
+          setShippingModalOpen(true);
+          return;
+        }
+        showToast(err.message)
+      });
   }
 
   const togglePayment = (value) => {
@@ -72,6 +80,7 @@ const Purchase = (props) => {
         page='purchase'
         filter={filter}
       />
+      <ShippingModal open={shippingModalOpen} onClose={() => setShippingModalOpen(false)} />
     </Layout>
   );
 };
