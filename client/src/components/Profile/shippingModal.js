@@ -4,6 +4,7 @@ import OllaCartModal from '../modal';
 import { Country, State } from 'country-state-city';
 import { useToasts } from 'react-toast-notifications';
 import api from '../../api';
+import { Save } from '@material-ui/icons';
 
 const ShippingModal = ({ open, onClose }) => {
   const { addToast } = useToasts();
@@ -46,9 +47,9 @@ const ShippingModal = ({ open, onClose }) => {
   }
 
   return (
-    <OllaCartModal open={open} onClose={onClose} title='Shopping Recommendation'>
+    <OllaCartModal open={open} onClose={onClose} title='Confirm Shipping'>
       <Box width={350} maxWidth='100%' paddingY={1}>
-        <Typography variant='h5'>Please fill in shipping information before purchase!</Typography>
+        <Typography variant='h5'>Save your shipping address before your first purchase.</Typography>
         <div className='form-content'>
           <TextField className='form-input' label='Full Name' size='small' variant='outlined' fullWidth color='primary' name='name'
             value={shipping.name || ''} onChange={shippingValueChanged} />
@@ -79,7 +80,7 @@ const ShippingModal = ({ open, onClose }) => {
           <TextField className='form-input' label='Postal Code' size='small' variant='outlined' fullWidth color='primary' name='postal_code'
             value={shipping.postal_code || ''} onChange={shippingValueChanged} />
           <div className='bottom-buttons'>
-            <Button variant='contained' color='primary' size='small' startIcon={<saveShippingAddress />} onClick={saveShippingAddress}>Save</Button>
+            <Button variant='contained' color='primary' size='small' startIcon={<Save />} onClick={saveShippingAddress}>Save</Button>
           </div>
         </div>
       </Box>
