@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const Order = require('../models/order.model');
 const Product = require('../models/product.model');
 const utils = require('../helpers/utils');
+const EmailController = require('./email.controller');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 exports.orderById = (req, res, next, id) => {
@@ -86,7 +87,7 @@ exports.updateOrderDetail = async (req, res) => {
   
   const user = await User.findOne({ _id: order.user });
   if (!user) return;
-  utils.sendOrderStatusMail(user.email, product);
+  EmailController.sendOrderStatusChangedEmail(product, user.email);
 }
 
 exports.getOrderCount = async (filter = {}) => {
@@ -136,7 +137,7 @@ exports.updateOrder = async (type, data) => {
     const charge = await stripe.charges.retrieve(data.latest_charge);
     order.receiptUrl = charge.receipt_url;
 
-    utils.sendNewOrderMail(order);
+    // utils.sendNewOrderMail(order);
 
     const p_ids = order.products.map(p => p.product);
     await Product.updateMany({ _id: { $in: p_ids } }, { $inc: { purchasedStatus: 1 }, purchased: 0 })

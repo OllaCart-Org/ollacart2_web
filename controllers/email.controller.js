@@ -112,3 +112,37 @@ exports.sendAnonymousShareEmail = (product, mailTo) => {
   
   transporter.sendMail(mailOptions);
 }
+
+exports.sendOrderStatusChangedEmail = (product, mailTo) => {
+  if (!product.orderStatus) return ;
+
+  const subjects = ['', 'Your Order Has Been Placed', 'Your Order Has Been Shipped', 'Your Order Has Been Closed'];
+  const templates = ['', 'order-placed', 'order-shipped', 'order-closed'];
+  const subject = subjects[product.orderStatus];
+  const template = templates[product.orderStatus];
+
+  const params = {
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    photo: product.photo,
+  };
+
+  if (product.orderStatus === 1) {
+    product.promocontent = '';
+    if (product.promoCode) product.promocontent = `Promo Code: ${product.promoCode}`;
+  }
+  if (product.orderStatus === 2) {
+    product.shippingcontent = '';
+    if (product.shippingNote) product.shippingNote = `Shipping Note: ${product.shippingNote}`;
+  }
+
+  var mailOptions = {
+    from: 'support@ollacart.com',
+    to: mailTo,
+    subject,
+    html: readTemplate(template, params)
+  };
+  
+  transporter.sendMail(mailOptions);
+}
