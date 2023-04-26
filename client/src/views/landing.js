@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from "react-redux"
 import Carousel from 'react-material-ui-carousel'
-import { FormatQuote } from '@material-ui/icons';
 
 import Layout from './layout';
 import Signin from '../components/signin';
@@ -9,8 +8,6 @@ import OllaCartMultiLogo from '../components/Logo/ollacartmulti';
 import './landing.scss';
 
 import WebStore from '../assets/img/chrome-webstore.png';
-import Avatar1 from '../assets/img/avatar1.jpg';
-import Avatar2 from '../assets/img/avatar2.jpg';
 import ExtensionVideo from '../assets/videos/extension.mp4';
 import SlideImg1 from '../assets/img/slide1.jpg';
 import SlideImg2 from '../assets/img/slide2.jpg';
@@ -83,10 +80,10 @@ const Landing = () => {
           <p>Select items from any online shopping website and add them to your OllaCart.<br />
             It is as easy as selecting the extension logo, hovering over the item to confirm details, and selecting either the text or image. From there you have the option to confirm additional information or images by manually selecting information.</p>
         </div>
-        <div className='video-container'>
+        <div className='video-container' mb={5}>
           <video src={ExtensionVideo} controls/>
         </div>
-        <Box className='user-comments color-light' my={5}>
+        {/* <Box className='user-comments color-light' my={5}>
           <div className='user-comment'>
             <FormatQuote />
             <span>The customer service for OllaCart is top-notch. I had an issue with one of my orders and they were quick to respond and resolve the problem. I highly recommend this extension to all my friends and family.</span>
@@ -103,7 +100,7 @@ const Landing = () => {
               <img src={Avatar2} alt="avatar" />
             </div>
           </div>
-        </Box>
+        </Box> */}
       </div>
     </Layout>
   );
