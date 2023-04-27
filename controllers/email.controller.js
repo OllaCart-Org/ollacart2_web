@@ -129,12 +129,12 @@ exports.sendOrderStatusChangedEmail = (product, mailTo) => {
   };
 
   if (product.orderStatus === 1) {
-    product.promocontent = '';
-    if (product.promoCode) product.promocontent = `Promo Code: ${product.promoCode}`;
+    params.promocontent = '';
+    if (product.promoCode) params.promocontent = `Promo Code: ${product.promoCode}`;
   }
   if (product.orderStatus === 2) {
-    product.shippingcontent = '';
-    if (product.shippingNote) product.shippingNote = `Shipping Note: ${product.shippingNote}`;
+    params.shippingcontent = '';
+    if (product.shippingNote) params.shippingNote = `Shipping Note: ${product.shippingNote}`;
   }
 
   var mailOptions = {
