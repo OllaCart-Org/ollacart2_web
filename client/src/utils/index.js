@@ -68,6 +68,22 @@ export default {
     data[_id] = count;
     window.localStorage.setItem('ollacart_thumb_count', JSON.stringify(data));
   },
+  getStoredSuggestItems: () => {
+    const d = window.localStorage.getItem('ollacart_suggest_items');
+    try {
+      const data = JSON.parse(d) || [];
+      return data;
+    } catch (ex) {
+      return [];
+    }
+  },
+  setStoredSuggestItem: function (_id) {
+    const data = this.getStoredSuggestItems();
+    const idx = data.indexOf(_id);
+    if (idx > -1) return;
+    data.push(_id);
+    window.localStorage.setItem('ollacart_suggest_items', JSON.stringify(data));
+  },
   getUsername: (user) => {
     if (!user) return '';
     return user.username || (user.email || '').split('@')[0];

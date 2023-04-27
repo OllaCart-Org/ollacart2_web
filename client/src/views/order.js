@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useToasts } from 'react-toast-notifications';
+import copy from 'copy-to-clipboard';
 
 import Card from '../components/card';
 import NoCard from '../components/nocard';
@@ -9,6 +10,7 @@ import OllaCartModal from '../components/modal';
 import utils from '../utils';
 
 import './order.scss';
+import { FileCopyOutlined } from '@material-ui/icons';
 
 const Order = () => {
   const [cards, setCards] = useState([]);
@@ -60,6 +62,11 @@ const Order = () => {
     utils.openLink(detailCard.shippingNote);
   }
 
+  const copyClicked = (str) => {
+    copy(str);
+    showToast('Copied to Clipboard', 'success');
+  }
+
   return (
     <Layout>
       <div>
@@ -84,11 +91,15 @@ const Order = () => {
             {getOrderStatusBadge(detailCard.orderStatus)}
             {detailCard.promoCode && <div className='shipping-note'>
               <div className='title'>Promo Code</div>
-              <div className={'note' + (utils.checkURL(detailCard.promoCode) ? ' link' : '')} onClick={noteClicked}>{detailCard.promoCode}</div>
+              <div className="note">
+                {detailCard.promoCode}&nbsp;&nbsp;&nbsp;<FileCopyOutlined onClick={() => copyClicked(detailCard.promoCode)}/>
+              </div>
             </div>}
             {detailCard.shippingNote && <div className='shipping-note'>
               <div className='title'>Shipping Note</div>
-              <div className={'note' + (utils.checkURL(detailCard.shippingNote) ? ' link' : '')} onClick={noteClicked}>{detailCard.shippingNote}</div>
+              <div className={'note' + (utils.checkURL(detailCard.shippingNote) ? ' link' : '')} onClick={noteClicked}>
+                {detailCard.shippingNote}&nbsp;&nbsp;&nbsp;<FileCopyOutlined onClick={() => copyClicked(detailCard.shippingNote)}/>
+              </div>
             </div>}
             <div className='price-list'>
               <div className='title'>Price Summary</div>

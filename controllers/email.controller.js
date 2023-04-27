@@ -134,7 +134,7 @@ exports.sendOrderStatusChangedEmail = (product, mailTo) => {
   }
   if (product.orderStatus === 2) {
     params.shippingcontent = '';
-    if (product.shippingNote) params.shippingNote = `Shipping Note: ${product.shippingNote}`;
+    if (product.shippingNote) params.shippingcontent = `Shipping Note: ${product.shippingNote}`;
   }
 
   var mailOptions = {

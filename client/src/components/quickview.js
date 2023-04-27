@@ -21,6 +21,9 @@ const QuickView = ({ card, close, share, singleShare, anonymousShare, anonymousS
       thumbup: card.likes.length,
       thumbdown: card.dislikes.length
     })
+    if (card.addedBy) {
+      utils.setStoredSuggestItem(card._id);
+    }
   }, [card])
 
   const goPreviewClicked = (e) => {

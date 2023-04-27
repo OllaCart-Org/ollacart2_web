@@ -40,6 +40,14 @@ const Card = ({ card, editable, showFullControl, hideThumbs, remove, quickView, 
     return <div className={'order-status-badge bg-red'}>Purchased</div>
   }
 
+  const getSuggestBadge = () => {
+    if (!card.addedBy) return '';
+    const data = utils.getStoredSuggestItems();
+    const idx = data.indexOf(card._id);
+    if (idx > -1) return '';
+    return <div className={'order-status-badge bg-indigo'}>Suggested</div>
+  }
+
   const thumbupDiff = () => {
     const current = card.likes.length;
     const before = utils.getStoredThumbCount(card._id).thumbup;
@@ -62,7 +70,7 @@ const Card = ({ card, editable, showFullControl, hideThumbs, remove, quickView, 
         <img src={card.photo} alt={card.name} className='mb-3'
           style={{ objectFit: 'contain', height: '100%', width: '100%', display: 'flex', marginLeft: 'auto', marginRight: 'auto' }}
         />
-        {getOrderStatusBadge() || getPurchaseStatusBadge()}
+        {getOrderStatusBadge() || getSuggestBadge() || getPurchaseStatusBadge()}
         {hideThumbs ? '' : (
           <>
             {thumbupDiff() && <div className='thumb thumb-up'>
@@ -95,8 +103,7 @@ const Card = ({ card, editable, showFullControl, hideThumbs, remove, quickView, 
                   </>}
                 <div className='close-link'><span onClick={removeClicked} ><Close /></span></div>
               </>
-            }
-            
+            }            
           </>
         }
       </div>
