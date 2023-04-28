@@ -89,32 +89,32 @@ const Order = () => {
           <div className='part'>
             <div className='product-title'>{detailCard.name}</div>
             {getOrderStatusBadge(detailCard.orderStatus)}
-            {detailCard.promoCode && <div className='shipping-note'>
+            {detailCard.promoCode ? <div className='shipping-note'>
               <div className='title'>Promo Code</div>
               <div className="note">
                 {detailCard.promoCode}&nbsp;&nbsp;&nbsp;<FileCopyOutlined onClick={() => copyClicked(detailCard.promoCode)}/>
               </div>
-            </div>}
-            {detailCard.shippingNote && <div className='shipping-note'>
+            </div> : ''}
+            {detailCard.shippingNote ? <div className='shipping-note'>
               <div className='title'>Shipping Note</div>
               <div className={'note' + (utils.checkURL(detailCard.shippingNote) ? ' link' : '')} onClick={noteClicked}>
                 {detailCard.shippingNote}&nbsp;&nbsp;&nbsp;<FileCopyOutlined onClick={() => copyClicked(detailCard.shippingNote)}/>
               </div>
-            </div>}
+            </div> : ''}
             <div className='price-list'>
               <div className='title'>Price Summary</div>
               <div className='price'>
                 <span>Product Price</span>
                 <span>${utils.commaPrice(detailCard.price)}</span>
               </div>
-              {(detailCard.taxRate > -1) && <div className='price'>
+              {(detailCard.taxRate > -1) ? <div className='price'>
                 <span>Tax ({utils.commaPrice(detailCard.taxRate * 100)}%)</span>
                 <span>+ ${utils.commaPrice(detailCard.taxPrice)}</span>
-              </div>}
-              {detailCard.anonymousPrice && <div className='price'>
+              </div> : ''}
+              {detailCard.anonymousPrice ? <div className='price'>
                 <span>Anonymous Shopping</span>
                 <span>+ ${utils.commaPrice(detailCard.anonymousPrice)}</span>
-              </div>}
+              </div> : ''}
               <div className='price'>
                 <span>Shipping Cost</span>
                 <span>+ ${utils.commaPrice(detailCard.shippingPrice)}</span>
