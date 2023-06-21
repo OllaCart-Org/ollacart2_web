@@ -29,3 +29,9 @@ exports.testEmail = async (req, res) => {
     res.send({ error, info });
   });
 }
+
+exports.testApi = async (req, res) => {
+  const data = req.body;
+  console.log('test api', data);
+  res.send({ success: true });
+}
