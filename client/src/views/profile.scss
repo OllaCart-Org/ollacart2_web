@@ -1,0 +1,72 @@
+
+.profile-page {
+  .MuiMenu-paper.MuiPopover-paper {
+    color: var(--fg) !important;
+    background-color: var(--color-gray) !important;
+  }
+  
+  max-width: 800px;
+  margin: auto;
+  padding: 10px;
+
+  .top-buttons-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .email-header {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+  .profile-settings {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+    color: var(--fg);
+
+    .left-side, .right-side {
+      max-width: 100%;
+      width: 350px;
+      margin: 0 auto;
+
+      &.left-side .switch-wrapper {
+        margin-top: 10px;
+      }
+
+      .switch-wrapper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 15px;
+        border-radius: 6px;
+        background-color: var(--color-gray);
+        
+        .text-content {
+          width: 1px;
+          flex-grow: 1;
+        }
+        .setting-button {
+          padding-right: 15px;
+        }
+        .MuiSwitch-root {
+          padding: 8px;
+          .MuiSwitch-track {
+            border-radius: 15px;
+          }
+        }
+      }
+  
+      .form-wrapper {
+        margin-top: 10px;
+        border: 3px solid var(--color-gray);
+        border-radius: 10px;
+      }
+    }
+  }
+}

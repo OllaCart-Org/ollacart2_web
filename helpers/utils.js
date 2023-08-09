@@ -1,8 +1,12 @@
 const nodemailer = require('nodemailer');
-const Product = require('../models/product');
-const User = require('../models/user');
+const Product = require('../models/product.model');
+const User = require('../models/user.model');
+const Extension = require('../models/extension.model');
+const Tax = require('../models/tax.model');
+const SalesTax = require('sales-tax');
+const Twilio = require('twilio');
 
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'support@ollacart.com',
@@ -10,37 +14,30 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+const twilioClient = Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+exports.getUsername = (user) => {
+  if (!user) return '';
+  return user.username || (user.email || '').split('@')[0];
+}
+
+exports.takeFirstDecimal = (str) => {
+  try {
+    // return parseFloat(str.match(/[\d\.]+/)) || 0;
+    return parseFloat((str + '').replace(/[^0-9.]+/g,"")) || 0;
+  } catch (ex) {
+    return 0;
+  }
+}
+
 exports.checkCeID = async (user, ce_id) => {
   if (user && ce_id && user.ce_id !== ce_id) {
     user.ce_id = ce_id;
     await User.updateMany({ ce_id }, { $set: { ce_id: '' } });
     await user.save();
     await Product.updateMany({ ce_id, user: null }, { $set: { user: user._id } });
+    await Extension.updateOne({ ce_id }, { ce_id, user: user._id }, { upsert: true });
   }
-}
-
-exports.sendMail = async (mailTo) => {
-  return new Promise(resolve => {
-    var mailOptions = {
-      from: 'support@ollacart.com',
-      to: mailTo,
-      subject: 'Welcome to OllaCart',
-      html: `<p>Congrats on the first step towards your new online shopping experience. As we continue to develop the capabilities of OllaCart, download and use our <a href="https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm">Chrome Extension</a> to select items from any online shopping website and add them to your OllaCart. It is as easy as selecting the extension logo, selecting the item, and selecting the extension logo again.<br>
-        When on <a href="https://www.ollacart.com">OllaCart.com</a>, select the items that you want to publish to your public online shopping cart. In order to share this list, select the share logo, and just copy and paste the website link at the top of your shared list, wherever you want.<br><br>
-        In the future, you will be able to:<br>
-        Purchase any item, from any website.<br>
-        Browse suggested items.<br>
-        Comment on and add from your friends’ items.<br>
-        Browse, shop, and compare on OllaCart.<br><br>
-        Security: Logging in to your account now only requires your email address in order to keep logging in hassle free. Our extension knows which cart to add your items to once you log in on the website. In case you would like to password protect your account, please let us know.<br><br>
-        We appreciate you using OllaCart while we continue to build out the functionality and cannot wait to revolutionize online shopping; making it easier, more fun, and more convenient.<br><br>
-        Have any suggestions? Let us know by responding to this email.</p>`
-    };
-    
-    transporter.sendMail(mailOptions, function(error, info){
-      resolve({ error, info });
-    });
-  })
 }
 
 exports.sendRequestMail = async (mailTo) => {
@@ -56,4 +53,114 @@ exports.sendRequestMail = async (mailTo) => {
       resolve({ error, info });
     });
   })
+}
+
+exports.sendSecureMail = async (mailTo, uid) => {
+  const secure_link = `${process.env.DOMAIN}/verify/${uid}`;
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: mailTo,
+      subject: 'Signin to your Account',
+      html: `<p>You are invited to OllaCart. Click the button below to accept invitattion to OllaCart.</p><a href="${secure_link}">Accept</a>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
+exports.sendNewOrderMail = async (order) => {
+  return new Promise(resolve => {
+    var mailOptions = {
+      from: 'support@ollacart.com',
+      to: 'support@ollacart.com',
+      subject: 'New order arrived',
+      html: `<p>New order($${order.totalReceived}) arrived from ${order.user.email}</p>`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      resolve({ error, info });
+    });
+  })
+}
+
+exports.sendPurchaseSMS = async (phoneTo, url) => {
+  const res = await twilioClient.messages.create({
+    body: 'Test SMS ' + url,
+    from: process.env.TWILIO_PHONE_NUMBER,
+    to: phoneTo
+  });
+  console.log('sendSMS', res);
+}
+
+const getValidTaxRate = (data) => {
+  if (!data && data !== 0) return null;
+  if (typeof data !== 'object') {
+    if (typeof data === 'number') return data;
+    return parseFloat(data) || null;
+  }
+  const rate = data['taxRate'];
+  if (!rate && rate !== 0) return null;
+  if (typeof rate === 'number') return rate;
+  return parseFloat(rate) || null;
+}
+
+const getTaxRateFromJson = (json, country, state, zipcode) => {
+  if (!json || typeof json !== 'object') return null;
+  if (!json[country] && json[country] !== 0) return null;
+  const cJson = json[country];
+
+  let taxRate = null;
+  const cTaxRate = getValidTaxRate(cJson);
+  
+  if (!state) {
+    if (zipcode) {
+      taxRate = getValidTaxRate(cJson[zipcode]);
+    }
+  } else {
+    const sJson = cJson[state];
+    if (!sJson && sJson !== 0);
+    else {
+      const sTaxRate = getValidTaxRate(sJson);
+      if (zipcode) taxRate = getValidTaxRate(sJson[zipcode]);
+      if (taxRate === null) taxRate = sTaxRate;
+    }
+  }
+  if (taxRate === null) taxRate = cTaxRate;
+  if (taxRate === null) return null;
+  return taxRate / 100;
+}
+
+exports.getTaxRate = async (shipping, category) => {
+  if (!shipping) return -1;
+  const {country, state, postal_code} = shipping;
+  if (category) {
+    const tax = await Tax.findOne({ category });
+    const taxRate = getTaxRateFromJson(tax?.taxJson, country, state, postal_code);
+    if (taxRate !== null) return taxRate;
+  }
+  const tax = await Tax.findOne({ category: null });
+  const taxRate = getTaxRateFromJson(tax?.taxJson, country, state, postal_code);
+  if (taxRate !== null) return taxRate;
+
+  if (SalesTax.hasStateSalesTax(country, state)) {
+    const res = await SalesTax.getSalesTax(country, state);
+    return res.rate || 0;
+  }
+  if (SalesTax.hasSalesTax(country)) {
+    const res = await SalesTax.getSalesTax(country);
+    return res.rate || 0;
+  }
+  return 0;
+}
+
+exports.checkShippingInfo = shipping => {
+  if (!shipping) return false;
+  if (!shipping.country) return false;
+  if (shipping.country === 'CA' || shipping.country === 'US') {
+    if (!shipping.state) return false;
+  }
+  return true;
 }

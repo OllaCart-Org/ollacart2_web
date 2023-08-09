@@ -1,0 +1,114 @@
+.main-content, .ollacart-modal {
+  color: var(--color-light);
+  h3, .text-title { font-size: 20pt; font-weight: bold; color: var(--color-sea); }
+  h4, .text-subtitle { font-size: 16pt; font-weight: bold; }
+  h5 { font-size: 14pt; }
+  a, p, span, .text-body { font-size: 12pt; font-weight: normal; }
+  small .text-small { font-size: 10pt; font-weight: normal; }
+  hr { opacity: 0.2; }
+
+  max-width: 920px;
+  padding: 0 10px;
+  margin: auto;
+  
+  .custom-logo { fill: currentColor; }
+  .ollacart-add-button {
+    cursor: pointer;
+    svg { width: 180px; height: auto; }
+  }
+  .MuiButton-startIcon, .MuiInputAdornment-positionStart {
+    .custom-logo {
+      width: 40px;
+      height: 40px;
+    }
+
+    &.MuiButton-iconSizeSmall {
+      .custom-logo {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+  .MuiButton-root { text-transform: none; padding: 8px 20px; border-radius: 8px; }
+  .MuiButton-sizeSmall { padding: 4px 15px; }
+  .MuiButton-outlined { border-width: 2px !important; border-color: var(--color-light); color: var(--color-light); }
+
+  .form-content {
+    padding: 10px;
+
+    .two-inputs {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .form-control {
+      margin-top: 10px;
+      .form-input { margin-top: 0; }
+
+      .MuiFormLabel-root {
+        color: var(--fg-opacity) !important;
+      }
+      .MuiSelect-root {
+        * {
+          color: var(--fg) !important;
+        }
+      }
+    }
+    .bottom-buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+    }
+  }
+  .form-input {
+    margin-top: 10px;
+    
+    * {
+      color: var(--fg) !important;
+      border-color: var(--color-gray) !important;
+    }
+    label {
+      color: var(--fg-gray) !important;
+    }
+  }
+  
+  .menu {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 20px;
+    background-color: var(--color-dark2);
+    max-width: 100%;
+    overflow: auto;
+
+    .right-menu {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .menu-item {
+        cursor: pointer;
+        position: relative;
+        width: 60px;
+        height: 60px;
+        color: var(--color-light);
+              
+        svg {
+          width: 100%;
+          height: 100%;
+          fill: currentColor;
+        }
+        &:hover { opacity: 0.8; }
+        &.active { border-bottom: 1px solid currentColor; }
+      }
+    }
+    @media screen and (max-width: 500px) {
+      padding: 10px 0;
+      .menu-item {
+        width: 40px !important;
+        height: 40px !important;
+      }
+    }
+  }
+}

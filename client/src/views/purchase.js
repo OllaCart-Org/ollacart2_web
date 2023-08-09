@@ -1,0 +1,88 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { Box, Button, Drawer } from '@material-ui/core';
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { useToasts } from 'react-toast-notifications';
+
+import Layout from './layout';
+import api from '../api';
+import CheckoutForm from '../components/Payment/CheckoutForm';
+
+import Cards from '../components/cards';
+import CartMultiLogo from '../components/Logo/cartmulti';
+import ShippingModal from '../components/Profile/shippingModal';
+
+const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
+
+const Purchase = (props) => {
+  const [filter] = useState({purchased: 1});
+  const [openPayment, setOpenPayment] = useState(false);
+  const [clientSecret, setClientSecret] = useState("");
+  const [shippingModalOpen, setShippingModalOpen] = useState(false);
+
+  const { addToast } = useToasts();
+
+  const showToast = useCallback((message, appearance = 'error') => {
+    addToast(message, { appearance, autoDismiss: true });
+  }, [addToast])
+
+  useEffect(() => {    
+    const clientSecret = new URLSearchParams(window.location.search).get(
+      "payment_intent_client_secret"
+    );
+
+    if (!clientSecret) {
+      return;
+    }
+    setClientSecret(clientSecret);
+    setOpenPayment(true);
+  }, [])
+  
+  const createPaymentIntent = () => {
+    api.createPaymentIntent()
+      .then((data) => {
+        setClientSecret(data.clientSecret);
+        setOpenPayment(true);
+      })
+      .catch(err => {
+        if (err.message === 'shipping') {
+          setShippingModalOpen(true);
+          return;
+        }
+        showToast(err.message)
+      });
+  }
+
+  const togglePayment = (value) => {
+    if (value) createPaymentIntent();
+    else setOpenPayment(false);
+  }
+
+  return (
+    <Layout>
+      <Box display='flex' justifyContent='center'>
+        <Button
+          variant="outlined"
+          startIcon={<CartMultiLogo />}
+          onClick={() => togglePayment(true)}
+        >
+          Purchase Items
+        </Button>
+      </Box>
+      <Drawer style={{zIndex: 999}} anchor='right' open={openPayment} onClose={() => togglePayment(false)}>
+        { clientSecret &&
+          <Elements options={{clientSecret, appearance: { theme: 'stripe' }}} stripe={stripePromise}>
+            <CheckoutForm clientSecret={clientSecret} onClose={() => togglePayment(false)} />
+          </Elements> }
+      </Drawer>
+      <Cards
+        page='purchase'
+        filter={filter}
+      />
+      <ShippingModal open={shippingModalOpen} onClose={() => setShippingModalOpen(false)} />
+    </Layout>
+  );
+};
+
+export default Purchase;

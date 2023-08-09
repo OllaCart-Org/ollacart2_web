@@ -1,0 +1,98 @@
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema;
+
+const userSchema = new mongoose.Schema(
+  {
+    username: { //Account Name
+      type: String,
+      trim: true
+    },
+    name: { //Full Name
+      type: String,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    email: {
+      type: String,
+      trim: true,
+      required: true,
+      unique: true,
+    },
+    role: {
+      type: String,
+      default: 'user'
+    },
+    ce_id: {
+      type: String,
+      default: ''
+    },
+    secure: {
+      type: Number,
+      default: 0
+    },
+    secure_identity: {
+      type: String,
+      default: ''
+    },
+    last_verified: {
+      type: String,
+      default: ''
+    },
+    shipping: {
+      country: String,
+      city: String,
+      state: String,
+      postal_code: String,
+      line1: String,
+      line2: String,
+    },
+    status: {
+      secure: {
+        type: Boolean,
+        default: false
+      },
+      shopping_recommendation: {
+        type: Boolean,
+        default: false
+      },
+      tax: {
+        type: Boolean,
+        default: false
+      },
+      promo_code: {
+        type: Boolean,
+        default: false
+      },
+      anonymous_shopping: {
+        type: Boolean,
+        default: false
+      },
+      anonymous_username: {
+        type: Boolean,
+        default: false
+      },
+    },
+    checkout: {
+      customerId: String,
+      anonymous_username: Boolean,
+    },
+    following: [{
+      type: ObjectId,
+      ref: 'User',
+    }],
+    invitedBy: {
+      type: ObjectId,
+      ref: 'User'
+    },
+    signinStatus: {
+      type: Boolean,
+      default: false
+    }
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model('User', userSchema);
