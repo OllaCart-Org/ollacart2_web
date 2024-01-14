@@ -482,6 +482,9 @@ exports.getProductNames = async () => {
 
 exports.scanPage = async (req, res) => {
   const { url, text } = req.body;
+  if (!req.user) {
+    return res.status(401).send({ error: "Unauthorized" });
+  }
   if (!url || !validator.isURL(url))
     return res.status(400).send({ error: "Invalid url" });
   try {
