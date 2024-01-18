@@ -1,14 +1,22 @@
 const _ = require("lodash");
-const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 const Product = require("../models/product.model");
+const Scan = require("../models/scan.model");
 const User = require("../models/user.model");
 const Extension = require("../models/extension.model");
 const EmailController = require("./email.controller");
 const { errorHandler } = require("../helpers/dbErrorHandler");
-const { takeFirstDecimal, getTaxRate } = require("../helpers/utils");
+const {
+  takeFirstDecimal,
+  getTaxRate,
+  sendPushNotification,
+} = require("../helpers/utils");
 const validator = require("validator").default;
 const { URL } = require("url");
+const {
+  runJsonify,
+  getJsonifyResultLoop,
+} = require("../services/product.service");
 
 exports.productById = async (req, res, next, id) => {
   let product = null;
@@ -481,37 +489,44 @@ exports.getProductNames = async () => {
 };
 
 exports.scanPage = async (req, res) => {
-  const { url, text } = req.body;
+  const { url, text, push_token } = req.body;
   if (!req.user) {
     return res.status(401).send({ error: "Unauthorized" });
   }
   if (!url || !validator.isURL(url))
     return res.status(400).send({ error: "Invalid url" });
   try {
-    console.log("scanPage request", url, text);
-    // const apiUrl =
-    //   "https://jsonify.co/api/v1/scraper/start?token=" +
-    //   process.env.JSONIFY_API_KEY +
-    //   "&url=" +
-    //   url;
+    console.log("scanPage request", url, text, push_token);
+    let scan = await Scan.findOne({ url, push_token, user: req.user._id });
+    if (scan && !scan.jsonifyResultId) {
+      await Scan.findOneAndDelete({ _id: scan._id });
+      scan = undefined;
+    }
+    if (!scan) {
+      const jsonifyResultId = await runJsonify(url);
+      if (!jsonifyResultId) {
+        return res.status(500).send({ error: "Failed scanning page" });
+      }
+      scan = new Scan({
+        user: req.user._id,
+        url,
+        push_token,
+        jsonifyResultId,
+      });
+      await scan.save();
+    }
 
-    // const payload = {
-    //   schema: {
-    //     name: "<product name here>",
-    //     price: "<price here>",
-    //     descr: "<product descr here",
-    //   },
-    //   url: url,
-    // };
+    res.send({ success: true });
 
-    // const response = await axios.post(apiUrl, payload, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // console.log(response);
-    res.send({ url: process.env.DOMAIN + "/" });
+    const jsonifyResultId = scan.jsonifyResultId;
+
+    const jsonifyResult = await getJsonifyResultLoop(jsonifyResultId, 50);
+    console.log("result", jsonifyResult);
+    if (jsonifyResult) {
+      await sendPushNotification(push_token, process.env.DOMAIN);
+    }
   } catch (ex) {
+    console.error("scanPage error", ex);
     return res.status(500).send({ error: ex });
   }
 };
