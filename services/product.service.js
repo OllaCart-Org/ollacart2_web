@@ -21,7 +21,6 @@ exports.runJsonify = async (url) => {
         "Content-Type": "application/json",
       },
     });
-    console.log("runJsonify result", response.data?.result?.id);
     return response.data?.result?.id;
   } catch (ex) {
     console.log("runJsonify error", ex);
@@ -33,7 +32,6 @@ const getJsonifyResult = async (resultId) => {
     const apiUrl = `${JSOINFY_API_URL}/result/${resultId}?token=${process.env.JSONIFY_API_KEY}`;
 
     const response = await axios.get(apiUrl);
-    console.log("getJsonifyResult result", response.data);
     return response.data?.result;
   } catch (ex) {
     console.log("getJsonifyResult error", ex);

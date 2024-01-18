@@ -206,10 +206,16 @@ exports.sendPushNotification = (token, url) => {
       .send(notification, token)
       .then((response) => {
         console.log(response);
+        if (response?.failed?.length) {
+          console.log(
+            "sendPushNotification failed response",
+            response?.failed[0].response
+          );
+        }
         resolve(response);
       })
       .catch((error) => {
-        console.error(error);
+        console.error("sendPushNotification error", error);
         reject(error);
       });
 
