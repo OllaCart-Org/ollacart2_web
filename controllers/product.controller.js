@@ -498,7 +498,11 @@ exports.scanPage = async (req, res) => {
   try {
     console.log("scanPage request", url, text, push_token);
     let scan = await Scan.findOne({ url, push_token, user: req.user._id });
-    if (scan && !scan.jsonifyResultId) {
+    if (
+      scan &&
+      (!scan.jsonifyResultId ||
+        scan.createdAt < new Date(Date.now() - 24 * 3600 * 1000))
+    ) {
       await Scan.findOneAndDelete({ _id: scan._id });
       scan = undefined;
     }
@@ -520,11 +524,31 @@ exports.scanPage = async (req, res) => {
 
     const jsonifyResultId = scan.jsonifyResultId;
 
-    const jsonifyResult = await getJsonifyResultLoop(jsonifyResultId, 50);
+    const jsonifyResult = await getJsonifyResultLoop(jsonifyResultId, 20);
     console.log("result", jsonifyResult);
     if (jsonifyResult) {
-      await sendPushNotification(push_token, process.env.DOMAIN);
+      const { name, price, description, photo } = jsonifyResult;
+      if (name && price) {
+        const domain = new URL(url).origin || "";
+        const product = new Product({
+          name,
+          price: takeFirstDecimal(price),
+          url,
+          original_url: url,
+          description: description || "",
+          photo: photo?.src || photo || "",
+          domain,
+          user: req.user._id,
+        });
+
+        await product.save();
+        return await sendPushNotification(
+          push_token,
+          `${name} is successfully added to OllaCart.`
+        );
+      }
     }
+    await sendPushNotification(push_token, "Failed adding item to OllaCart.");
   } catch (ex) {
     console.error("scanPage error", ex);
     return res.status(500).send({ error: ex });

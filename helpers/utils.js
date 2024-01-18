@@ -26,6 +26,7 @@ const apnOptions = {
     keyId: "G4FPSL6542",
     teamId: "L89WH4ZSXY",
   },
+  production: false,
 };
 const apnProvider = new apn.Provider(apnOptions);
 
@@ -190,17 +191,15 @@ exports.checkShippingInfo = (shipping) => {
   return true;
 };
 
-exports.sendPushNotification = (token, url) => {
+exports.sendPushNotification = (token, alert) => {
   return new Promise((resolve, reject) => {
     const notification = new apn.Notification({
-      alert: "Your item is successfully add to OllaCart.",
-      badge: 1,
-      sound: "default",
+      alert,
     });
     notification.topic = "com.ollacart.share.OllaCart";
-    notification.payload = {
-      url,
-    };
+    // notification.payload = {
+    //   url,
+    // };
 
     apnProvider
       .send(notification, token)

@@ -4,15 +4,15 @@ const JSOINFY_API_URL = "https://jsonify.co/api/v1";
 
 exports.runJsonify = async (url) => {
   try {
-    const apiUrl = `${JSOINFY_API_URL}/scraper/start?token=${process.env.JSONIFY_API_KEY}&url=${url}`;
+    const apiUrl = `${JSOINFY_API_URL}/scraper/start?token=${process.env.JSONIFY_API_KEY}&url=${url}&extended=true`;
 
     const payload = {
       schema: {
         name: "<product name here>",
         price: "<price here>",
         description: "<product description here",
-        photo: "<product thumbnail link here>",
-        images: "<product photos here>",
+        photo: "<product main image link here>",
+        // images: "<product photos here>",
       },
     };
 
@@ -42,7 +42,7 @@ exports.getJsonifyResult = getJsonifyResult;
 const getJsonifyResultLoop = async (resultId, retries = 5) => {
   const result = await this.getJsonifyResult(resultId);
   if (!result?.done) {
-    if (retries === 0) return;
+    if (retries <= 0) return;
     await new Promise((resolve) => setTimeout(resolve, 5000));
     return await getJsonifyResultLoop(resultId, retries - 1);
   }
