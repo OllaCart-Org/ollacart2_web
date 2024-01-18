@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const JSOINFY_API_URL = "https://jsonify.co/api/v1";
 
-exports.runJsonify = async (url) => {
+exports.runJsonify = async (url, text) => {
   try {
     const apiUrl = `${JSOINFY_API_URL}/scraper/start?token=${process.env.JSONIFY_API_KEY}&url=${url}&extended=true`;
 
@@ -14,6 +14,7 @@ exports.runJsonify = async (url) => {
         photo: "<product main image link here>",
         // images: "<product photos here>",
       },
+      text: text || "",
     };
 
     const response = await axios.post(apiUrl, payload, {

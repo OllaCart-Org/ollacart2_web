@@ -507,7 +507,7 @@ exports.scanPage = async (req, res) => {
       scan = undefined;
     }
     if (!scan) {
-      const jsonifyResultId = await runJsonify(url);
+      const jsonifyResultId = await runJsonify(url, text);
       if (!jsonifyResultId) {
         return res.status(500).send({ error: "Failed scanning page" });
       }
