@@ -544,7 +544,10 @@ exports.scanPage = async (req, res) => {
         await product.save();
         return await sendPushNotification(
           push_token,
-          `${name} is successfully added to OllaCart.`
+          `🌟${
+            name.length > 30 ? name.substring(0, 30) + "..." : name
+          }🌟 was successfully added to OllaCart.`,
+          product.photo || ""
         );
       }
     }
