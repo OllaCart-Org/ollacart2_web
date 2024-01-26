@@ -554,6 +554,7 @@ exports.scanPage = async (req, res) => {
     await sendPushNotification(push_token, "Failed adding item to OllaCart.");
   } catch (ex) {
     console.error("scanPage error", ex);
+    await sendPushNotification(push_token, "Failed adding item to OllaCart.");
     return res.status(500).send({ error: ex });
   }
 };
