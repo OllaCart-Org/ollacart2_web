@@ -20,7 +20,7 @@ const twilioClient = Twilio(
   process.env.TWILIO_AUTH_TOKEN
 );
 
-const apnOptions = {
+const apnDevOptions = {
   token: {
     key: "key/iOS.p8",
     keyId: "G4FPSL6542",
@@ -28,7 +28,16 @@ const apnOptions = {
   },
   production: false,
 };
+const apnOptions = {
+  token: {
+    key: "key/iOS.p8",
+    keyId: "G4FPSL6542",
+    teamId: "L89WH4ZSXY",
+  },
+  production: true,
+};
 const apnProvider = new apn.Provider(apnOptions);
+const apnDevProvider = new apn.Provider(apnDevOptions);
 
 exports.getUsername = (user) => {
   if (!user) return "";
@@ -210,6 +219,13 @@ exports.sendPushNotification = (token, alert) => {
             "sendPushNotification failed response",
             response?.failed[0].response
           );
+          apnDevProvider.send(notification, token).then((response) => {
+            console.log(
+              "DEV sendPushNotification response",
+              response,
+              response?.failed?.[0]?.response
+            );
+          });
         }
         resolve(response);
       })
