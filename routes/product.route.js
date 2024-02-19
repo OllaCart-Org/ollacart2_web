@@ -20,6 +20,7 @@ const {
   getShareStatus,
   getSocialStatus,
   scanPage,
+  getScanningUrls,
 } = require("../controllers/product.controller");
 const { getAnalytics } = require("../controllers/admin.controller");
 const {
@@ -35,6 +36,7 @@ router.post("/product/update_sequence", Auth, updateSequence);
 router.post("/product/remove/:productId", Auth, remove);
 router.post("/product/updatelogo/:productId", Auth, updateLogo);
 router.post("/product/scanpage", Auth, scanPage);
+router.post("/product/getScanningUrls", Auth, getScanningUrls);
 
 router.post("/product/getsharestatus", Auth, getShareStatus);
 router.post("/product/getsocialstatus", Auth, getSocialStatus);

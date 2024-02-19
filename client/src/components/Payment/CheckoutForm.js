@@ -3,16 +3,17 @@ import {
   PaymentElement,
   useStripe,
   useElements,
-  AddressElement
+  AddressElement,
 } from "@stripe/react-stripe-js";
-import { useToasts } from 'react-toast-notifications';
+import { useToasts } from "react-toast-notifications";
 
 import api from "../../api";
 
-import './payment.scss'
+import "./payment.scss";
 import { IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import utils from "../../utils";
+import { CommonImage } from "../Common/CommonImage";
 
 const PUBLIC_URL = process.env.REACT_APP_PUBLIC_URL;
 
@@ -24,76 +25,82 @@ export default function CheckoutForm(props) {
   const [defaultShipping, setDefaultShipping] = useState({});
   const [shipping, setShipping] = useState({});
   const [additionalProductCount, setAdditionalProductCount] = useState(0);
-  
+
   const stripe = useStripe();
   const elements = useElements();
   const { addToast } = useToasts();
 
-  const showToast = useCallback((message, appearance = 'error') => {
-    addToast(message, { appearance });
-  }, [addToast])
+  const showToast = useCallback(
+    (message, appearance = "error") => {
+      addToast(message, { appearance });
+    },
+    [addToast]
+  );
 
   const fetchProducts = useCallback(async () => {
-    api.fetchProductsByClientSecret(props.clientSecret)
-        .then((data) => {
-          // const products = [{
-          //   photo: 'https://i.postimg.cc/PJfjfcJq/stripe-icon.png',
-          //   name: 'Processing Fee',
-          //   price: data.totalFee,
-          //   description: 'Stripe Fee (2.9% + 30¢)',
-          // }];
-          const products = [];
-          if (data.anonymous_shopping) {
-            products.push({
-              photo: 'https://i.postimg.cc/NFNDxmGc/anonymous.png',
-              name: 'Anonymous Shopping',
-              price: data.anonymousPrice,
-              description: 'Anonymous Shopping Fee (1%)',
-            });
-            setAdditionalProductCount(1);
-          }
-          products.push(
-            ...data.products
-          );
-          setProducts(products);
-          setOrder(data);
-        })
-        .catch(err => showToast(err.message));
-  }, [props.clientSecret, showToast])
+    api
+      .fetchProductsByClientSecret(props.clientSecret)
+      .then((data) => {
+        // const products = [{
+        //   photo: 'https://i.postimg.cc/PJfjfcJq/stripe-icon.png',
+        //   name: 'Processing Fee',
+        //   price: data.totalFee,
+        //   description: 'Stripe Fee (2.9% + 30¢)',
+        // }];
+        const products = [];
+        if (data.anonymous_shopping) {
+          products.push({
+            photo: "https://i.postimg.cc/NFNDxmGc/anonymous.png",
+            name: "Anonymous Shopping",
+            price: data.anonymousPrice,
+            description: "Anonymous Shopping Fee (1%)",
+          });
+          setAdditionalProductCount(1);
+        }
+        products.push(...data.products);
+        setProducts(products);
+        setOrder(data);
+      })
+      .catch((err) => showToast(err.message));
+  }, [props.clientSecret, showToast]);
 
   useEffect(() => {
-    api.getAccountSettings()
-      .then(data => {
+    api
+      .getAccountSettings()
+      .then((data) => {
         const user = data?.user;
         const ship = data?.user?.shipping;
         setDefaultShipping({
-          name: user.name || '',
-          phone: user.phone || '',
+          name: user.name || "",
+          phone: user.phone || "",
           address: {
-            line1: ship?.line1 || '',
-            line2: ship?.line2 || '',
-            country: ship?.country || '',
-            city: ship?.city || '',
-            state: ship?.state || '',
-            postal_code: ship?.postal_code || '',
-          }
+            line1: ship?.line1 || "",
+            line2: ship?.line2 || "",
+            country: ship?.country || "",
+            city: ship?.city || "",
+            state: ship?.state || "",
+            postal_code: ship?.postal_code || "",
+          },
         });
         setDefaultLoaded(true);
       })
-      .catch(err => showToast(err.message));
+      .catch((err) => showToast(err.message));
   }, [showToast]);
 
   useEffect(() => {
     if (!stripe || !props.clientSecret) {
       return;
     }
-    
-    showToast('Please note. Shipping is estimated and the difference in actual cost of shipping will be refunded. Currently, all purchase orders are refundable except stripe processing fee.', 'success');
+
+    showToast(
+      "Please note. Shipping is estimated and the difference in actual cost of shipping will be refunded. Currently, all purchase orders are refundable except stripe processing fee.",
+      "success"
+    );
     fetchProducts();
 
     const clientSecret = new URLSearchParams(window.location.search).get(
       "payment_intent_client_secret"
-    );    
+    );
 
     if (!clientSecret) {
       return;
@@ -102,10 +109,10 @@ export default function CheckoutForm(props) {
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       switch (paymentIntent.status) {
         case "succeeded":
-          showToast("Payment succeeded!", 'success');
+          showToast("Payment succeeded!", "success");
           break;
         case "processing":
-          showToast("Your payment is processing.", 'warning');
+          showToast("Your payment is processing.", "warning");
           break;
         case "requires_payment_method":
           showToast("Your payment was not successful, please try again.");
@@ -121,7 +128,7 @@ export default function CheckoutForm(props) {
     let price = order.itemsPrice + order.shippingPrice + order.anonymousPrice;
     price += order.taxPrice;
     return utils.commaPrice(price.toFixed(2));
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -131,42 +138,51 @@ export default function CheckoutForm(props) {
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
-    
-    api.updateAccountSettings({ name: shipping.name, phone: shipping.phone, shipping: shipping.address })
+
+    api
+      .updateAccountSettings({
+        name: shipping.name,
+        phone: shipping.phone,
+        shipping: shipping.address,
+      })
       .then(async () => {
         setIsLoading(true);
         const { error } = await stripe.confirmPayment({
           elements,
           confirmParams: {
             // Make sure to change this to your payment completion page
-            return_url: PUBLIC_URL + '/order',
+            return_url: PUBLIC_URL + "/order",
           },
         });
-    
+
         if (error.type === "card_error" || error.type === "validation_error") {
           showToast(error.message);
         } else {
           showToast("An unexpected error occurred.");
         }
-    
+
         setIsLoading(false);
       })
-      .catch(err => showToast(err.message));
+      .catch((err) => showToast(err.message));
   };
 
   const paymentElementOptions = {
-    layout: "tabs"
-  }
+    layout: "tabs",
+  };
 
   const addressElementChanged = (event) => {
-    setShipping(event.value)
-  }
+    setShipping(event.value);
+  };
 
-  if (!defaultLoaded) return '';
+  if (!defaultLoaded) return "";
 
   return (
-    <div className='Payment-App'>
-      <IconButton aria-label="Close" className='close-button' onClick={props.onClose}>
+    <div className="Payment-App">
+      <IconButton
+        aria-label="Close"
+        className="close-button"
+        onClick={props.onClose}
+      >
         <Close />
       </IconButton>
       <div className="payment-details">
@@ -176,27 +192,57 @@ export default function CheckoutForm(props) {
             <div key={idx}>
               <div className="payment-product">
                 <div className="payment-product-img">
-                  {itm.photo && <img src={itm.photo} alt="logo" />}
+                  {itm.photo && <CommonImage photo={itm.photo} alt="logo" />}
                 </div>
                 <div className="payment-product-detail">
                   <div className="payment-product-name">{itm.name}</div>
-                  {itm.description && <div className="payment-product-description">{itm.description}</div>}
-                  {(itm.taxRate > -1) && <div className="payment-product-description">Tax ({utils.commaPrice(itm.taxRate * 100)}%): +${itm.taxPrice}</div>}
-                  {itm.shippingPrice && <div className="payment-product-description">Shipping Cost: +${itm.shippingPrice}</div>}
+                  {itm.description && (
+                    <div className="payment-product-description">
+                      {itm.description}
+                    </div>
+                  )}
+                  {itm.taxRate > -1 && (
+                    <div className="payment-product-description">
+                      Tax ({utils.commaPrice(itm.taxRate * 100)}%): +$
+                      {itm.taxPrice}
+                    </div>
+                  )}
+                  {itm.shippingPrice && (
+                    <div className="payment-product-description">
+                      Shipping Cost: +${itm.shippingPrice}
+                    </div>
+                  )}
                 </div>
-                <div className="payment-product-price">${utils.commaPrice(itm.price)}</div>
+                <div className="payment-product-price">
+                  ${utils.commaPrice(itm.price)}
+                </div>
               </div>
-              {(idx === additionalProductCount - 1) && <hr />}
+              {idx === additionalProductCount - 1 && <hr />}
             </div>
           ))}
         </div>
       </div>
       <form id="payment-form" onSubmit={handleSubmit}>
         <PaymentElement id="payment-element" options={paymentElementOptions} />
-        <AddressElement id="address-element" options={{mode: 'shipping', fields: { phone: 'always' }, defaultValues: defaultShipping}} onChange={addressElementChanged} />
-        <button id="pay-now-element" disabled={isLoading || !stripe || !elements}>
+        <AddressElement
+          id="address-element"
+          options={{
+            mode: "shipping",
+            fields: { phone: "always" },
+            defaultValues: defaultShipping,
+          }}
+          onChange={addressElementChanged}
+        />
+        <button
+          id="pay-now-element"
+          disabled={isLoading || !stripe || !elements}
+        >
           <span id="button-text">
-            {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+            {isLoading ? (
+              <div className="spinner" id="spinner"></div>
+            ) : (
+              "Pay now"
+            )}
           </span>
         </button>
       </form>

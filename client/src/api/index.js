@@ -3,32 +3,36 @@ import { actions } from "../redux/_actions";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const call = (url, _data) => {
-  const data = {
-    token: localStorage.getItem("token") || "",
-    ce_id: localStorage.getItem("ce_id") || "",
-    ..._data,
-  };
+const call = async (url, _data) => {
+  const token = localStorage.getItem("token") || "";
+  const ce_id = localStorage.getItem("ce_id") || "";
+  const data = { token, ce_id, ..._data };
 
   store.dispatch(actions.setLoading(true));
 
-  return fetch(API_URL + url, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  }).then(async (response) => {
+  try {
+    const response = await fetch(API_URL + url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
     store.dispatch(actions.setLoading(false));
+
     if (!response.ok) {
       const json = await response.json();
-      let error = response.statusText;
-      if (json && json.error) error = json.error;
-      throw Error(error);
+      const error = json.error || response.statusText;
+      throw new Error(error);
     }
-    return response.json();
-  });
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error occurred during API call:", error);
+    throw error;
+  }
 };
 
 const me = () => {
@@ -67,8 +71,8 @@ const updateProduct = (productID, detail) => {
   return call(`/product/update/${productID}`, detail);
 };
 
-const updateProductLogo = (productID, logo) => {
-  return call(`/product/updatelogo/${productID}`, { logo });
+const updateProductLogo = (productID, idx) => {
+  return call(`/product/updatelogo/${productID}`, { idx });
 };
 
 const updateProductSequence = (data) => {
@@ -239,6 +243,10 @@ const scanPage = (detail) => {
   return call(`/product/scanpage`, detail);
 };
 
+const getScanningUrls = () => {
+  return call(`/product/getScanningUrls`);
+};
+
 export default {
   me,
   signin,
@@ -292,4 +300,5 @@ export default {
   updateTax,
   inviteUser,
   scanPage,
+  getScanningUrls,
 };

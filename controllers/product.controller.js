@@ -17,6 +17,7 @@ const {
   runJsonify,
   getJsonifyResultLoop,
 } = require("../services/product.service");
+const { processImage } = require("../helpers/image");
 
 exports.productById = async (req, res, next, id) => {
   let product = null;
@@ -57,9 +58,23 @@ exports.create = async (req, res) => {
   const extension = await Extension.findOne({ ce_id });
   if (extension) user_id = extension.user;
 
+  const processedPhoto = await processImage(photo);
+  for (let i = 0; i < photos.length; i++) {
+    const processedPhoto = await processImage(photos[i]);
+    photos[i] = {
+      url: photos[i],
+      small: processedPhoto?.small || "",
+      normal: processedPhoto?.normal || "",
+    };
+  }
+
   let product = new Product({
     name,
-    photo,
+    photo: {
+      url: photo,
+      small: processedPhoto?.small || "",
+      normal: processedPhoto?.normal || "",
+    },
     url,
     ce_id,
     description,
@@ -127,12 +142,12 @@ exports.updateLogo = async (req, res) => {
   const product = req.product;
   if (!product) return res.status(400).json({ error: "Product not found" });
 
-  const { logo } = req.body;
-  const idx = product.photos.indexOf(logo);
+  const { idx } = req.body;
   if (idx === -1) return res.status(400).json({ error: "Photo not found" });
 
-  product.photos[idx] = product.photo;
-  product.photo = logo;
+  const tmpPhoto = { ...product.photos[idx] };
+  product.photos[idx] = { ...product.photo };
+  product.photo = tmpPhoto;
 
   const result = await product.save();
   res.json(result);
@@ -497,15 +512,19 @@ exports.scanPage = async (req, res) => {
     return res.status(400).send({ error: "Invalid url" });
   try {
     console.log("scanPage request", url, text, push_token);
-    let scan = await Scan.findOne({ url, push_token, user: req.user._id });
-    if (
-      scan &&
-      (!scan.jsonifyResultId ||
-        scan.createdAt < new Date(Date.now() - 24 * 3600 * 1000))
-    ) {
-      await Scan.findOneAndDelete({ _id: scan._id });
+    const oneDayAgo = new Date(Date.now() - 24 * 3600 * 1000);
+    let scan = await Scan.findOne({
+      url,
+      push_token,
+      user: req.user._id,
+      status: { $ne: "failed" },
+      createdAt: { $gt: oneDayAgo },
+    });
+
+    if (!scan?.jsonifyResultId) {
       scan = undefined;
     }
+
     if (!scan) {
       const jsonifyResultId = await runJsonify(url, text);
       if (!jsonifyResultId) {
@@ -530,31 +549,59 @@ exports.scanPage = async (req, res) => {
       const { name, price, description, photo } = jsonifyResult;
       if (name && price) {
         const domain = new URL(url).origin || "";
+        const photoUrl = photo?.src || photo || "";
+        const processedPhoto = await processImage(photoUrl);
         const product = new Product({
           name,
           price: takeFirstDecimal(price),
           url,
           original_url: url,
           description: description || "",
-          photo: photo?.src || photo || "",
+          photo: {
+            url: photoUrl,
+            small: processedPhoto?.small || "",
+            normal: processedPhoto?.normal || "",
+          },
           domain,
           user: req.user._id,
         });
-
         await product.save();
+
+        scan.status = "success";
+        await scan.save();
         return await sendPushNotification(
           push_token,
           `🌟${
             name.length > 30 ? name.substring(0, 30) + "..." : name
           }🌟 was successfully added to OllaCart.`,
-          product.photo || ""
+          photoUrl
         );
       }
     }
+
+    scan.status = "failed";
+    await scan.save();
     await sendPushNotification(push_token, "Failed adding item to OllaCart.");
   } catch (ex) {
     console.error("scanPage error", ex);
     await sendPushNotification(push_token, "Failed adding item to OllaCart.");
     return res.status(500).send({ error: ex });
   }
+};
+
+exports.getScanningUrls = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).send({ error: "Unauthorized" });
+  }
+
+  const oneDayAgo = new Date(Date.now() - 24 * 3600 * 1000);
+
+  const scans = await Scan.find({
+    user: req.user._id,
+    status: "pending",
+    createdAt: { $gt: oneDayAgo },
+  });
+
+  const scanningUrls = scans.map((scan) => scan.url);
+  res.send(scanningUrls);
 };

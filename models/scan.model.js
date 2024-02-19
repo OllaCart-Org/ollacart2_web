@@ -10,6 +10,10 @@ const scanSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "User",
     },
+    status: {
+      type: String,
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
