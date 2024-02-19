@@ -206,9 +206,6 @@ exports.sendPushNotification = (token, alert) => {
       alert,
     });
     notification.topic = "com.ollacart.share.OllaCart";
-    // notification.payload = {
-    //   url,
-    // };
 
     apnProvider
       .send(notification, token)

@@ -594,12 +594,12 @@ exports.getScanningUrls = async (req, res) => {
     return res.status(401).send({ error: "Unauthorized" });
   }
 
-  const oneDayAgo = new Date(Date.now() - 24 * 3600 * 1000);
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 
   const scans = await Scan.find({
     user: req.user._id,
     status: "pending",
-    createdAt: { $gt: oneDayAgo },
+    createdAt: { $gt: tenMinutesAgo },
   });
 
   const scanningUrls = scans.map((scan) => scan.url);
