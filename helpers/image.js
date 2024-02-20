@@ -50,7 +50,7 @@ const processImage = async (url) => {
   try {
     if (!validator.isURL(url)) return;
 
-    const imageName = url.split("/").pop().split("?")[0];
+    const imageName = Date.now() + "-" + url.split("/").pop().split("?")[0];
     const buffer = await getDataFromImageUrl(url);
     const meta = await sharp(buffer).metadata();
 
