@@ -11,7 +11,7 @@ exports.runJsonify = async (url, text) => {
         name: "<product name here>",
         price: "<price here>",
         description: "<product description here",
-        photo: "<product main image link here>",
+        photo: "<product thumbnail link here>",
         // images: "<product photos here>",
       },
       text: text || "",
