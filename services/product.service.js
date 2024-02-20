@@ -14,6 +14,7 @@ exports.runJsonify = async (url, text) => {
         photo: "<product thumbnail link here>",
         // images: "<product photos here>",
       },
+      url,
       text: text || "",
     };
 
