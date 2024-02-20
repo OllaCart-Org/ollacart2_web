@@ -512,13 +512,14 @@ exports.scanPage = async (req, res) => {
     return res.status(400).send({ error: "Invalid url" });
   try {
     console.log("scanPage request", url, text, push_token);
-    const oneDayAgo = new Date(Date.now() - 24 * 3600 * 1000);
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
     let scan = await Scan.findOne({
       url,
       push_token,
+      text,
       user: req.user._id,
       status: { $ne: "failed" },
-      createdAt: { $gt: oneDayAgo },
+      createdAt: { $gt: tenMinutesAgo },
     });
 
     if (!scan?.jsonifyResultId) {
@@ -533,6 +534,7 @@ exports.scanPage = async (req, res) => {
       scan = new Scan({
         user: req.user._id,
         url,
+        text,
         push_token,
         jsonifyResultId,
       });

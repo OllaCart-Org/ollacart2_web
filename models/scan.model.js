@@ -6,6 +6,7 @@ const scanSchema = new mongoose.Schema(
     url: String,
     push_token: String,
     jsonifyResultId: String,
+    text: String,
     user: {
       type: ObjectId,
       ref: "User",
