@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
 const productSchema = new mongoose.Schema(
   {
     anonymousId: {
       type: String,
-      default: ''
+      default: "",
     },
     name: {
       type: String,
@@ -26,11 +26,11 @@ const productSchema = new mongoose.Schema(
     },
     color: {
       type: String,
-      default: ''
+      default: "",
     },
     size: {
       type: String,
-      default: ''
+      default: "",
     },
     shared: {
       type: Number,
@@ -38,70 +38,80 @@ const productSchema = new mongoose.Schema(
     },
     purchased: {
       type: Number,
-      default: 0
+      default: 0,
     },
     purchasedStatus: {
       type: Number,
-      default: 0
+      default: 0,
     },
     photo: {
-      type: String,
-      default: ''
+      url: String,
+      small: String,
+      normal: String,
     },
-    photos: [{
-      type: String,
-      default: ''
-    }],
+    photos: [
+      {
+        url: String,
+        small: String,
+        normal: String,
+      },
+    ],
     url: {
       type: String,
-      default: ''
+      default: "",
     },
     original_url: {
       type: String,
-      default: ''
+      default: "",
     },
     domain: {
       type: String,
-      default: ''
+      default: "",
     },
     ce_id: {
       type: String,
-      default: ''
+      default: "",
     },
     sequence: {
       type: Number,
-      default: Date.now()
+      default: Date.now(),
     },
     user: {
       type: ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     category: {
       type: ObjectId,
-      ref: 'Category'
+      ref: "Category",
     },
     forkId: {
       type: ObjectId,
-      ref: 'Product'
+      ref: "Product",
     },
-    forkedIds: [{
-      type: ObjectId,
-      ref: 'Product'
-    }],
-    likes: [{
-      type: ObjectId,
-      ref: 'User',
-    }],
-    dislikes: [{
-      type: ObjectId,
-      ref: 'User',
-    }],
+    forkedIds: [
+      {
+        type: ObjectId,
+        ref: "Product",
+      },
+    ],
+    likes: [
+      {
+        type: ObjectId,
+        ref: "User",
+      },
+    ],
+    dislikes: [
+      {
+        type: ObjectId,
+        ref: "User",
+      },
+    ],
     addedBy: {
       type: ObjectId,
-      ref: 'User'
-    }
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model("Product", productSchema);
