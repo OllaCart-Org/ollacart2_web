@@ -21,10 +21,11 @@ const Cards = (props) => {
   const [emailModalForm, setEmailModalForm] = useState({});
   const [dragStartIdx, setDragStartIdx] = useState(-1);
   const [dragEndIdx, setDragEndIdx] = useState(-1);
-  const [scanningUrls, setScanningUrls] = useState(false);
+  const [scanningUrls, setScanningUrls] = useState([]);
+  const [scanningToasts, setScanningToasts] = useState([]);
 
   const { _id } = useSelector((state) => state.auth);
-  const { addToast } = useToasts();
+  const { addToast, removeToast } = useToasts();
 
   const showToast = useCallback(
     (message, appearance = "error") => {
@@ -42,42 +43,57 @@ const Cards = (props) => {
       .catch((err) => console.error(err));
   }, []);
 
-  const fetchScanningUrls = async () => {
+  const fetchScanningUrls = useCallback(async () => {
     const urls = await api.getScanningUrls();
     for (const url of urls) {
-      addToast("We are currently parsing this url.\n" + url, {
-        appearance: "success",
-      });
+      if (scanningUrls.includes(url)) continue;
+      addToast(
+        "We are currently parsing:\n" + url,
+        {
+          appearance: "success",
+        },
+        (id) => {
+          setScanningToasts([...scanningToasts, { id, url }]);
+        }
+      );
     }
-  };
+    for (const url of scanningUrls) {
+      if (urls.includes(url)) continue;
+      const scanningToast = scanningToasts.find((t) => t.url === url);
+      removeToast(scanningToast.id);
+      loadCards();
+      break;
+    }
+    setScanningUrls(urls);
+  }, [scanningUrls, addToast]);
 
   useEffect(() => {
     if (page !== "home") return;
-    fetchScanningUrls();
-  }, [page]);
+    const interval = setInterval(fetchScanningUrls, 2000);
+
+    return () => clearInterval(interval);
+  }, [page, fetchScanningUrls]);
+
+  const loadCards = () => {
+    api
+      .getProducts({ skip: 0, limit, ...filter })
+      .then((data) => {
+        setCards(data.data);
+        setSize(data.size);
+        setSkip(0);
+      })
+      .catch((err) => showToast(err.message));
+  };
 
   useEffect(() => {
-    const loadCards = () => {
-      api
-        .getProducts({ skip: 0, limit, ...filter })
-        .then((data) => {
-          console.log(data);
-          setCards(data.data);
-          setSize(data.size);
-          setSkip(0);
-        })
-        .catch((err) => showToast(err.message));
-    };
-
     loadCards();
-  }, [limit, showToast, filter]);
+  }, []);
 
   const loadMore = () => {
     let toSkip = skip + limit;
     api
       .getProducts({ skip: toSkip, limit, ...filter })
       .then((data) => {
-        console.log(cards, data);
         setCards([...cards, ...data.data]);
         setSize(data.size);
         setSkip(toSkip);
