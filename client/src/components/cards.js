@@ -87,7 +87,7 @@ const Cards = (props) => {
 
   useEffect(() => {
     loadCards();
-  }, []);
+  }, [filter]);
 
   const loadMore = () => {
     let toSkip = skip + limit;
