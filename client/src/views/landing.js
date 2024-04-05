@@ -1,88 +1,123 @@
-import React from 'react';
-import { useSelector } from "react-redux"
-import Carousel from 'react-material-ui-carousel'
+import React from "react";
+import { useSelector } from "react-redux";
+import Carousel from "react-material-ui-carousel";
 
-import Layout from './layout';
-import Signin from '../components/signin';
-import OllaCartMultiLogo from '../components/Logo/ollacartmulti';
-import './landing.scss';
+import Layout from "./layout";
+import Signin from "../components/signin";
+import OllaCartMultiLogo from "../components/Logo/ollacartmulti";
+import "./landing.scss";
 
-import WebStore from '../assets/img/chrome-webstore.png';
-import ExtensionVideo from '../assets/videos/extension.mp4';
-import SlideImg1 from '../assets/img/slide1.jpg';
-import SlideImg2 from '../assets/img/slide2.jpg';
-import SlideImg3 from '../assets/img/slide3.jpg';
-import SlideImg4 from '../assets/img/slide4.jpg';
-import SlideImg5 from '../assets/img/slide5.jpg';
-import { Box } from '@material-ui/core';
+import ShareImg from "../assets/img/share.svg";
 
-const SlideImgs = [{
+import WebStore from "../assets/img/chrome-webstore.png";
+import ExtensionVideo from "../assets/videos/extension.mp4";
+import SlideImg1 from "../assets/img/slide1.jpg";
+import SlideImg2 from "../assets/img/slide2.jpg";
+import SlideImg3 from "../assets/img/slide3.jpg";
+import SlideImg4 from "../assets/img/slide4.jpg";
+import SlideImg5 from "../assets/img/slide5.jpg";
+import { Box } from "@material-ui/core";
+import utils from "../utils";
+
+const SlideImgs = [
+  {
     img: SlideImg1,
-    text: 'Select the items that you want to purchase from multiple different sites by turning the product outline green, and select the items that you wish to share with other users by turning the outline blue.'
-  }, {
+    text: "Select the items that you want to purchase from multiple different sites by turning the product outline green, and select the items that you wish to share with other users by turning the outline blue.",
+  },
+  {
     img: SlideImg2,
-    text: 'Copy and paste the website link at the top of your shared cart wherever you want.'
-  }, {
+    text: "Copy and paste the website link at the top of your shared cart wherever you want.",
+  },
+  {
     img: SlideImg3,
-    text: 'You may now purchase products via OllaCart from any combination of websites. We are currently fine-tuning our purchase-as-a-service system, and appreciate all feedback.'
-  }, {
+    text: "You may now purchase products via OllaCart from any combination of websites. We are currently fine-tuning our purchase-as-a-service system, and appreciate all feedback.",
+  },
+  {
     img: SlideImg4,
-    text: 'Track your purchases and shipping in our centralized order tracking system.'
-  }, {
+    text: "Track your purchases and shipping in our centralized order tracking system.",
+  },
+  {
     img: SlideImg5,
-    text: 'Introducing social shopping - follow your favorite shoppers and give feedback!'
-  }]
+    text: "Introducing social shopping - follow your favorite shoppers and give feedback!",
+  },
+];
 
 const Landing = () => {
-  const { email } = useSelector(state => state.auth);
+  const { email } = useSelector((state) => state.auth);
+  const isIPhone = utils.getPhoneType() === "iPhone";
+  const isSafari = utils.getBrowserType() === "Safari";
 
   const openWebStore = () => {
-    window.open('https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm', '_blank');
-  }
+    window.open(
+      "https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm",
+      "_blank"
+    );
+  };
 
   return (
     <Layout>
-      <div className='landing-page'>
-        <div className='landing-top'>
+      <div className="landing-page">
+        <div className="landing-top">
           <div>
-            <Box className='landing-logo' mt={5}>
-              <OllaCartMultiLogo className='color-white' />
-              <p>OllaCart is a universal and social shopping cart. Use the extension to select any product online, which will add it to your OllaCart.</p>
+            <Box className="landing-logo" mt={5}>
+              <OllaCartMultiLogo className="color-white" />
+              <p>
+                {isIPhone && isSafari
+                  ? "OllaCart is a universal and social shopping Cart. Share items from your iPhone to your OllaCart with the share icon."
+                  : "OllaCart is a universal and social shopping cart. Use the extension to select any product online, which will add it to your OllaCart."}
+              </p>
             </Box>
-            <div className='webstore-download' onClick={openWebStore}>
-              <img src={WebStore} alt="websotre" />
-              <h4>Chrome WebStore</h4>
-            </div>
+            {isIPhone && isSafari ? (
+              <img src={ShareImg} />
+            ) : (
+              <div className="webstore-download" onClick={openWebStore}>
+                <img src={WebStore} alt="websotre" />
+                <h4>Chrome WebStore</h4>
+              </div>
+            )}
           </div>
-          {!email && <div className='landing-signin'>
-            <Signin />
-          </div>}
+          {!email && (
+            <div className="landing-signin">
+              <Signin />
+            </div>
+          )}
         </div>
         <hr />
-        <div className='landing-logo'>
+        <div className="landing-logo">
           <h3>Using the Website</h3>
         </div>
-        <div className='carousel-container'>
+        <div className="carousel-container">
           <Carousel>
             {SlideImgs.map((itm, idx) => (
               <div key={idx}>
-                <p className='carousel-text'>{itm.text}</p>
-                <div className='carousel-item'>
+                <p className="carousel-text">{itm.text}</p>
+                <div className="carousel-item">
                   <img src={itm.img} alt="slide" />
                 </div>
               </div>
             ))}
           </Carousel>
         </div>
-        <hr />
-        <div className='landing-logo'>
-          <h3>Using Extension</h3>
-          <p>Select items from any online shopping website and add them to your OllaCart.<br />
-            It is as easy as selecting the extension logo, hovering over the item to confirm details, and selecting either the text or image. From there you have the option to confirm additional information or images by manually selecting information.</p>
-        </div>
-        <div className='video-container' mb={5}>
-          <video src={ExtensionVideo} controls/>
-        </div>
+        {!(isIPhone && isSafari) && (
+          <>
+            <hr />
+            <div className="landing-logo">
+              <h3>Using Extension</h3>
+              <p>
+                Select items from any online shopping website and add them to
+                your OllaCart.
+                <br />
+                It is as easy as selecting the extension logo, hovering over the
+                item to confirm details, and selecting either the text or image.
+                From there you have the option to confirm additional information
+                or images by manually selecting information.
+              </p>
+            </div>
+            <div className="video-container" mb={5}>
+              <video src={ExtensionVideo} controls />
+            </div>
+          </>
+        )}
         {/* <Box className='user-comments color-light' my={5}>
           <div className='user-comment'>
             <FormatQuote />

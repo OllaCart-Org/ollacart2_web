@@ -108,4 +108,24 @@ export default {
     } catch (err) {}
     return false;
   },
+  getPhoneType: () => {
+    const userAgent = navigator?.userAgent || "";
+    if (/android/i.test(userAgent)) {
+      return "Android";
+    } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+      return "iPhone";
+    } else {
+      return "Unknown";
+    }
+  },
+  getBrowserType: () => {
+    const userAgent = navigator?.userAgent || "";
+    if (/Chrome/i.test(userAgent)) {
+      return "Chrome";
+    } else if (/Safari/i.test(userAgent)) {
+      return "Safari";
+    } else {
+      return "Unknown";
+    }
+  },
 };
