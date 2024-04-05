@@ -9,15 +9,8 @@ const NoCard = ({ page }) => {
       <div className="no-card-text">
         {page === "home" && (
           <>
-            Add any item you wish to share or purchase to OllaCart using our{" "}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://chrome.google.com/webstore/detail/ollacart/hpbmlmabfkbhmhjhocddfckebbnbkcbm"
-            >
-              Chrome Extension
-            </a>
-            .
+            Add any item you wish to share or purchase to OllaCart using our
+            extension.
           </>
         )}
         {page === "purchase" && (
