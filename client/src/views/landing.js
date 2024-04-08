@@ -64,8 +64,8 @@ const Landing = () => {
               <p>
                 {isIPhone && isSafari ? (
                   <>
-                    OllaCart is a universal and social shopping Cart. Share
-                    items from your iPhone to your OllaCart with the share icon{" "}
+                    Share items from Safari on your iPhone to your OllaCart with
+                    the share icon{" "}
                     <img
                       src={ShareImg}
                       style={{ width: "20px", marginBottom: "-4px" }}
