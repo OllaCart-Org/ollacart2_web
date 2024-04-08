@@ -70,7 +70,7 @@ const Landing = () => {
                       src={ShareImg}
                       style={{ width: "20px", marginBottom: "-4px" }}
                     />
-                    . But first you need to log in!"
+                    . But first you need to log in!
                   </>
                 ) : (
                   "OllaCart is a universal and social shopping cart. Use the extension to select any product online, which will add it to your OllaCart."
