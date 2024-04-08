@@ -1,16 +1,35 @@
 import React from "react";
 import { LinearProgress } from "@material-ui/core";
 import OllaCartLogo from "../components/Logo/ollacartmulti";
+import utils from "../utils";
+
+import ShareImg from "../assets/img/share.svg";
 
 const NoCard = ({ page }) => {
+  const isIPhone = utils.getPhoneType() === "iPhone";
+  const isSafari = utils.getBrowserType() === "Safari";
+
   return (
     <div className="no-card-container">
       <OllaCartLogo />
       <div className="no-card-text">
         {page === "home" && (
           <>
-            Add any item you wish to share or purchase to OllaCart using our
-            extension.
+            {isIPhone && isSafari ? (
+              <>
+                Add any item to your OllaCart by sharing{" "}
+                <img
+                  src={ShareImg}
+                  style={{ width: "40px", marginBottom: "-4px" }}
+                />{" "}
+                the product to OllaCart through Safari.
+              </>
+            ) : (
+              <>
+                Add any item you wish to share or purchase to OllaCart using our
+                extension.
+              </>
+            )}
           </>
         )}
         {page === "purchase" && (

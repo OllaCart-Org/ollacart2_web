@@ -14,11 +14,14 @@ import BagLogo from "../components/Logo/bag";
 import UserLogo from "../components/Logo/user";
 import SocialLogo from "../components/Logo/social";
 import Footer from "../components/Footer/footer";
+import { SigninArrow } from "../components/Common/SigninArrow";
+import utils from "../utils";
 
 const Layout = ({ children }) => {
   const { email, _id } = useSelector((state) => state.auth);
   const history = useHistory();
   const location = useLocation();
+  const isIPhone = utils.getPhoneType() === "iPhone";
 
   const [page, setPage] = useState("");
   const [openSigninModal, setOpenSigninModal] = useState(false);
@@ -106,10 +109,10 @@ const Layout = ({ children }) => {
             >
               {email && <UserLogo onClick={() => goTo("/profile")} />}
               {!email && (
-                <ExitToApp
-                  style={{ width: "100%", height: "100%" }}
-                  onClick={() => setOpenSigninModal(true)}
-                />
+                <>
+                  <UserLogo onClick={() => setOpenSigninModal(true)} />
+                  {isIPhone && <SigninArrow />}
+                </>
               )}
             </div>
           </div>
