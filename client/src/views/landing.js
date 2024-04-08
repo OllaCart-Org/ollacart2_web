@@ -62,14 +62,22 @@ const Landing = () => {
             <Box className="landing-logo" mt={5}>
               <OllaCartMultiLogo className="color-white" />
               <p>
-                {isIPhone && isSafari
-                  ? "OllaCart is a universal and social shopping Cart. Share items from your iPhone to your OllaCart with the share icon."
-                  : "OllaCart is a universal and social shopping cart. Use the extension to select any product online, which will add it to your OllaCart."}
+                {isIPhone && isSafari ? (
+                  <>
+                    OllaCart is a universal and social shopping Cart. Share
+                    items from your iPhone to your OllaCart with the share icon{" "}
+                    <img
+                      src={ShareImg}
+                      style={{ width: "20px", marginBottom: "-4px" }}
+                    />
+                    . But first you need to log in!"
+                  </>
+                ) : (
+                  "OllaCart is a universal and social shopping cart. Use the extension to select any product online, which will add it to your OllaCart."
+                )}
               </p>
             </Box>
-            {isIPhone && isSafari ? (
-              <img src={ShareImg} />
-            ) : (
+            {!(isIPhone && isSafari) && (
               <div className="webstore-download" onClick={openWebStore}>
                 <img src={WebStore} alt="websotre" />
                 <h4>Chrome WebStore</h4>
@@ -84,7 +92,11 @@ const Landing = () => {
         </div>
         <hr />
         <div className="landing-logo">
-          <h3>Using the Website</h3>
+          {!(isIPhone && isSafari) ? (
+            <h3>Using the Website</h3>
+          ) : (
+            <h3>Using the App</h3>
+          )}
         </div>
         <div className="carousel-container">
           <Carousel>
