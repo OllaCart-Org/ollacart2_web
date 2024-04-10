@@ -1,13 +1,15 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
 const userSchema = new mongoose.Schema(
   {
-    username: { //Account Name
+    username: {
+      //Account Name
       type: String,
-      trim: true
+      trim: true,
     },
-    name: { //Full Name
+    name: {
+      //Full Name
       type: String,
       trim: true,
     },
@@ -23,23 +25,23 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: 'user'
+      default: "user",
     },
     ce_id: {
       type: String,
-      default: ''
+      default: "",
     },
     secure: {
       type: Number,
-      default: 0
+      default: 0,
     },
     secure_identity: {
       type: String,
-      default: ''
+      default: "",
     },
     last_verified: {
       type: String,
-      default: ''
+      default: "",
     },
     shipping: {
       country: String,
@@ -52,47 +54,53 @@ const userSchema = new mongoose.Schema(
     status: {
       secure: {
         type: Boolean,
-        default: false
+        default: false,
       },
       shopping_recommendation: {
         type: Boolean,
-        default: false
+        default: false,
       },
       tax: {
         type: Boolean,
-        default: false
+        default: false,
       },
       promo_code: {
         type: Boolean,
-        default: false
+        default: false,
       },
       anonymous_shopping: {
         type: Boolean,
-        default: false
+        default: false,
       },
       anonymous_username: {
         type: Boolean,
-        default: false
+        default: false,
       },
     },
     checkout: {
       customerId: String,
       anonymous_username: Boolean,
     },
-    following: [{
-      type: ObjectId,
-      ref: 'User',
-    }],
+    following: [
+      {
+        type: ObjectId,
+        ref: "User",
+      },
+    ],
     invitedBy: {
       type: ObjectId,
-      ref: 'User'
+      ref: "User",
     },
     signinStatus: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);
