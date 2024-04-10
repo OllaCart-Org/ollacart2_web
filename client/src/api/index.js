@@ -43,6 +43,10 @@ const signin = (email) => {
   return call(`/signin`, { email });
 };
 
+const deleteAccount = () => {
+  return call(`/user/delete`, {});
+};
+
 const request = (email) => {
   return call(`/request`, { email });
 };
@@ -250,6 +254,7 @@ const getScanningUrls = () => {
 export default {
   me,
   signin,
+  deleteAccount,
   request,
   verifyUser,
   getProduct,
