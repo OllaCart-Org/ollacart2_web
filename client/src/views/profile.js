@@ -359,19 +359,6 @@ const Profile = () => {
                 </IconButton>
               </div>
             </div>
-            <div className="delete-account">
-              <Button
-                variant="contained"
-                color="secondary"
-                size="small"
-                startIcon={<Delete />}
-                onClick={() => {
-                  setIsDeleteAccountModalOpen(true);
-                }}
-              >
-                Delete Account
-              </Button>
-            </div>
           </div>
           <div className="right-side">
             <div className="form-wrapper">
@@ -592,6 +579,18 @@ const Profile = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+            <div className="delete-account">
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<Delete />}
+                onClick={() => {
+                  setIsDeleteAccountModalOpen(true);
+                }}
+              >
+                Delete Account
+              </Button>
             </div>
           </div>
         </div>
