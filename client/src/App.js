@@ -83,8 +83,8 @@ function AppContainer() {
   useEffect(() => {
     if (email) {
       if (interv) return;
-      const interval = setInterval(fetchRealTimeData, 5000);
-      setInterv(interval);
+      // const interval = setInterval(fetchRealTimeData, 5000);
+      // setInterv(interval);
     }
     return () => {
       if (interv) clearInterval(interv);

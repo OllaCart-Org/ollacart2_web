@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Placeholder from "../../assets/img/placeholder.png";
 
 export const CommonImage = ({ photo, ...props }) => {
-  const urls = [photo, photo.url, photo.normal, photo.small].filter(
+  const urls = [photo, photo?.url, photo?.normal, photo?.small].filter(
     (photo) => photo && typeof photo === "string"
   );
 
