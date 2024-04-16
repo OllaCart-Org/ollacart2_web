@@ -122,7 +122,7 @@ export default {
     const userAgent = navigator?.userAgent || "";
     if (/Chrome/i.test(userAgent)) {
       return "Chrome";
-    } else if (/Safari/i.test(userAgent)) {
+    } else if (/Safari/i.test(userAgent) || /AppleWebKit/i.test(userAgent)) {
       return "Safari";
     } else {
       return "Unknown";
