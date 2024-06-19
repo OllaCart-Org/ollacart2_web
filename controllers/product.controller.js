@@ -16,6 +16,7 @@ const { URL } = require("url");
 const {
   runJsonify,
   getJsonifyResultLoop,
+  runJsonifyV2,
 } = require("../services/product.service");
 const { processImage } = require("../helpers/image");
 
@@ -587,6 +588,63 @@ exports.scanPage = async (req, res) => {
   } catch (ex) {
     console.error("scanPage error", ex);
     await sendPushNotification(push_token, "Failed adding item to OllaCart.");
+    return res.status(500).send({ error: ex });
+  }
+};
+
+exports.scanPageV2 = async (req, res) => {
+  const { url, text, push_token } = req.body;
+  if (!req.user) {
+    return res.status(401).send({ error: "Unauthorized" });
+  }
+  if (!url || !validator.isURL(url))
+    return res.status(400).send({ error: "Invalid url" });
+  try {
+    console.log("scanPageV2 request", url, text, push_token);
+    const oneMinuteAgo = new Date(Date.now() - 1 * 60 * 1000);
+    let scan = await Scan.findOne({
+      url,
+      push_token,
+      text,
+      user: req.user._id,
+      status: { $ne: "failed" },
+      createdAt: { $gt: oneMinuteAgo },
+    });
+
+    if (!scan?.jsonifyResultId) {
+      scan = undefined;
+    }
+
+    if (!scan) {
+      const jsonifyResultId = await runJsonifyV2(url, text);
+      if (!jsonifyResultId) {
+        return res.status(500).send({ error: "Failed scanning page" });
+      }
+      scan = new Scan({
+        user: req.user._id,
+        url,
+        text,
+        push_token,
+        jsonifyResultId,
+      });
+      await scan.save();
+    }
+
+    res.send({ success: true });
+  } catch (ex) {
+    console.error("scanPageV2 error", ex);
+    await sendPushNotification(push_token, "Failed adding item to OllaCart.");
+    return res.status(500).send({ error: ex });
+  }
+};
+
+exports.runJsonifyWebhook = async (req, res) => {
+  console.log("Jsonify Webhook", req.body);
+  try {
+    const { status, id, name, run_id, results } = req.body;
+    res.status(200).send("success");
+  } catch (ex) {
+    console.error("runJsonifyWebhook", ex);
     return res.status(500).send({ error: ex });
   }
 };
