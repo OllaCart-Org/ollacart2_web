@@ -641,7 +641,49 @@ exports.scanPageV2 = async (req, res) => {
 exports.runJsonifyWebhook = async (req, res) => {
   console.log("Jsonify Webhook", req.body);
   try {
-    const { status, id, name, run_id, results } = req.body;
+    const { status, run_id, results } = req.body;
+    if (!run_id || !results?.length) return res.status(400).send("Bad Request");
+    const scan = await Scan.findOne({ jsonifyResultId: run_id });
+    if (!scan) return res.status(400).send("No scan found");
+
+    const { name, price, description, photo } = results[0];
+    const url = scan.url;
+    if (status === "done" && name && price) {
+      const domain = new URL(url).origin || "";
+      const photoUrl = photo?.src || photo || "";
+      const processedPhoto = await processImage(photoUrl);
+      const product = new Product({
+        name,
+        price: takeFirstDecimal(price),
+        url,
+        original_url: url,
+        description: description || "",
+        photo: {
+          url: photoUrl,
+          small: processedPhoto?.small || "",
+          normal: processedPhoto?.normal || "",
+        },
+        domain,
+        user: req.user._id,
+      });
+      await product.save();
+      console.log("product", product);
+
+      scan.status = "success";
+      await scan.save();
+      await sendPushNotification(
+        scan.push_token,
+        `🌟${
+          name.length > 30 ? name.substring(0, 30) + "..." : name
+        }🌟 was successfully added to OllaCart.`,
+        photoUrl
+      );
+      return res.status(200).send("success");
+    }
+
+    scan.status = "failed";
+    await scan.save();
+    await sendPushNotification(push_token, "Failed adding item to OllaCart.");
     res.status(200).send("success");
   } catch (ex) {
     console.error("runJsonifyWebhook", ex);
