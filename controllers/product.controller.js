@@ -664,7 +664,7 @@ exports.runJsonifyWebhook = async (req, res) => {
           normal: processedPhoto?.normal || "",
         },
         domain,
-        user: req.user._id,
+        user: scan.user,
       });
       await product.save();
       console.log("product", product);
