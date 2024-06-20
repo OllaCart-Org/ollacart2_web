@@ -683,7 +683,10 @@ exports.runJsonifyWebhook = async (req, res) => {
 
     scan.status = "failed";
     await scan.save();
-    await sendPushNotification(push_token, "Failed adding item to OllaCart.");
+    await sendPushNotification(
+      scan.push_token,
+      "Failed adding item to OllaCart."
+    );
     res.status(200).send("success");
   } catch (ex) {
     console.error("runJsonifyWebhook", ex);
