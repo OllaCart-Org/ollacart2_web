@@ -641,9 +641,9 @@ exports.scanPageV2 = async (req, res) => {
 exports.runJsonifyWebhook = async (req, res) => {
   console.log("Jsonify Webhook", req.body);
   try {
-    const { status, run_id, results } = req.body;
-    if (!run_id || !results?.length) return res.status(400).send("Bad Request");
-    const scan = await Scan.findOne({ jsonifyResultId: run_id });
+    const { status, id, results } = req.body;
+    if (!id || !results?.length) return res.status(400).send("Bad Request");
+    const scan = await Scan.findOne({ jsonifyResultId: id });
     if (!scan) return res.status(400).send("No scan found");
 
     const { name, price, description, photo } = results[0];
