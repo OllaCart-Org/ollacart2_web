@@ -38,7 +38,7 @@ exports.runJsonifyV2 = async (url, text) => {
 
     const response = await axios.post(
       apiUrl,
-      { urls: [url], text },
+      { text_url: url, text },
       {
         headers: {
           "Content-Type": "application/json",
