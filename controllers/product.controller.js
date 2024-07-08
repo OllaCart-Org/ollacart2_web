@@ -642,13 +642,13 @@ exports.runJsonifyWebhook = async (req, res) => {
   console.log("Jsonify Webhook", req.body);
   try {
     const { status, id, results } = req.body;
-    console.log('body', status, id, results);
+    console.log("body", status, id, results);
     if (!id || !results?.length) return res.status(400).send("Bad Request");
     const scan = await Scan.findOne({ jsonifyResultId: id });
     if (!scan) return res.status(400).send("No scan found");
 
     const { name, price, description, photo } = results[0];
-    console.log('result', name, price, description, photo)
+    console.log("result", name, price, description, photo);
     const url = scan.url;
     if (status === "done" && name && price) {
       const domain = new URL(url).origin || "";
@@ -701,12 +701,12 @@ exports.getScanningUrls = async (req, res) => {
     return res.status(401).send({ error: "Unauthorized" });
   }
 
-  const oneMinuteAgo = new Date(Date.now() - 1 * 60 * 1000);
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
   const scans = await Scan.find({
     user: req.user._id,
     status: "pending",
-    createdAt: { $gt: oneMinuteAgo },
+    createdAt: { $gt: fiveMinutesAgo },
   });
 
   const scanningUrls = scans.map((scan) => scan.url);
