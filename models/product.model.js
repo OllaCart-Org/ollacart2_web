@@ -11,12 +11,12 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
-      maxlength: 320,
+      // maxlength: 320,
     },
     description: {
       type: String,
       // required: true,
-      maxlength: 2000,
+      // maxlength: 2000,
     },
     keywords: [{ type: String }],
     price: {

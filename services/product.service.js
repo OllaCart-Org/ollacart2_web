@@ -1,10 +1,13 @@
 const axios = require("axios");
 
 const JSOINFY_API_URL = "https://jsonify.co/api/v1";
+const JSONIFY_V2_API_URL = "https://beta.jsonify.com/api/v2";
 
 exports.runJsonify = async (url, text) => {
   try {
-    const apiUrl = `${JSOINFY_API_URL}/scraper/start?token=${process.env.JSONIFY_API_KEY}&url=${url}&extended=true`;
+    const apiUrl = `${JSOINFY_API_URL}/scraper/start?token=${
+      process.env.JSONIFY_API_KEY
+    }&url=${encodeURIComponent(url)}&extended=true`;
 
     const payload = {
       schema: {
@@ -26,6 +29,27 @@ exports.runJsonify = async (url, text) => {
     return response.data?.result?.id;
   } catch (ex) {
     console.log("runJsonify error", ex);
+  }
+};
+
+exports.runJsonifyV2 = async (url, text) => {
+  try {
+    const apiUrl = `${JSONIFY_V2_API_URL}/workflow/${process.env.JSONIFY_V2_WORKFLOW}/node/${process.env.JSONIFY_V2_NODE}/start`;
+
+    const response = await axios.post(
+      apiUrl,
+      { text_url: url, text },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.JSONIFY_V2_API_KEY}`,
+        },
+      }
+    );
+
+    return response.data?.result?.id;
+  } catch (ex) {
+    console.log("runJsonify v2 error", ex);
   }
 };
 

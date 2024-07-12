@@ -36,6 +36,7 @@ const getDataFromImageUrl = async (url) => {
   const response = await axios({
     url,
     method: "GET",
+    timeout: 10000,
     responseType: "arraybuffer",
   });
   return response.data;

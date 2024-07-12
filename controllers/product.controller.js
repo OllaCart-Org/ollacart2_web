@@ -16,6 +16,7 @@ const { URL } = require("url");
 const {
   runJsonify,
   getJsonifyResultLoop,
+  runJsonifyV2,
 } = require("../services/product.service");
 const { processImage } = require("../helpers/image");
 
@@ -591,17 +592,121 @@ exports.scanPage = async (req, res) => {
   }
 };
 
+exports.scanPageV2 = async (req, res) => {
+  const { url, text, push_token } = req.body;
+  if (!req.user) {
+    return res.status(401).send({ error: "Unauthorized" });
+  }
+  if (!url || !validator.isURL(url))
+    return res.status(400).send({ error: "Invalid url" });
+  try {
+    console.log("scanPageV2 request", url, text, push_token);
+    const oneMinuteAgo = new Date(Date.now() - 1 * 60 * 1000);
+    let scan = await Scan.findOne({
+      url,
+      push_token,
+      text,
+      user: req.user._id,
+      status: { $ne: "failed" },
+      createdAt: { $gt: oneMinuteAgo },
+    });
+
+    if (!scan?.jsonifyResultId) {
+      scan = undefined;
+    }
+
+    if (!scan) {
+      const jsonifyResultId = await runJsonifyV2(url, text);
+      if (!jsonifyResultId) {
+        return res.status(500).send({ error: "Failed scanning page" });
+      }
+      scan = new Scan({
+        user: req.user._id,
+        url,
+        text,
+        push_token,
+        jsonifyResultId,
+      });
+      await scan.save();
+    }
+
+    res.send({ success: true });
+  } catch (ex) {
+    console.error("scanPageV2 error", ex);
+    await sendPushNotification(push_token, "Failed adding item to OllaCart.");
+    return res.status(500).send({ error: ex });
+  }
+};
+
+exports.runJsonifyWebhook = async (req, res) => {
+  console.log("Jsonify Webhook", req.body);
+  try {
+    const { status, id, results } = req.body;
+    console.log("body", status, id, results);
+    if (!id || !results?.length) return res.status(400).send("Bad Request");
+    const scan = await Scan.findOne({ jsonifyResultId: id });
+    if (!scan) return res.status(400).send("No scan found");
+
+    const { name, price, description, photo } = results[0];
+    console.log("result", name, price, description, photo);
+    const url = scan.url;
+    if (status === "done" && name && price) {
+      const domain = new URL(url).origin || "";
+      const photoUrl = photo?.src || photo || "";
+      const processedPhoto = await processImage(photoUrl);
+      const product = new Product({
+        name,
+        price: takeFirstDecimal(price),
+        url,
+        original_url: url,
+        description: description || "",
+        photo: {
+          url: photoUrl,
+          small: processedPhoto?.small || "",
+          normal: processedPhoto?.normal || "",
+        },
+        domain,
+        user: scan.user,
+      });
+      await product.save();
+      console.log("product", product);
+
+      scan.status = "success";
+      await scan.save();
+      await sendPushNotification(
+        scan.push_token,
+        `🌟${
+          name.length > 30 ? name.substring(0, 30) + "..." : name
+        }🌟 was successfully added to OllaCart.`,
+        photoUrl
+      );
+      return res.status(200).send("success");
+    }
+
+    scan.status = "failed";
+    await scan.save();
+    await sendPushNotification(
+      scan.push_token,
+      "Failed adding item to OllaCart."
+    );
+    res.status(200).send("success");
+  } catch (ex) {
+    console.error("runJsonifyWebhook", ex);
+    return res.status(500).send({ error: ex });
+  }
+};
+
 exports.getScanningUrls = async (req, res) => {
   if (!req.user) {
     return res.status(401).send({ error: "Unauthorized" });
   }
 
-  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
   const scans = await Scan.find({
     user: req.user._id,
     status: "pending",
-    createdAt: { $gt: tenMinutesAgo },
+    createdAt: { $gt: fiveMinutesAgo },
   });
 
   const scanningUrls = scans.map((scan) => scan.url);
