@@ -1,0 +1,166 @@
+#shopping-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 112px 64px;
+    gap: 60px;
+    width: 100%;
+    .shopping-content{
+        display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+        h1{
+            font-size: 48px;
+            font-family: Oxanium ;
+            font-weight: 700 ;
+            color: #FFFFFF ;
+            line-height: 120% ;
+            text-align: center;
+        }
+        span{
+            color: #FFC827;
+        }
+        .img-main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            
+            img{
+                margin-left: -16px;
+            }
+        }
+    }
+    .shop-online{
+        display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+        .shop-sigin{
+            display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+            h1{
+                font-size: 48px;
+                font-family: Oxanium ;
+                font-weight: 700 ;
+                color: #FFFFFF ;
+                line-height: 120% ;
+                text-align: center;
+            }
+            button{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                width: 100%;
+                padding: 6px 8px;
+                border-radius: 6px;
+                background-color: #FFC827;
+                max-width: 304px;
+                cursor: pointer;
+                border: none;
+                outline: none;
+                height: 48px;
+                p{
+                    font-size: 16px;
+                    font-family: Oxanium ;
+                    font-weight: 700 ;
+                    color: #FFFFFF ;
+                    line-height: 150% ;
+                }
+            }
+        }
+        .shop-cards{
+            display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+            .shop-card{
+                display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-direction: column;
+    max-width:304px ;
+    min-width: 304px;
+    min-height: 355px;
+    border: 1px solid #383A4A;
+    border-radius: 6px;
+    padding: 16px;
+    gap: 24px;
+    background-color: #2D2F40;
+                img{
+                    width: 96px !important;
+                    height: 96px !important;
+                }
+                h1{
+                    font-size: 24px;
+                    font-family: Oxanium ;
+                    font-weight: 700 ;
+                    color: #FFFFFF ;
+                    line-height: 140% ;
+                }
+                p{
+                    font-size: 16px;
+                    font-family: Almarai;
+                    font-weight: 700 ;
+                    color: #FFFFFF ;
+                    line-height: 150% ;
+                }
+            }
+        }
+    }
+}
+@media screen and (max-width: 1220px){
+    #shopping-container{
+        .shopping-content{
+            flex-direction: column-reverse !important;
+        }
+        .shop-online{
+            .shop-cards{
+    flex-wrap: wrap !important;
+
+            }
+        }
+    }
+}
+@media screen and (max-width: 770px) {
+    #shopping-container{
+        padding: 64px 20px !important;
+        gap: 48px !important;
+        .shopping-content{
+            .url{
+                width: 334px !important;
+            }
+            h1{
+                font-size: 36px !important;
+            }
+        }
+        .shop-online{
+        gap: 48px !important;
+            .shop-cards{
+                .shop-card{
+                    align-items: center !important;
+                    max-width: 100% !important;
+                    p{
+                        text-align: center !important;
+                    }
+                }
+            }
+            .shop-sigin{
+                h1{
+                    font-size: 36px !important;
+
+                }
+            }
+        }
+    }
+}

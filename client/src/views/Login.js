@@ -1,5 +1,5 @@
 import React from "react";
-import Signin from "../components/signin";
+import Signin from "../components/Landing/Signin";
 import { Box } from "@material-ui/core";
 import OllaCartMultiLogo from "../components/Logo/ollacartmulti";
 

@@ -1,0 +1,148 @@
+#cta-container{
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    .cta-img{
+        position: absolute;
+        width: 100%;
+        height:100% ;
+        img{
+            object-fit: cover;
+        width: 100%;
+        height:100% ;
+        }
+    }
+    .cta-main{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 40px;
+        padding: 112px 64px;
+        width: 100%;
+        z-index: 1;
+
+        .cta-heading{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 24px;
+            h1{
+                font-size: 48px ;
+                font-family: Oxanium;
+                font-weight: 700;
+                color: #FFFFFF;
+                line-height:120% ;
+                text-align: center;
+            }
+            p{
+                font-size: 18px ;
+                font-family: Almarai;
+                color: #FFFFFF;
+                line-height:150% ;
+                text-align: center;
+            }
+        }
+        .email-section{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            .email{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+                input{
+                        padding: 12px;
+                        background-color: #35374B;
+                        border:1px solid #292B30 ;
+                        width: 430px;
+                        height: 48px;
+                        border-radius: 6px;
+                        
+                }
+                input[type="email"]:focus {
+                    border-color: #32386F;
+                    outline: none;
+                  }
+                
+                button{
+                        color: #FFFFFF;
+                        background-color: #FFC827;
+                        padding: 2px 8px;
+                        font-size: 16px ;
+                        font-family: Oxanium;
+                        line-height:150% ;
+                        font-weight: 700;
+                        border: none;
+                        outline: none;
+                        cursor: pointer;
+                        height: 48px;
+                        border-radius: 6px;
+
+                }
+            }
+        }
+        .term{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            p{
+                font-size: 12px ;
+                font-family: Almarai;
+                color: #FFFFFF;
+                line-height:150% ;
+            }
+            a{
+                text-decoration: underline;
+                font-size: 12px ;
+                font-family: Almarai;
+                color: #FFFFFF;
+                line-height:150% ;
+            }
+        }
+     
+    }
+}
+@media screen and (max-width: 680px){
+    #cta-container{
+        .cta-main{
+            padding: 64px 20px !important;
+            gap: 8px !important;
+            .cta-heading{
+                gap: 20px;
+                h1{
+                    font-size: 36px !important;
+                }
+                p{
+                    font-size: 16px !important;
+                }
+            }
+            .email-section{
+                width: 100% !important;
+
+                .email{
+                    flex-direction: column !important;
+                    width: 100% !important;
+                    button{
+                        width: 100% !important;
+                    }
+                    input{
+                        width: 100% !important;
+                    }
+                }
+            }
+            .term{
+                flex-direction: column !important;
+            }
+        }
+    }
+}

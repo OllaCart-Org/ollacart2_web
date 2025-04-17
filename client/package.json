@@ -16,19 +16,22 @@
     "comma-number": "^2.1.0",
     "copy-to-clipboard": "^3.3.2",
     "country-state-city": "^3.1.2",
+    "framer-motion": "^3.10.0",
     "moment": "^2.29.4",
     "querystring": "^0.2.1",
-    "react": "^16.13.1",
+    "react": "^16.14.0",
     "react-beautiful-dnd": "^13.1.1",
-    "react-dom": "^16.13.1",
+    "react-dom": "^16.14.0",
+    "react-intersection-observer": "^8.0.0",
     "react-jsondata-editor": "^2.0.2",
     "react-material-ui-carousel": "v2",
     "react-redux": "^7.2.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^5.3.4",
     "react-scripts": "3.4.1",
     "react-stripe-js": "^1.1.2",
     "react-tag-input-component": "^2.0.2",
     "react-toast-notifications": "^2.5.1",
+    "react-whatsapp": "^0.3.0",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
@@ -55,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "sass": "^1.58.3"
   }
 }
