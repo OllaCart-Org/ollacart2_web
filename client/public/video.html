@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+</head>
+<body>
+    <video id="video" width="100%" height="100%" controls autoplay muted>
+        <source src="/extension-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <script>
+        const videoElement = document.getElementById('video');
+
+        window.addEventListener('message', (event) => {
+            if (event.data === 'play') {
+                videoElement.play();
+            } else if (event.data === 'pause') {
+                videoElement.pause();
+            }
+        });
+
+        // Auto-play the video when the iframe loads
+        window.addEventListener('load', () => {
+            videoElement.play().catch(error => {
+                console.error('Auto-play was prevented:', error);
+            });
+        });
+    </script>
+</body>
+</html>

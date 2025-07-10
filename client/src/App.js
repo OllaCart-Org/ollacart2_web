@@ -96,7 +96,7 @@ function AppContainer() {
   return (
     <div>
       <MuiThemeProvider theme={theme}>
-        <ToastProvider>
+        <ToastProvider placement="top-right">
           <Router>
             <Switch>
               <Route

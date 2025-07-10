@@ -1,0 +1,162 @@
+
+.video-container{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-direction: column;
+    padding:112px 64px ;
+    gap: 80px;
+    .video-content{
+        display: flex;
+        align-items: center;
+        justify-content: start;
+    gap: 48px;
+
+        .video-extension{
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            flex-direction: column;
+    gap: 40px;
+            width: 42%;
+            h1{
+                display: none;
+                font-size: 48px;
+                font-weight: 700;
+                font-family: Oxanium;
+                line-height: 120%;
+                color: #FFFFFF;
+            }
+            span{
+                color: #FFC827;
+            }
+            button{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 2px solid #FAF2DA;
+                    border-radius: 6px;
+                    padding: 4px 8px;
+                    background-color: transparent;
+                    gap: 4px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    font-family: Oxanium;
+                    font-weight: 700;
+                    line-height: 150%;
+                    width: 100%;
+                    min-width: 244px ;
+            }
+            .btn{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap:6px ;
+                background-color: #FFC827;
+                border-radius: 6px;
+                padding-left:8px ;
+             padding-right:24px ;
+             padding-top:4px ;
+             padding-bottom:4px ;
+             cursor: pointer;
+             height: 53px;
+ 
+ 
+                     p{
+                         font-size: 16px;
+                         font-family: Oxanium;
+                         font-weight: 700;
+                         line-height: 150%;
+                         color: #FFFFFF;
+                     }
+                 }
+                 .mobile-btn{
+                     display: none;
+                 }
+        }
+        .video-text{
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            p{
+                font-size: 30px;
+                font-weight: 700;
+                font-family: Oxanium;
+                line-height: 120%;
+                color: #FFFFFF;
+            }
+        }
+    }
+    .video{
+        // position: relative;
+  width: 100%;
+  overflow: hidden;
+    // padding-top: 51%;
+  video{
+    // position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+        img{
+            object-fit: cover;
+            width: 100%;
+        }
+    }
+    .mobile-video{
+        display: none;
+    }
+}
+@media screen and (max-width: 980px){
+    .video-container{
+        .video-content{
+            flex-direction: column !important;
+            gap: 20px;
+            flex-direction: column-reverse !important;
+            .video-extension{
+                gap: 20px !important;
+                button{
+                    display: none !important;
+                }
+                a{
+                    width: 100% !important;
+                    .mobile-btn{
+                        display: flex !important;
+                    }
+                }
+                
+            }
+        }
+    }
+}
+@media screen and (max-width: 680px) {
+    .video-container{
+        padding: 64px 20px !important;
+        gap: 48px !important;
+        .video-content{
+            width: 100% !important;
+            .video-extension{
+                width: 100% !important;
+                h1{
+                    font-size: 26px !important;
+                }
+                .mobile-btn{
+                    width: 100% !important;
+                }
+            }
+            .video-text{
+                p{
+                    font-size: 16px !important;
+                }
+            }
+        }
+        .video{
+            display: none !important;
+        }
+        .mobile-video{
+            display: flex !important;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+#main-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2B2D42;
+    flex-direction: column;
+    .homepage-container{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: start;
+        justify-content: center;
+        flex-direction: column;
+        max-width: 1320px;
+    }
+}
